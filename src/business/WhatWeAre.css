@@ -1,0 +1,36 @@
+.about {
+  background: var(--bg-alt);
+  color: var(--text);
+  padding-block: var(--space-6);
+}
+
+.about__inner {
+  max-width: var(--max-w-narrow);
+  text-align: center;
+}
+
+.about__eyebrow {
+  font-family: var(--font-body);
+  font-weight: var(--weight-body-regular);
+  font-size: 0.72rem;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: var(--space-3);
+}
+
+.about__headline {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: var(--weight-display-regular);
+  font-size: clamp(1.8rem, 4.5vw, 2.6rem);
+  margin-bottom: var(--space-3);
+}
+
+.about__body {
+  font-family: var(--font-body);
+  font-weight: var(--weight-body-light);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--text);
+}

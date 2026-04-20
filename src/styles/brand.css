@@ -1,0 +1,49 @@
+/*
+ * brand.css — per-business swap layer.
+ * Change this file (plus /public logo + hero) to rebrand the whole site.
+ * Components consume only the --primary / --accent / --font-* vars below.
+ */
+
+:root {
+  /* -- Raw palette (Easy Beans Coffee — from EB_Brand_Guidelines.pdf) -- */
+  --eb-espresso: #2c2c2a;
+  --eb-ink:      #1a1a1a;
+  --eb-matcha:   #7a8b6e;
+  --eb-camel:    #a8907a;
+  --eb-oat:      #c4b4a0;
+  --eb-sage:     #d4ddd0;
+  --eb-stone:    #9c9a92;
+  --eb-cream:    #e8e6e1;
+  --eb-white:    #ffffff;
+
+  /* -- Semantic roles (the swap layer) -- */
+  --primary:      var(--eb-espresso);
+  --primary-dark: var(--eb-ink);
+  --secondary:    var(--eb-cream);
+  --accent:       var(--eb-matcha);
+  --accent-soft:  var(--eb-sage);
+
+  --bg:           var(--eb-white);
+  --bg-alt:       var(--eb-cream);
+  --bg-dark:      var(--eb-espresso);
+
+  --text:         var(--eb-espresso);
+  --text-muted:   var(--eb-stone);
+  --text-on-dark: var(--eb-cream);
+  --text-on-accent: var(--eb-white);
+
+  --border-soft:  rgba(44, 44, 42, 0.12);
+  --overlay-dark: rgba(44, 44, 42, 0.5);
+
+  /* -- Typography -- */
+  --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-body:    "Josefin Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --weight-display-regular: 400;
+  --weight-display-bold:    600;
+  --weight-body-light:      300;
+  --weight-body-regular:    400;
+
+  --tracking-wide:  0.18em;
+  --tracking-wider: 0.28em;
+}
