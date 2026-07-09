@@ -11,6 +11,9 @@ export const TodoSchema = z.object({
   important: z.boolean(),
   category: z.string().max(100).nullable().optional(),
   assignee: z.string().max(100).nullable().optional(),
+  // Shared manual sort order (see migration 0002). Fractional so items can be
+  // dropped between two others. Nullable for rows created before the column.
+  position: z.number().nullable().optional(),
   created_at: z.string(),
   updated_at: z.string().nullable().optional(),
 });

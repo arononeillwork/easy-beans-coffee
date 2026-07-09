@@ -22,7 +22,7 @@ import type { Assignee, Todo, TodoUpdate } from '../../todoModel';
 type TodoListProps = {
   items: Todo[];
   draggable: boolean;
-  onReorder: (ids: string[]) => void;
+  onReorder: (id: string, position: number) => void;
   onToggleCompleted: (id: string, completed: boolean) => void;
   onToggleImportant: (id: string, important: boolean) => void;
   onSetAssignee: (id: string, assignee: Assignee | null) => void;
@@ -51,7 +51,22 @@ export default function TodoList({
     const oldIndex = items.findIndex((t) => t.id === active.id);
     const newIndex = items.findIndex((t) => t.id === over.id);
     if (oldIndex < 0 || newIndex < 0) return;
-    onReorder(arrayMove(items, oldIndex, newIndex).map((t) => t.id));
+
+    // Drop the item between its new neighbours by averaging their positions,
+    // so only the moved row needs saving (no full renumber).
+    const reordered = arrayMove(items, oldIndex, newIndex);
+    const before = reordered[newIndex - 1];
+    const after = reordered[newIndex + 1];
+    const prevPos = before ? positionOf(before, newIndex - 1) : undefined;
+    const nextPos = after ? positionOf(after, newIndex + 1) : undefined;
+
+    let position: number;
+    if (prevPos === undefined && nextPos === undefined) position = 0;
+    else if (prevPos === undefined) position = (nextPos as number) - 1;
+    else if (nextPos === undefined) position = prevPos + 1;
+    else position = (prevPos + nextPos) / 2;
+
+    onReorder(String(active.id), position);
   };
 
   const completedCount = items.filter((t) => t.completed).length;
@@ -81,6 +96,11 @@ export default function TodoList({
       </SortableContext>
     </DndContext>
   );
+}
+
+/** A neighbour's stored position, falling back to its list index for legacy null rows. */
+function positionOf(todo: Todo, index: number): number {
+  return todo.position ?? index;
 }
 
 function CompletedDivider({ count }: { count: number }) {

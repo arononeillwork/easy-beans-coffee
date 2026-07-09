@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
 import { Alert, Box, Container, Snackbar, Typography } from '@mui/material';
 import TaskAltRoundedIcon from '@mui/icons-material/TaskAltRounded';
+import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import AddTodoForm from './components/AddTodoForm';
 import SortControls from './components/SortControls';
 import TodoList from './components/TodoList';
 import ProgressRing from './components/ProgressRing';
 import { useTodos } from './hooks/useTodos';
-import { useTodoOrder } from './hooks/useTodoOrder';
 import { SortMode, type SortModeValue, type Todo } from '../todoModel';
 import { EmptyCard, GlassHeader, PageRoot } from './styled';
 
@@ -24,11 +24,11 @@ export default function TodoApp() {
     setAssignee,
     editTodo,
     removeTodo,
+    reorderTodo,
   } = useTodos();
-  const { order, saveOrder } = useTodoOrder();
   const [sortMode, setSortMode] = useState<SortModeValue>(readSortMode);
 
-  const orderedTodos = useMemo(() => orderTodos(todos, order, sortMode), [todos, order, sortMode]);
+  const orderedTodos = useMemo(() => orderTodos(todos, sortMode), [todos, sortMode]);
   const categories = useMemo(() => uniqueCategories(todos), [todos]);
   const total = todos.length;
   const done = useMemo(() => todos.filter((t) => t.completed).length, [todos]);
@@ -77,12 +77,12 @@ export default function TodoApp() {
         <Box sx={{ mt: 3 }}>
           <SortControls sortMode={sortMode} onChange={handleSortChange} count={remaining} />
           {!loading && orderedTodos.length === 0 && !error ? (
-            <EmptyState />
+            <EmptyState important={sortMode === SortMode.Important && total > 0} />
           ) : (
             <TodoList
               items={orderedTodos}
               draggable={sortMode === SortMode.Manual}
-              onReorder={saveOrder}
+              onReorder={reorderTodo}
               onToggleCompleted={toggleCompleted}
               onToggleImportant={toggleImportant}
               onSetAssignee={setAssignee}
@@ -107,7 +107,7 @@ export default function TodoApp() {
   );
 }
 
-function EmptyState() {
+function EmptyState({ important }: { important: boolean }) {
   return (
     <EmptyCard>
       <Box
@@ -123,12 +123,16 @@ function EmptyState() {
           color: 'secondary.dark',
         }}
       >
-        <TaskAltRoundedIcon fontSize="large" />
+        {important ? <StarRoundedIcon fontSize="large" /> : <TaskAltRoundedIcon fontSize="large" />}
       </Box>
       <Typography variant="h6" sx={{ mb: 0.5 }}>
-        All clear
+        {important ? 'No important tasks' : 'All clear'}
       </Typography>
-      <Typography color="text.secondary">Add your first task above to get the day brewing.</Typography>
+      <Typography color="text.secondary">
+        {important
+          ? 'Star a task to have it show up here.'
+          : 'Add your first task above to get the day brewing.'}
+      </Typography>
     </EmptyCard>
   );
 }
@@ -144,18 +148,20 @@ function summary(loading: boolean, total: number, remaining: number): string {
   return `${remaining} ${remaining === 1 ? 'task' : 'tasks'} left to go.`;
 }
 
-function orderTodos(todos: Todo[], order: string[], sortMode: SortModeValue): Todo[] {
-  const rank = new Map(order.map((id, index) => [id, index]));
+function orderTodos(todos: Todo[], sortMode: SortModeValue): Todo[] {
+  // Manual order is the shared `position` from Supabase, so it's the same on
+  // every device. Tie-break on created_at for rows that share a position.
   const manual = [...todos].sort((a, b) => {
-    const ra = rank.get(a.id) ?? Number.MAX_SAFE_INTEGER;
-    const rb = rank.get(b.id) ?? Number.MAX_SAFE_INTEGER;
-    if (ra !== rb) return ra - rb;
+    const pa = a.position ?? Number.MAX_SAFE_INTEGER;
+    const pb = b.position ?? Number.MAX_SAFE_INTEGER;
+    if (pa !== pb) return pa - pb;
     return a.created_at.localeCompare(b.created_at);
   });
 
   let sorted = manual;
   if (sortMode === SortMode.Important) {
-    sorted = [...manual].sort((a, b) => Number(b.important) - Number(a.important));
+    // "Important" is a filter, not just a sort: only important tasks are listed.
+    sorted = manual.filter((t) => t.important);
   } else if (sortMode === SortMode.Category) {
     sorted = [...manual].sort((a, b) => compareCategory(a.category, b.category));
   }

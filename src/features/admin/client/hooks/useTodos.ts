@@ -13,6 +13,7 @@ type UseTodosResult = {
   setAssignee: (id: string, assignee: Assignee | null) => Promise<void>;
   editTodo: (id: string, updates: TodoUpdate) => Promise<void>;
   removeTodo: (id: string) => Promise<void>;
+  reorderTodo: (id: string, position: number) => Promise<void>;
   reload: () => Promise<void>;
 };
 
@@ -34,7 +35,7 @@ export function useTodos(): UseTodosResult {
     setLoading(true);
     setError(null);
     const data = await todoService.getAll(undefined, {
-      column: 'created_at',
+      column: 'position',
       ascending: true,
     });
     setTodos(data);
@@ -45,21 +46,27 @@ export function useTodos(): UseTodosResult {
     reload();
   }, [reload]);
 
-  const addTodo = useCallback(async (input: CreateTodoInput): Promise<void> => {
-    if (!todoService) return;
-    const category = input.category?.trim() ? input.category.trim() : null;
-    const created = await todoService.create({
-      title: input.title.trim(),
-      category,
-      completed: false,
-      important: false,
-    });
-    if (!created) {
-      setError('Could not add the task. Please try again.');
-      return;
-    }
-    setTodos((prev) => [...prev, created]);
-  }, []);
+  const addTodo = useCallback(
+    async (input: CreateTodoInput): Promise<void> => {
+      if (!todoService) return;
+      const category = input.category?.trim() ? input.category.trim() : null;
+      // Append to the bottom of the shared order.
+      const nextPosition = todos.reduce((max, t) => Math.max(max, t.position ?? 0), 0) + 1;
+      const created = await todoService.create({
+        title: input.title.trim(),
+        category,
+        completed: false,
+        important: false,
+        position: nextPosition,
+      });
+      if (!created) {
+        setError('Could not add the task. Please try again.');
+        return;
+      }
+      setTodos((prev) => [...prev, created]);
+    },
+    [todos],
+  );
 
   const toggleCompleted = useCallback(
     (id: string, completed: boolean) => patch(setTodos, setError, id, { completed }),
@@ -82,6 +89,11 @@ export function useTodos(): UseTodosResult {
         title: updates.title.trim(),
         category: updates.category,
       }),
+    [],
+  );
+
+  const reorderTodo = useCallback(
+    (id: string, position: number) => patch(setTodos, setError, id, { position }),
     [],
   );
 
@@ -112,6 +124,7 @@ export function useTodos(): UseTodosResult {
     setAssignee,
     editTodo,
     removeTodo,
+    reorderTodo,
     reload,
   };
 }
