@@ -5,7 +5,6 @@
 export const clientConfig = {
   supabaseUrl: import.meta.env.VITE_SUPABASE_URL ?? '',
   supabaseAnonKey: import.meta.env.VITE_SUPABASE_ANON_KEY ?? '',
-  adminPin: import.meta.env.VITE_ADMIN_PIN ?? '12345',
   todoTable: import.meta.env.VITE_TODO_TABLE ?? 'todList',
   environment: import.meta.env.MODE,
 } as const;

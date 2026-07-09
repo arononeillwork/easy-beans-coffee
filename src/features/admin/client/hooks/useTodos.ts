@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { todoService } from '../../todoService';
-import type { CreateTodoInput, Todo, TodoUpdate } from '../../todoModel';
+import type { Assignee, CreateTodoInput, Todo, TodoUpdate } from '../../todoModel';
 
 type UseTodosResult = {
   todos: Todo[];
@@ -10,6 +10,7 @@ type UseTodosResult = {
   addTodo: (input: CreateTodoInput) => Promise<void>;
   toggleCompleted: (id: string, completed: boolean) => Promise<void>;
   toggleImportant: (id: string, important: boolean) => Promise<void>;
+  setAssignee: (id: string, assignee: Assignee | null) => Promise<void>;
   editTodo: (id: string, updates: TodoUpdate) => Promise<void>;
   removeTodo: (id: string) => Promise<void>;
   reload: () => Promise<void>;
@@ -70,6 +71,11 @@ export function useTodos(): UseTodosResult {
     [],
   );
 
+  const setAssignee = useCallback(
+    (id: string, assignee: Assignee | null) => patch(setTodos, setError, id, { assignee }),
+    [],
+  );
+
   const editTodo = useCallback(
     (id: string, updates: TodoUpdate) =>
       patch(setTodos, setError, id, {
@@ -103,6 +109,7 @@ export function useTodos(): UseTodosResult {
     addTodo,
     toggleCompleted,
     toggleImportant,
+    setAssignee,
     editTodo,
     removeTodo,
     reload,

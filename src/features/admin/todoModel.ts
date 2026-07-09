@@ -10,11 +10,17 @@ export const TodoSchema = z.object({
   completed: z.boolean(),
   important: z.boolean(),
   category: z.string().max(100).nullable().optional(),
+  assignee: z.string().max(100).nullable().optional(),
   created_at: z.string(),
   updated_at: z.string().nullable().optional(),
 });
 
 export type Todo = z.infer<typeof TodoSchema>;
+
+/** People a task can be assigned to. Shown as a single-letter badge on each row. */
+export const ASSIGNEES = ['Aron', 'Mark', 'Julio', 'Maria'] as const;
+
+export type Assignee = (typeof ASSIGNEES)[number];
 
 /** Input for creating a task — title required, category optional. */
 export const CreateTodoSchema = z.object({

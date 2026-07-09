@@ -17,7 +17,7 @@ import { Fragment } from 'react';
 import { Box, Typography } from '@mui/material';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import TodoItem from './TodoItem';
-import type { Todo, TodoUpdate } from '../../todoModel';
+import type { Assignee, Todo, TodoUpdate } from '../../todoModel';
 
 type TodoListProps = {
   items: Todo[];
@@ -25,6 +25,7 @@ type TodoListProps = {
   onReorder: (ids: string[]) => void;
   onToggleCompleted: (id: string, completed: boolean) => void;
   onToggleImportant: (id: string, important: boolean) => void;
+  onSetAssignee: (id: string, assignee: Assignee | null) => void;
   onEdit: (id: string, updates: TodoUpdate) => void;
   onDelete: (id: string) => void;
 };
@@ -35,6 +36,7 @@ export default function TodoList({
   onReorder,
   onToggleCompleted,
   onToggleImportant,
+  onSetAssignee,
   onEdit,
   onDelete,
 }: TodoListProps) {
@@ -68,6 +70,7 @@ export default function TodoList({
                   draggable={draggable && !todo.completed}
                   onToggleCompleted={onToggleCompleted}
                   onToggleImportant={onToggleImportant}
+                  onSetAssignee={onSetAssignee}
                   onEdit={onEdit}
                   onDelete={onDelete}
                 />

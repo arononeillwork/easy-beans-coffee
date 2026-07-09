@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Alert, Box, Container, IconButton, Snackbar, Tooltip, Typography } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Alert, Box, Container, Snackbar, Typography } from '@mui/material';
 import TaskAltRoundedIcon from '@mui/icons-material/TaskAltRounded';
 import AddTodoForm from './components/AddTodoForm';
 import SortControls from './components/SortControls';
@@ -13,7 +12,7 @@ import { EmptyCard, GlassHeader, PageRoot } from './styled';
 
 const SORT_KEY = 'ebc:admin:sort-mode';
 
-export default function TodoApp({ onLock }: { onLock: () => void }) {
+export default function TodoApp() {
   const {
     todos,
     loading,
@@ -22,6 +21,7 @@ export default function TodoApp({ onLock }: { onLock: () => void }) {
     addTodo,
     toggleCompleted,
     toggleImportant,
+    setAssignee,
     editTodo,
     removeTodo,
   } = useTodos();
@@ -50,11 +50,6 @@ export default function TodoApp({ onLock }: { onLock: () => void }) {
             alt="Easy Beans Coffee"
             sx={{ height: 44, width: 'auto', display: 'block', flex: 1, objectFit: 'contain', objectPosition: 'left center' }}
           />
-          <Tooltip title="Lock">
-            <IconButton onClick={onLock} aria-label="Lock admin" color="primary">
-              <LockOutlinedIcon />
-            </IconButton>
-          </Tooltip>
         </Container>
       </GlassHeader>
 
@@ -90,6 +85,7 @@ export default function TodoApp({ onLock }: { onLock: () => void }) {
               onReorder={saveOrder}
               onToggleCompleted={toggleCompleted}
               onToggleImportant={toggleImportant}
+              onSetAssignee={setAssignee}
               onEdit={editTodo}
               onDelete={removeTodo}
             />

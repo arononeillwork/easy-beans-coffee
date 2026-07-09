@@ -20,13 +20,15 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { TaskCard } from '../styled';
-import type { Todo, TodoUpdate } from '../../todoModel';
+import AssigneeBadge from './AssigneeBadge';
+import type { Assignee, Todo, TodoUpdate } from '../../todoModel';
 
 type TodoItemProps = {
   todo: Todo;
   draggable: boolean;
   onToggleCompleted: (id: string, completed: boolean) => void;
   onToggleImportant: (id: string, important: boolean) => void;
+  onSetAssignee: (id: string, assignee: Assignee | null) => void;
   onEdit: (id: string, updates: TodoUpdate) => void;
   onDelete: (id: string) => void;
 };
@@ -36,6 +38,7 @@ export default function TodoItem({
   draggable,
   onToggleCompleted,
   onToggleImportant,
+  onSetAssignee,
   onEdit,
   onDelete,
 }: TodoItemProps) {
@@ -170,6 +173,10 @@ export default function TodoItem({
 
       {!editing && (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <AssigneeBadge
+            value={todo.assignee}
+            onChange={(assignee) => onSetAssignee(todo.id, assignee)}
+          />
           <Tooltip title={todo.important ? 'Remove importance' : 'Mark as important'}>
             <IconButton
               size="small"

@@ -107,12 +107,3 @@ export const EmptyCard = styled(Box)(({ theme }) => ({
   border: '1px dashed rgba(111,78,55,0.25)',
   backgroundColor: 'rgba(255,253,248,0.5)',
 }));
-
-/** Centered gradient backdrop for the PIN lock screen. */
-export const GateRoot = styled(Box)(({ theme }) => ({
-  minHeight: '100vh',
-  display: 'grid',
-  placeItems: 'center',
-  padding: theme.spacing(2),
-  background: pageGradient,
-}));

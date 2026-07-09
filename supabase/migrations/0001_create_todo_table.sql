@@ -13,6 +13,7 @@ alter table public."ToDo" add column if not exists title       text;
 alter table public."ToDo" add column if not exists completed   boolean not null default false;
 alter table public."ToDo" add column if not exists important   boolean not null default false;
 alter table public."ToDo" add column if not exists category    text;
+alter table public."ToDo" add column if not exists assignee    text;
 alter table public."ToDo" add column if not exists created_at  timestamptz not null default now();
 alter table public."ToDo" add column if not exists updated_at  timestamptz not null default now();
 
