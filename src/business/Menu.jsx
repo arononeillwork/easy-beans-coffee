@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import LanguageToggle from './LanguageToggle.jsx';
-import { drinkSections, foodSections, allergenInfo, t } from './menuData.js';
+import { drinkSections, foodSections, t } from './menuData.js';
 import './Menu.css';
 
 const STORAGE_KEY = 'ebc:lang';
@@ -16,44 +16,46 @@ function readStoredLang() {
   }
 }
 
-function AllergenBadges({ codes, lang }) {
-  if (!codes || codes.length === 0) return null;
-  return (
-    <span className="menu-item__allergens" aria-label={t.allergensHeading[lang]}>
-      {codes.map((code) => {
-        const info = allergenInfo[code];
-        return (
-          <span
-            key={code}
-            className="allergen-dot"
-            style={{ background: info.color }}
-            title={info.label[lang]}
-            aria-label={info.label[lang]}
-          >
-            {info.short}
-          </span>
-        );
-      })}
-    </span>
+function MenuSection({ section, lang }) {
+  const hasDualPrice = section.items.some(
+    (item) => item.priceHot || item.priceIced
   );
-}
 
-function MenuSection({ section, lang, showAllergens }) {
   return (
     <section className="menu-section" aria-labelledby={`sec-${section.id}`}>
       <h2 id={`sec-${section.id}`} className="menu-section__title">
         {section.title[lang]}
       </h2>
 
+      {hasDualPrice && (
+        <div className="menu-price-head" aria-hidden="true">
+          <span className="menu-price-col">{t.hot[lang]}</span>
+          <span className="menu-price-col">{t.iced[lang]}</span>
+        </div>
+      )}
+
       <ul className="menu-list">
         {section.items.map((item, i) => (
           <li key={i} className="menu-item">
             <span className="menu-item__name">
               {item.name[lang]}
-              {showAllergens && <AllergenBadges codes={item.allergens} lang={lang} />}
+              {item.badge && (
+                <span className="menu-item__badge">{item.badge[lang]}</span>
+              )}
             </span>
             <span className="menu-item__leader" aria-hidden="true" />
-            <span className="menu-item__price">{item.price ?? ''}</span>
+            {hasDualPrice ? (
+              <span className="menu-item__prices">
+                <span className="menu-price-col menu-item__price">
+                  {item.priceHot ?? ''}
+                </span>
+                <span className="menu-price-col menu-item__price">
+                  {item.priceIced ?? ''}
+                </span>
+              </span>
+            ) : (
+              <span className="menu-item__price">{item.price ?? ''}</span>
+            )}
           </li>
         ))}
 
@@ -66,40 +68,17 @@ function MenuSection({ section, lang, showAllergens }) {
         ))}
       </ul>
 
-      {section.note && (
-        <div className="menu-note">
-          <p className="menu-note__heading">{section.note.heading[lang]}</p>
+      {(section.notes ?? (section.note ? [section.note] : [])).map((note, ni) => (
+        <div key={ni} className="menu-note">
+          <p className="menu-note__heading">{note.heading[lang]}</p>
           <ul className="menu-note__options">
-            {section.note.options.map((opt, i) => (
+            {note.options.map((opt, i) => (
               <li key={i}>{opt[lang]}</li>
             ))}
           </ul>
         </div>
-      )}
+      ))}
     </section>
-  );
-}
-
-function AllergenLegend({ lang }) {
-  return (
-    <aside className="legend" aria-label={t.allergensHeading[lang]}>
-      <h3 className="legend__title">{t.allergensHeading[lang]}</h3>
-      <ul className="legend__list">
-        {Object.entries(allergenInfo).map(([code, info]) => (
-          <li key={code} className="legend__item">
-            <span
-              className="allergen-dot"
-              style={{ background: info.color }}
-              aria-hidden="true"
-            >
-              {info.short}
-            </span>
-            <span className="legend__label">{info.label[lang]}</span>
-          </li>
-        ))}
-      </ul>
-      <p className="legend__note">{t.allergensNote[lang]}</p>
-    </aside>
   );
 }
 
@@ -129,7 +108,6 @@ export default function Menu() {
   }
 
   const sections = tab === 'drinks' ? drinkSections : foodSections;
-  const showAllergens = tab === 'food';
 
   return (
     <div className="menu-shell">
@@ -172,16 +150,9 @@ export default function Menu() {
 
         <div className="menu-grid">
           {sections.map((section) => (
-            <MenuSection
-              key={section.id}
-              section={section}
-              lang={lang}
-              showAllergens={showAllergens}
-            />
+            <MenuSection key={section.id} section={section} lang={lang} />
           ))}
         </div>
-
-        {showAllergens && <AllergenLegend lang={lang} />}
       </main>
 
       <footer className="menu-footer">

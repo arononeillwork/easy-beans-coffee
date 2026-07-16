@@ -206,10 +206,55 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* --- Hot / Iced dual-price columns --- */
+.menu-price-head {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 0.1rem;
+}
+
+.menu-price-head .menu-price-col {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-muted);
+}
+
+.menu-item__prices {
+  flex: 0 0 auto;
+  display: inline-flex;
+  gap: 0.5rem;
+}
+
+.menu-price-col {
+  flex: 0 0 auto;
+  width: 3.4rem;
+  text-align: right;
+}
+
 .menu-item--muted .menu-item__name,
 .menu-item--muted .menu-item__price {
   color: var(--text-muted);
   font-style: italic;
+}
+
+/* --- "Coming soon" / status label --- */
+.menu-item__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--text-on-dark);
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: var(--weight-body-regular);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1;
 }
 
 /* --- Milk-alternative / similar note block --- */
