@@ -50,10 +50,12 @@ Set for **Production** only — never reuse sandbox values:
 
 ## Notes
 
-- The site is the Vercel project **easy-beans-coffee** under the **easy-beans-coffee** team; the
-  domain and every env var above belong there. A second project of the same name under
-  `arononeillworks-projects` was also wired to this repo, and it served the domain until the
-  launch. Disconnect its Git so a push builds one site, not two.
+- The site is the Vercel project **easy-beans-coffee** under **arononeillworks-projects**
+  (vercel.com/arononeillworks-projects/easy-beans-coffee); the domain and every env var above
+  belong there. A duplicate project of the same name under the `easy-beans-coffee` team is also
+  wired to this repo. Delete it or disconnect its Git, so a push builds one site, not two.
+- That project skips commits with no file changes (`git commit --allow-empty` won't redeploy
+  it). Redeploy from its Deployments tab, or push a real change.
 - DNS for easybeanscoffee.com is at Cloudflare and points at Vercel. Moving the domain between
   Vercel projects needs no DNS change unless Vercel asks for a `_vercel` TXT verification
   record. Add that in Cloudflare.
