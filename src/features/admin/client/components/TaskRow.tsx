@@ -14,12 +14,10 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import AssigneeBadge from './AssigneeBadge';
 import SelectPill from './SelectPill';
 import { CheckBox, TagPill, TaskCard } from '../styled';
-import { amber, areaColor, lilacDeep, priorityColor, red } from '../adminTheme';
+import { amber, areaColor, lilacDeep, red } from '../adminTheme';
 import {
   AREAS,
-  PRIORITIES,
   toArea,
-  toPriority,
   type Assignee,
   type Task,
   type TaskId,
@@ -33,7 +31,6 @@ type TaskRowProps = {
   onToggleImportant: (id: TaskId, important: boolean) => void;
   onTogglePinned: (id: TaskId, pinned: boolean) => void;
   onSetArea: (id: TaskId, area: string) => void;
-  onSetPriority: (id: TaskId, priority: string) => void;
   onSetAssignee: (id: TaskId, assignee: Assignee | null) => void;
   onEdit: (id: TaskId, updates: TaskUpdate) => void;
   onDelete: (id: TaskId) => void;
@@ -46,7 +43,6 @@ export default function TaskRow({
   onToggleImportant,
   onTogglePinned,
   onSetArea,
-  onSetPriority,
   onSetAssignee,
   onEdit,
   onDelete,
@@ -77,7 +73,7 @@ export default function TaskRow({
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
       elevation={0}
-      priority={toPriority(task.priority)}
+      area={toArea(task.area)}
       pinned={task.pinned}
       completed={task.completed}
       dragging={isDragging}
@@ -157,13 +153,6 @@ export default function TaskRow({
               onChange={(value) => onSetArea(task.id, value)}
               dotColors={areaColor}
               ariaLabel="Change category"
-            />
-            <SelectPill
-              value={toPriority(task.priority)}
-              options={PRIORITIES}
-              onChange={(value) => onSetPriority(task.id, value)}
-              dotColors={priorityColor}
-              ariaLabel="Change priority"
             />
             {task.section ? <TagPill>{task.section}</TagPill> : null}
 

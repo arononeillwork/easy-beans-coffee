@@ -10,33 +10,23 @@ import { useTasks } from './hooks/useTasks';
 import { buildBoard, toPlainText } from './lib/board';
 import { EmptyCard, Foot, PageRoot, Toast, Wrap } from './styled';
 import { card, line, muted, roseInk } from './adminTheme';
-import {
-  GroupBy,
-  isArea,
-  toArea,
-  toPriority,
-  type GroupByValue,
-  type Task,
-  type TaskId,
-} from '../taskModel';
+import { isArea, toArea, type Task, type TaskId } from '../taskModel';
 
 const VIEW_KEY = 'ebc:admin:view';
 
 type View = {
-  groupBy: GroupByValue;
   areaFilter: string | null;
   starredOnly: boolean;
   showDone: boolean;
 };
 
 const DEFAULT_VIEW: View = {
-  groupBy: GroupBy.Priority,
   areaFilter: null,
   starredOnly: false,
   showDone: false,
 };
 
-/** The /admin task board: what's left, grouped the way you want to work through it. */
+/** The /admin task board: what's left, grouped by category. */
 export default function TaskBoard() {
   const {
     tasks,
@@ -48,7 +38,6 @@ export default function TaskBoard() {
     toggleImportant,
     togglePinned,
     setArea,
-    setPriority,
     setAssignee,
     editTask,
     moveTask,
@@ -89,10 +78,6 @@ export default function TaskBoard() {
 
   const groups = useMemo(() => buildBoard(tasks, view), [tasks, view]);
   const open = useMemo(() => tasks.filter((t) => !t.completed), [tasks]);
-  const blockers = useMemo(
-    () => open.filter((t) => toPriority(t.priority) === 'block').length,
-    [open],
-  );
   const starredCount = useMemo(() => open.filter((t) => t.important).length, [open]);
   // What each category chip would show under the other filters as they stand.
   const areaCounts = useMemo(() => {
@@ -146,7 +131,6 @@ export default function TaskBoard() {
       <Wrap>
         <BoardHero
           open={open.length}
-          blockers={blockers}
           done={done}
           percent={percent}
           loading={loading}
@@ -156,8 +140,6 @@ export default function TaskBoard() {
             as far as its own box, which is no distance at all. */}
         <Box ref={barRef} sx={{ position: 'sticky', top: 0, zIndex: 8 }}>
           <BoardControls
-            groupBy={view.groupBy}
-            onGroupByChange={(groupBy) => update({ groupBy })}
             areaFilter={view.areaFilter}
             onAreaFilterChange={(areaFilter) => update({ areaFilter })}
             starredOnly={view.starredOnly}
@@ -178,13 +160,11 @@ export default function TaskBoard() {
         ) : (
           <TaskGroups
             groups={groups}
-            groupBy={view.groupBy}
             onMove={moveTask}
             onToggleCompleted={toggleCompleted}
             onToggleImportant={toggleImportant}
             onTogglePinned={togglePinned}
             onSetArea={setArea}
-            onSetPriority={setPriority}
             onSetAssignee={setAssignee}
             onEdit={editTask}
             onDelete={handleDelete}
@@ -279,7 +259,6 @@ function readView(): View {
     if (!raw) return DEFAULT_VIEW;
     const parsed = JSON.parse(raw) as Partial<View>;
     return {
-      groupBy: parsed.groupBy === GroupBy.Area ? GroupBy.Area : GroupBy.Priority,
       // A category saved before the list was re-cut would filter out everything.
       areaFilter: isArea(parsed.areaFilter) ? parsed.areaFilter : null,
       starredOnly: parsed.starredOnly === true,

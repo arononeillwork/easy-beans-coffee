@@ -6,7 +6,7 @@ import {
   matcha,
   muted,
   page,
-  priorityColor,
+  areaColor,
   rose,
   roseDeep,
   roseInk,
@@ -104,14 +104,14 @@ export const SubHead = styled(Box)({
 });
 
 /**
- * A job. The left rail carries its priority colour; a pin swaps the border for
+ * A job. The left rail carries its category colour; a pin swaps the border for
  * a lilac outline so pinned work is obvious at a glance without shouting.
  */
 export const TaskCard = styled(Paper, {
   shouldForwardProp: (prop) =>
-    prop !== 'priority' && prop !== 'pinned' && prop !== 'completed' && prop !== 'dragging',
-})<{ priority?: string; pinned?: boolean; completed?: boolean; dragging?: boolean }>(
-  ({ priority, pinned, completed, dragging }) => ({
+    prop !== 'area' && prop !== 'pinned' && prop !== 'completed' && prop !== 'dragging',
+})<{ area?: string; pinned?: boolean; completed?: boolean; dragging?: boolean }>(
+  ({ area, pinned, completed, dragging }) => ({
     position: 'relative',
     display: 'flex',
     alignItems: 'flex-start',
@@ -134,13 +134,13 @@ export const TaskCard = styled(Paper, {
       bottom: 12,
       width: 3,
       borderRadius: '0 3px 3px 0',
-      backgroundColor: priorityColor[priority ?? ''] ?? slate,
+      backgroundColor: areaColor[area ?? ''] ?? slate,
     },
     '&:hover': { boxShadow: completed ? softShadow : hoverShadow },
   }),
 );
 
-/** Round-cornered outline pill. Used for area / priority dropdowns and section tags. */
+/** Round-cornered outline pill. Used for the category dropdown and section tags. */
 export const Pill = styled(ButtonBase)<{ component?: React.ElementType }>({
   border: `1px solid ${line}`,
   backgroundColor: card,

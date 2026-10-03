@@ -5,14 +5,13 @@ import { roseInk } from '../adminTheme';
 
 type BoardHeroProps = {
   open: number;
-  blockers: number;
   done: number;
   percent: number;
   loading: boolean;
 };
 
-/** Rose panel at the top: today's date, the headline, and the three counts. */
-export default function BoardHero({ open, blockers, done, percent, loading }: BoardHeroProps) {
+/** Rose panel at the top: today's date, the headline, and the open and done counts. */
+export default function BoardHero({ open, done, percent, loading }: BoardHeroProps) {
   return (
     <Hero>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1.25 }}>
@@ -39,7 +38,6 @@ export default function BoardHero({ open, blockers, done, percent, loading }: Bo
           </Typography>
           <Box sx={{ display: 'flex', gap: 2.75 }}>
             <Stat value={open} label="open" />
-            <Stat value={blockers} label="before reopen" tone="#C4372E" />
             <Stat value={done} label="done" />
           </Box>
         </Box>

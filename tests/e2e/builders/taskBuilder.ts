@@ -29,11 +29,6 @@ export class TaskBuilder {
     return this;
   }
 
-  at(priority: string): this {
-    this.task.priority = priority;
-    return this;
-  }
-
   under(section: string): this {
     this.task.section = section;
     return this;
@@ -72,18 +67,19 @@ export class TaskBuilder {
 /** A board with one job per case the specs care about. */
 export function testBoardTasks(): Task[] {
   return [
-    new TaskBuilder('Get the AC sorted').in('shop').at('block').position(1).build(),
-    new TaskBuilder('Buy bowls and plates').in('buying').at('block').starred().position(2).build(),
+    new TaskBuilder('Get the AC sorted').in('shop').position(1).build(),
+    new TaskBuilder('Buy bowls and plates').in('buying').starred().position(2).build(),
     new TaskBuilder('Add a photo to every item in Square')
       .in('tech')
-      .at('block')
+      
       .under('Square')
       .position(3)
       .build(),
-    new TaskBuilder('Branded fans').in('design').at('next').pinned().starred().position(4).build(),
-    new TaskBuilder('Rubbish bin for outside').in('buying').at('next').position(5).build(),
-    new TaskBuilder('Image / video loop for the TV').in('content').at('later').position(6).build(),
-    new TaskBuilder('Clean the outside terrace').in('shop').at('next').done().position(7).build(),
+    new TaskBuilder('Branded fans').in('design').pinned().starred().position(4).build(),
+    new TaskBuilder('Rubbish bin for outside').in('buying').position(5).build(),
+    new TaskBuilder('Menu board for the counter').in('design').position(5.5).build(),
+    new TaskBuilder('Image / video loop for the TV').in('content').position(6).build(),
+    new TaskBuilder('Clean the outside terrace').in('shop').done().position(7).build(),
   ];
 }
 

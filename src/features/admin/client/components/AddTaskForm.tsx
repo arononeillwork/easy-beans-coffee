@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Box, TextField } from '@mui/material';
 import { AddButton } from '../styled';
-import { areaColor, priorityColor } from '../adminTheme';
+import { areaColor } from '../adminTheme';
 import SelectPill from './SelectPill';
 import {
   AREAS,
   CreateTaskSchema,
   DEFAULT_AREA,
-  DEFAULT_PRIORITY,
-  PRIORITIES,
   type CreateTaskInput,
 } from '../../taskModel';
 
@@ -18,11 +16,10 @@ type AddTaskFormProps = {
   areaFilter: string | null;
 };
 
-/** Compose bar: what the job is, which category it belongs to, how urgent it is. */
+/** Compose bar: what the job is and which category it belongs to. */
 export default function AddTaskForm({ onAdd, areaFilter }: AddTaskFormProps) {
   const [title, setTitle] = useState('');
   const [area, setArea] = useState<string>(areaFilter ?? DEFAULT_AREA);
-  const [priority, setPriority] = useState<string>(DEFAULT_PRIORITY);
   const [saving, setSaving] = useState(false);
 
   // Follow the filter chips: viewing "People" means a job added now is a People
@@ -31,7 +28,7 @@ export default function AddTaskForm({ onAdd, areaFilter }: AddTaskFormProps) {
     if (areaFilter) setArea(areaFilter);
   }, [areaFilter]);
 
-  const parsed = CreateTaskSchema.safeParse({ title, area, priority });
+  const parsed = CreateTaskSchema.safeParse({ title, area });
 
   const handleSubmit = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault();
@@ -39,7 +36,7 @@ export default function AddTaskForm({ onAdd, areaFilter }: AddTaskFormProps) {
     setSaving(true);
     await onAdd(parsed.data);
     setSaving(false);
-    // Keep the category/priority pills where they are — jobs tend to arrive in runs.
+    // Keep the category pill where it is — jobs tend to arrive in runs.
     setTitle('');
   };
 
@@ -65,14 +62,6 @@ export default function AddTaskForm({ onAdd, areaFilter }: AddTaskFormProps) {
         dotColors={areaColor}
         size="large"
         ariaLabel="Category for the new job"
-      />
-      <SelectPill
-        value={priority}
-        options={PRIORITIES}
-        onChange={setPriority}
-        dotColors={priorityColor}
-        size="large"
-        ariaLabel="Priority for the new job"
       />
       <AddButton type="submit" component="button" disabled={!parsed.success || saving}>
         Add

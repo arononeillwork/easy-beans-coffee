@@ -6,7 +6,6 @@ import type { Assignee, CreateTaskInput, Task, TaskId, TaskUpdate } from '../../
 export type TaskMove = {
   position: number;
   area?: string;
-  priority?: string;
   section?: string | null;
 };
 
@@ -20,7 +19,6 @@ type UseTasksResult = {
   toggleImportant: (id: TaskId, important: boolean) => Promise<void>;
   togglePinned: (id: TaskId, pinned: boolean) => Promise<void>;
   setArea: (id: TaskId, area: string) => Promise<void>;
-  setPriority: (id: TaskId, priority: string) => Promise<void>;
   setAssignee: (id: TaskId, assignee: Assignee | null) => Promise<void>;
   editTask: (id: TaskId, updates: TaskUpdate) => Promise<void>;
   moveTask: (id: TaskId, move: TaskMove) => Promise<void>;
@@ -72,7 +70,6 @@ export function useTasks(): UseTasksResult {
       const created = await taskService.create({
         title: input.title.trim(),
         area: input.area,
-        priority: input.priority,
         section: null,
         completed: false,
         important: false,
@@ -105,11 +102,6 @@ export function useTasks(): UseTasksResult {
 
   const setArea = useCallback(
     (id: TaskId, area: string) => patch(setTasks, setError, id, { area }),
-    [],
-  );
-
-  const setPriority = useCallback(
-    (id: TaskId, priority: string) => patch(setTasks, setError, id, { priority }),
     [],
   );
 
@@ -181,7 +173,6 @@ export function useTasks(): UseTasksResult {
     toggleImportant,
     togglePinned,
     setArea,
-    setPriority,
     setAssignee,
     editTask,
     moveTask,

@@ -1,17 +1,6 @@
-import {
-  AREAS,
-  GroupBy,
-  PRIORITIES,
-  areaLabel,
-  toArea,
-  toPriority,
-  type GroupByValue,
-  type Task,
-  type TaskId,
-} from '../../taskModel';
+import { AREAS, toArea, type Task, type TaskId } from '../../taskModel';
 
 export type BoardFilters = {
-  groupBy: GroupByValue;
   areaFilter: string | null;
   starredOnly: boolean;
   showDone: boolean;
@@ -33,8 +22,8 @@ export type BoardGroup = {
 };
 
 /**
- * Turns the flat table into what the page shows: filtered, grouped by priority
- * or area, pinned jobs first, done ones sunk to the bottom of their group.
+ * Turns the flat table into what the page shows: filtered, grouped by category,
+ * pinned jobs first, done ones sunk to the bottom of their group.
  */
 export function buildBoard(tasks: Task[], filters: BoardFilters): BoardGroup[] {
   const visible = tasks.filter((task) => {
@@ -45,28 +34,17 @@ export function buildBoard(tasks: Task[], filters: BoardFilters): BoardGroup[] {
   });
 
   const ordered = [...visible].sort(byManualOrder);
-  const byPriority = filters.groupBy === GroupBy.Priority;
-  const definitions: { key: string; label: string; why?: string }[] = byPriority
-    ? PRIORITIES.map((p) => ({ key: p.key, label: p.label, why: p.why }))
-    : AREAS.map((a) => ({ key: a.key, label: a.label, why: a.hint }));
 
-  return definitions
-    .map((definition) => {
-      const items = ordered
-        .filter((task) => groupKeyOf(task, filters.groupBy) === definition.key)
-        .sort(byPinnedThenDone);
-      return {
-        key: definition.key,
-        label: definition.label,
-        why: definition.why,
-        count: items.length,
-        // Sub-headings only make sense inside an area — under Priority the same
-        // section name would show up in every group.
-        sections: byPriority
-          ? [{ key: '', label: null, items }]
-          : splitIntoSections(items),
-      };
-    })
+  return AREAS.map((area) => {
+    const items = ordered.filter((task) => toArea(task.area) === area.key).sort(byPinnedThenDone);
+    return {
+      key: area.key,
+      label: area.label,
+      why: area.hint,
+      count: items.length,
+      sections: splitIntoSections(items),
+    };
+  })
     .filter((group) => group.count > 0);
 }
 
@@ -83,10 +61,6 @@ function splitIntoSections(items: Task[]): BoardSection[] {
   });
   const sections = loose.length > 0 ? [{ key: '', label: null, items: loose }] : [];
   return [...sections, ...named];
-}
-
-export function groupKeyOf(task: Task, groupBy: GroupByValue): string {
-  return groupBy === GroupBy.Priority ? toPriority(task.priority) : toArea(task.area);
 }
 
 /** The shared manual order, with created_at breaking ties on equal positions. */
@@ -111,7 +85,6 @@ export function flattenBoard(groups: BoardGroup[]): Task[] {
 export type ResolvedMove = {
   position: number;
   area?: string;
-  priority?: string;
   section?: string | null;
 };
 
@@ -129,7 +102,6 @@ export function resolveMove(
   displayOrder: Task[],
   activeId: TaskId,
   overId: TaskId,
-  groupBy: GroupByValue,
 ): ResolvedMove | null {
   const fromIndex = displayOrder.findIndex((task) => task.id === activeId);
   const toIndex = displayOrder.findIndex((task) => task.id === overId);
@@ -143,21 +115,22 @@ export function resolveMove(
   moved.splice(toIndex, 0, active);
 
   // Group fields the row inherits from where it was dropped.
-  const adopted: ResolvedMove =
-    groupBy === GroupBy.Priority
-      ? { position: 0, priority: toPriority(over.priority) }
-      : { position: 0, area: toArea(over.area), section: over.section?.trim() || null };
+  const adopted: ResolvedMove = {
+    position: 0,
+    area: toArea(over.area),
+    section: over.section?.trim() || null,
+  };
 
   const target: Task = { ...active, ...adopted } as Task;
-  const bucket = bucketOf(target, groupBy);
-  const before = findNeighbour(moved, toIndex - 1, -1, bucket, groupBy, active.id);
-  const after = findNeighbour(moved, toIndex + 1, 1, bucket, groupBy, active.id);
+  const bucket = bucketOf(target);
+  const before = findNeighbour(moved, toIndex - 1, -1, bucket, active.id);
+  const after = findNeighbour(moved, toIndex + 1, 1, bucket, active.id);
 
   return { ...adopted, position: positionBetween(before, after) };
 }
 
-function bucketOf(task: Task, groupBy: GroupByValue): string {
-  return [groupKeyOf(task, groupBy), Number(task.pinned), Number(task.completed)].join('|');
+function bucketOf(task: Task): string {
+  return [toArea(task.area), Number(task.pinned), Number(task.completed)].join('|');
 }
 
 function findNeighbour(
@@ -165,13 +138,12 @@ function findNeighbour(
   start: number,
   step: number,
   bucket: string,
-  groupBy: GroupByValue,
   skipId: TaskId,
 ): Task | null {
   for (let i = start; i >= 0 && i < list.length; i += step) {
     const candidate = list[i];
     if (candidate.id === skipId) continue;
-    if (bucketOf(candidate, groupBy) === bucket) return candidate;
+    if (bucketOf(candidate) === bucket) return candidate;
   }
   return null;
 }
@@ -188,19 +160,20 @@ function positionBetween(before: Task | null, after: Task | null): number {
 /** The whole board as plain text, for pasting into a message or a note. */
 export function toPlainText(tasks: Task[]): string {
   const lines: string[] = ["Easy Beans Coffee — what's left", ''];
-  PRIORITIES.forEach((priority) => {
+  AREAS.forEach((area) => {
     const items = [...tasks]
-      .filter((task) => toPriority(task.priority) === priority.key)
+      .filter((task) => toArea(task.area) === area.key)
       .sort(byManualOrder)
       .sort(byPinnedThenDone);
     if (items.length === 0) return;
-    lines.push(priority.label.toUpperCase());
+    lines.push(area.label.toUpperCase());
     items.forEach((task) => {
-      const tags = [areaLabel(task.area)];
+      const tags: string[] = [];
       if (task.section?.trim()) tags.push(task.section.trim());
       if (task.assignee) tags.push(task.assignee);
       const flags = `${task.pinned ? '📌 ' : ''}${task.important ? '★ ' : ''}`;
-      lines.push(`${task.completed ? '[x]' : '[ ]'} ${flags}${task.title}  (${tags.join(' / ')})`);
+      const suffix = tags.length > 0 ? `  (${tags.join(' / ')})` : '';
+      lines.push(`${task.completed ? '[x]' : '[ ]'} ${flags}${task.title}${suffix}`);
     });
     lines.push('');
   });

@@ -2,11 +2,9 @@ import { Box, ButtonBase, FormControlLabel, Switch, Typography } from '@mui/mate
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import { Bar } from '../styled';
 import { amber, areaColor, card, ink, line, matcha, muted, tintOf } from '../adminTheme';
-import { AREAS, GroupBy, type GroupByValue } from '../../taskModel';
+import { AREAS } from '../../taskModel';
 
 type BoardControlsProps = {
-  groupBy: GroupByValue;
-  onGroupByChange: (value: GroupByValue) => void;
   areaFilter: string | null;
   onAreaFilterChange: (value: string | null) => void;
   starredOnly: boolean;
@@ -18,10 +16,8 @@ type BoardControlsProps = {
   areaCounts: Record<string, number>;
 };
 
-/** Sticky bar: how to group, whether to filter to starred, and which category to show. */
+/** Sticky bar: whether to filter to starred, show done jobs, and which category to show. */
 export default function BoardControls({
-  groupBy,
-  onGroupByChange,
   areaFilter,
   onAreaFilterChange,
   starredOnly,
@@ -33,22 +29,6 @@ export default function BoardControls({
 }: BoardControlsProps) {
   return (
     <Bar>
-      <Box
-        role="group"
-        aria-label="Group by"
-        sx={{ display: 'inline-flex', backgroundColor: '#E6EBE6', borderRadius: 999, p: '3px' }}
-      >
-        <Segment
-          selected={groupBy === GroupBy.Priority}
-          onClick={() => onGroupByChange(GroupBy.Priority)}
-        >
-          Priority
-        </Segment>
-        <Segment selected={groupBy === GroupBy.Area} onClick={() => onGroupByChange(GroupBy.Area)}>
-          Category
-        </Segment>
-      </Box>
-
       <ButtonBase
         onClick={() => onStarredOnlyChange(!starredOnly)}
         aria-pressed={starredOnly}
@@ -77,7 +57,7 @@ export default function BoardControls({
 
       <FormControlLabel
         // On a phone the switch takes its own line rather than being squeezed
-        // off the edge next to the grouping controls.
+        // off the edge next to the starred filter.
         sx={{
           ml: { xs: 0, sm: 'auto' },
           mr: 0,
@@ -127,35 +107,6 @@ export default function BoardControls({
         ))}
       </Box>
     </Bar>
-  );
-}
-
-function Segment({
-  selected,
-  onClick,
-  children,
-}: {
-  selected: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <ButtonBase
-      onClick={onClick}
-      aria-pressed={selected}
-      sx={{
-        borderRadius: 999,
-        px: 1.75,
-        py: 0.75,
-        fontSize: 13,
-        fontWeight: 550,
-        color: selected ? ink : muted,
-        backgroundColor: selected ? card : 'transparent',
-        boxShadow: selected ? '0 1px 3px rgba(15,26,21,.12)' : 'none',
-      }}
-    >
-      {children}
-    </ButtonBase>
   );
 }
 

@@ -47,12 +47,12 @@
   General.
 - "The board is locked until a PIN is set": `ADMIN_BOARD_PIN` isn't in the deployment.
   Env changes only reach new builds, so redeploy after adding it.
-- Every job in one group, area chips all empty, "Before we reopen" showing 0: the `ToDo` table is missing
-  `area` / `priority` (migration 0006), so the board coerces every row to the same fallback group.
+- Every job in one category, area chips all empty: the `ToDo` table is missing `area` (migration
+  0006), so the board coerces every row to the same fallback category.
   Run `npm run fix:todo` — it says which columns are missing, and fills the grouping data back in
   once `supabase/apply-todo-board.sql` has been pasted into that project's SQL editor.
   (Adding columns needs the SQL editor: a Supabase API key can't run DDL.)
-- "Could not save your change" on pin, area, priority or drag; "Could not add that job" on the
+- "Could not save your change" on pin, category or drag; "Could not add that job" on the
   compose bar: same cause. PostgREST rejects the whole write when it names a column the table
   hasn't got (`Could not find the 'pinned' column … in the schema cache`), and the board rolls the
   change back.

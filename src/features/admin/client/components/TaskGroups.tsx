@@ -18,18 +18,16 @@ import TaskRow from './TaskRow';
 import { GroupHead, GroupPanel, SubHead } from '../styled';
 import { tintOf } from '../adminTheme';
 import { flattenBoard, resolveMove, type BoardGroup } from '../lib/board';
-import type { Assignee, GroupByValue, TaskId, TaskUpdate } from '../../taskModel';
+import type { Assignee, TaskId, TaskUpdate } from '../../taskModel';
 import type { TaskMove } from '../hooks/useTasks';
 
 type TaskGroupsProps = {
   groups: BoardGroup[];
-  groupBy: GroupByValue;
   onMove: (id: TaskId, move: TaskMove) => void;
   onToggleCompleted: (id: TaskId, completed: boolean) => void;
   onToggleImportant: (id: TaskId, important: boolean) => void;
   onTogglePinned: (id: TaskId, pinned: boolean) => void;
   onSetArea: (id: TaskId, area: string) => void;
-  onSetPriority: (id: TaskId, priority: string) => void;
   onSetAssignee: (id: TaskId, assignee: Assignee | null) => void;
   onEdit: (id: TaskId, updates: TaskUpdate) => void;
   onDelete: (id: TaskId) => void;
@@ -37,9 +35,9 @@ type TaskGroupsProps = {
 
 /**
  * The list itself. One drag context spans every group, so a job can be dragged
- * from Later straight into Blockers — it takes on the group it's dropped into.
+ * from one category straight into another — it takes on the group it's dropped into.
  */
-export default function TaskGroups({ groups, groupBy, onMove, ...rowHandlers }: TaskGroupsProps) {
+export default function TaskGroups({ groups, onMove, ...rowHandlers }: TaskGroupsProps) {
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
@@ -51,7 +49,7 @@ export default function TaskGroups({ groups, groupBy, onMove, ...rowHandlers }: 
   // matching `task.id` and the drop would be silently discarded.
   const handleDragEnd = ({ active, over }: DragEndEvent): void => {
     if (!over || active.id === over.id) return;
-    const move = resolveMove(displayOrder, active.id, over.id, groupBy);
+    const move = resolveMove(displayOrder, active.id, over.id);
     if (move) onMove(active.id, move);
   };
 

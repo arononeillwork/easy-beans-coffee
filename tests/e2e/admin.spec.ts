@@ -36,13 +36,16 @@ test.describe('/admin task board', () => {
     test.skip(!(await admin.isConfigured()), 'NEXT_PUBLIC_BOARD_SUPABASE_* not set');
   });
 
-  test('groups open jobs by priority and counts them', async ({ page }) => {
+  test('groups open jobs by category and counts them', async ({ page }) => {
     const admin = new AdminPage(page);
 
-    await expect(admin.group('Before we reopen')).toContainText('Get the AC sorted');
-    await expect(admin.group('Before we reopen')).toContainText('3');
-    await expect(admin.group('Next up')).toContainText('Branded fans');
-    await expect(admin.group('Later')).toContainText('Image / video loop for the TV');
+    await expect(admin.group('Shop')).toContainText('Get the AC sorted');
+    await expect(admin.group('Buying')).toContainText('Buy bowls and plates');
+    await expect(admin.group('Buying')).toContainText('2');
+    await expect(admin.group('Social & content')).toContainText('Image / video loop for the TV');
+    // No priority groups or priority pickers any more.
+    await expect(page.getByText('Before we reopen')).toBeHidden();
+    await expect(page.getByRole('button', { name: 'Change priority' })).toHaveCount(0);
 
     // Done jobs stay hidden until asked for.
     await expect(page.getByText('Clean the outside terrace')).toBeHidden();
@@ -65,20 +68,18 @@ test.describe('/admin task board', () => {
 
     await expect(pinnedRow).toHaveCSS('outline-color', PIN_OUTLINE);
     await expect(pinnedRow).toHaveCSS('outline-style', 'solid');
-    // Pinned first, even though "Rubbish bin" has the lower position.
-    await expect(admin.groupRowTitles('Next up')).toHaveText([
+    // Pinned first, even though "Menu board" has the lower position.
+    await expect(admin.groupRowTitles('Design')).toHaveText([
       'Branded fans',
-      'Rubbish bin for outside',
+      'Menu board for the counter',
     ]);
 
     // An unpinned job has no outline.
-    await expect(admin.row('Rubbish bin for outside')).toHaveCSS('outline-style', 'none');
+    await expect(admin.row('Menu board for the counter')).toHaveCSS('outline-style', 'none');
   });
 
-  test('grouping by category shows section sub-headings', async ({ page }) => {
+  test('categories show section sub-headings', async ({ page }) => {
     const admin = new AdminPage(page);
-
-    await page.getByRole('button', { name: 'Category', exact: true }).click();
 
     await expect(admin.group('Tech & till')).toContainText('Square');
     await expect(admin.group('Shop')).toContainText('Get the AC sorted');

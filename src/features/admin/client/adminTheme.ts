@@ -32,13 +32,6 @@ export const lilacTint = '#F3EEFA';
 export const softShadow = '0 1px 2px rgba(15,26,21,.05), 0 10px 28px -18px rgba(15,26,21,.35)';
 export const hoverShadow = '0 10px 26px -12px rgba(15,26,21,.3)';
 
-/** Priority accent, used for the row rail and the dot on the priority pill. */
-export const priorityColor: Record<string, string> = {
-  block: red,
-  next: amber,
-  later: slate,
-};
-
 export type GroupTint = {
   /** Panel and sticky-title background. Opaque, so rows scroll cleanly under the title. */
   bg: string;
@@ -50,15 +43,10 @@ export type GroupTint = {
 
 /**
  * One light tint per group, so a category reads as a note running behind its
- * jobs. Priority and area keys share the map — the board groups by one or the
- * other, never both, so a key only ever means one thing.
+ * jobs.
  */
 export const groupTint: Record<string, GroupTint> = {
-  // Priorities. Blockers keep the red of their row rail so the signal carries.
-  block: { bg: '#FBEBEA', edge: '#F0CFCC', ink: '#8E3B36' },
-  next: { bg: '#FBF2E3', edge: '#EDDCBD', ink: '#8A5B17' },
-  later: { bg: '#EDF1EF', edge: '#DBE3DE', ink: '#4F6058' },
-  // Categories. Each `ink` also fills its filter chip when selected, so every
+  // Each `ink` also fills its filter chip when selected, so every
   // one is dark enough to carry white text.
   legal: { bg: '#E7ECF3', edge: '#C9D4E3', ink: '#2F4C73' },
   staff: { bg: '#E1F2EE', edge: '#BFE0D8', ink: '#1F6559' },
