@@ -40,6 +40,13 @@
 ## Admin (/admin)
 
 - Blank list: `NEXT_PUBLIC_SUPABASE_ANON_KEY` missing, or `ToDo` table not present in the Supabase project.
+- PIN accepted but the list never loads: the board reads from the BusinessAgent project
+  (`NEXT_PUBLIC_BOARD_SUPABASE_*`). If that database is overloaded, its API answers the
+  browser's CORS preflight but times out on the read. Check BusinessAgent's API logs for
+  504s and its Postgres logs for "statement timeout". Restart it from Project Settings →
+  General.
+- "The board is locked until a PIN is set": `ADMIN_BOARD_PIN` isn't in the deployment.
+  Env changes only reach new builds, so redeploy after adding it.
 - Every job in one group, area chips all empty, "Before we reopen" showing 0: the `ToDo` table is missing
   `area` / `priority` (migration 0006), so the board coerces every row to the same fallback group.
   Run `npm run fix:todo` — it says which columns are missing, and fills the grouping data back in
