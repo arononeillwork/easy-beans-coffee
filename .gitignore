@@ -67,6 +67,9 @@ media-src/
 # TypeScript's incremental build cache.
 tsconfig.tsbuildinfo
 
+# Production settings, filled in by hand and pasted into Vercel — holds secrets.
+vercel-settings.txt
+
 # Personal Claude Code settings and its scheduler lock.
 .claude/settings.local.json
 .claude/*.lock
