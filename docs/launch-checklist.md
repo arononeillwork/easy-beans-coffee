@@ -15,7 +15,7 @@ Do these in order. Stop at any failure.
 
 ## After deploy, before announcing
 
-- [ ] https://easybeans.es loads; ES default, EN toggle works; popup appears once; signup lands in `email_signups`.
+- [ ] https://www.easybeanscoffee.com loads; ES default, EN toggle works; popup appears once; signup lands in `email_signups`.
 - [ ] `/menu` shows the real catalog (prices match Dashboard).
 - [ ] Sitemap/robots reachable; `/order/status/*`, `/order/confirmation`, `/admin` disallowed.
 - [ ] **Real low-value order** (e.g. one espresso):

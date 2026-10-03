@@ -18,9 +18,9 @@ Set for **Production** only — never reuse sandbox values:
 | `SQUARE_APPLICATION_ID` | Production application ID |
 | `SQUARE_LOCATION_ID` | The café's real location ID |
 | `SQUARE_WEBHOOK_SIGNATURE_KEY` | From the production webhook subscription |
-| `SQUARE_WEBHOOK_NOTIFICATION_URL` | `https://easybeans.es/api/webhooks/square` |
+| `SQUARE_WEBHOOK_NOTIFICATION_URL` | `https://www.easybeanscoffee.com/api/webhooks/square` |
 | `SQUARE_EXCLUDE_RULES` | *(optional)* Catalog names to hide, e.g. `starts:test, contains:do not use`. Unset means `starts:test, starts:promo`; empty means filter nothing. |
-| `NEXT_PUBLIC_SITE_URL` | `https://easybeans.es` |
+| `NEXT_PUBLIC_SITE_URL` | `https://www.easybeanscoffee.com` |
 | `CAFE_TIMEZONE` | `Europe/Madrid` |
 | `SMTP_HOST` | Mail provider host — offer emails do not send without it |
 | `SMTP_PORT` | e.g. `587` |
@@ -41,7 +41,7 @@ Set for **Production** only — never reuse sandbox values:
    framework to Next.js: the Vercel project was created for the old Vite site, and
    its preset would otherwise look for a `dist/` folder.
 3. Create a **production** webhook subscription in the Square Developer Console pointing at
-   `https://easybeans.es/api/webhooks/square` with `payment.updated`, `order.updated`,
+   `https://www.easybeanscoffee.com/api/webhooks/square` with `payment.updated`, `order.updated`,
    `order.fulfillment.updated`. Paste its signature key into the env vars and redeploy.
 4. The production catalog is managed by the café in Square Dashboard — do **not** run the
    seed script against production (it refuses anyway).
@@ -49,6 +49,14 @@ Set for **Production** only — never reuse sandbox values:
    and the printer test before announcing.
 
 ## Notes
+
+- The site is the Vercel project **easy-beans-coffee** under the **easy-beans-coffee** team; the
+  domain and every env var above belong there. A second project of the same name under
+  `arononeillworks-projects` was also wired to this repo, and it served the domain until the
+  launch. Disconnect its Git so a push builds one site, not two.
+- DNS for easybeanscoffee.com is at Cloudflare and points at Vercel. Moving the domain between
+  Vercel projects needs no DNS change unless Vercel asks for a `_vercel` TXT verification
+  record. Add that in Cloudflare.
 
 - Prices/catalog: Square Dashboard is the admin UI. Menu changes appear on the site within
   ~5 minutes (catalog cache TTL); checkout validates against ≤60 s-old data.
