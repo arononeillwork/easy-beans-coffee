@@ -37,8 +37,9 @@ Set for **Production** only — never reuse sandbox values:
 1. Apply Supabase migrations `supabase/migrations/0003–0005` and `0007` to the production
    project (SQL editor or `supabase db push`). They are idempotent, and
    `supabase/apply-pending.sql` is all of them in one paste.
-2. Push to `main` — Vercel auto-builds (`next build`). There is no `vercel.json`; the
-   framework preset handles routing.
+2. Push to `main` — Vercel auto-builds (`next build`). `vercel.json` only pins the
+   framework to Next.js: the Vercel project was created for the old Vite site, and
+   its preset would otherwise look for a `dist/` folder.
 3. Create a **production** webhook subscription in the Square Developer Console pointing at
    `https://easybeans.es/api/webhooks/square` with `payment.updated`, `order.updated`,
    `order.fulfillment.updated`. Paste its signature key into the env vars and redeploy.
