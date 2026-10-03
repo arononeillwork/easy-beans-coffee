@@ -1,15 +1,20 @@
 import { useState, type MouseEvent } from 'react';
-import { Avatar, Menu, MenuItem, ListItemIcon, ListItemText, Tooltip } from '@mui/material';
-import CheckIcon from '@mui/icons-material/Check';
+import { Avatar, ListItemIcon, ListItemText, Menu, MenuItem, Tooltip } from '@mui/material';
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import PersonOutlineRoundedIcon from '@mui/icons-material/PersonOutlineRounded';
-import { ASSIGNEES, type Assignee } from '../../todoModel';
+import { ASSIGNEES, isAssignee, type Assignee } from '../../taskModel';
+import { matcha } from '../adminTheme';
 
-/** Distinct colour per person so the two "M" names (Mark / Maria) stay readable. */
+/**
+ * One colour per person so the two "M" names (Mark / Maria) stay apart. These
+ * sit off the board's signal colours — matcha, amber and lilac all mean
+ * something here, so nobody's initial borrows them.
+ */
 const ASSIGNEE_COLORS: Record<Assignee, string> = {
-  Aron: '#6f4e37',
-  Mark: '#3b7ea1',
-  Julio: '#4b9560',
-  Maria: '#c65b7c',
+  Aron: '#7A4E55',
+  Mark: '#4A6B7C',
+  Julio: '#5C7A4A',
+  Maria: '#8E6BA8',
 };
 
 type AssigneeBadgeProps = {
@@ -17,24 +22,18 @@ type AssigneeBadgeProps = {
   onChange: (assignee: Assignee | null) => void;
 };
 
-function isAssignee(value: string | null | undefined): value is Assignee {
-  return !!value && (ASSIGNEES as readonly string[]).includes(value);
-}
-
 export default function AssigneeBadge({ value, onChange }: AssigneeBadgeProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const open = Boolean(anchorEl);
   const current = isAssignee(value) ? value : null;
 
   const openMenu = (e: MouseEvent<HTMLElement>): void => {
     e.stopPropagation();
     setAnchorEl(e.currentTarget);
   };
-  const closeMenu = (): void => setAnchorEl(null);
 
   const pick = (assignee: Assignee | null): void => {
+    setAnchorEl(null);
     onChange(assignee);
-    closeMenu();
   };
 
   return (
@@ -42,46 +41,56 @@ export default function AssigneeBadge({ value, onChange }: AssigneeBadgeProps) {
       <Tooltip title={current ? `Assigned to ${current}` : 'Assign someone'}>
         <Avatar
           onClick={openMenu}
-          aria-label={current ? `Assigned to ${current}, change` : 'Assign task'}
+          aria-label={current ? `Assigned to ${current}, change` : 'Assign job'}
           sx={{
-            width: 28,
-            height: 28,
-            fontSize: 14,
+            width: 26,
+            height: 26,
+            mr: 0.25,
+            fontSize: 13,
             fontWeight: 700,
             cursor: 'pointer',
             bgcolor: current ? ASSIGNEE_COLORS[current] : 'transparent',
-            color: current ? '#fff' : 'text.disabled',
-            border: current ? 'none' : '1.5px dashed rgba(111,78,55,0.35)',
-            transition: 'transform .15s ease, box-shadow .15s ease',
-            '&:hover': { transform: 'scale(1.08)', boxShadow: '0 2px 8px rgba(111,78,55,0.25)' },
+            color: current ? '#fff' : '#BFC9C2',
+            border: current ? 'none' : '1.5px dashed #CBD5CE',
+            transition: 'transform .15s ease',
+            '&:hover': { transform: 'scale(1.08)' },
           }}
         >
-          {current ? current.charAt(0) : <PersonOutlineRoundedIcon sx={{ fontSize: 16 }} />}
+          {current ? current.charAt(0) : <PersonOutlineRoundedIcon sx={{ fontSize: 15 }} />}
         </Avatar>
       </Tooltip>
 
       <Menu
         anchorEl={anchorEl}
-        open={open}
-        onClose={closeMenu}
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        slotProps={{ paper: { sx: { borderRadius: 3, minWidth: 168, mt: 0.5 } } }}
+        slotProps={{ paper: { sx: { mt: 0.5 } } }}
       >
         {ASSIGNEES.map((name) => (
           <MenuItem key={name} selected={current === name} onClick={() => pick(name)}>
-            <ListItemIcon>
-              <Avatar sx={{ width: 24, height: 24, fontSize: 12, fontWeight: 700, bgcolor: ASSIGNEE_COLORS[name], color: '#fff' }}>
+            <ListItemIcon sx={{ minWidth: 'auto' }}>
+              <Avatar
+                sx={{
+                  width: 22,
+                  height: 22,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  bgcolor: ASSIGNEE_COLORS[name],
+                  color: '#fff',
+                }}
+              >
                 {name.charAt(0)}
               </Avatar>
             </ListItemIcon>
             <ListItemText>{name}</ListItemText>
-            {current === name && <CheckIcon fontSize="small" sx={{ color: 'success.main', ml: 1 }} />}
+            {current === name && <CheckRoundedIcon sx={{ fontSize: 16, color: matcha, ml: 1 }} />}
           </MenuItem>
         ))}
         <MenuItem onClick={() => pick(null)} disabled={!current}>
-          <ListItemIcon>
-            <PersonOutlineRoundedIcon fontSize="small" />
+          <ListItemIcon sx={{ minWidth: 'auto' }}>
+            <PersonOutlineRoundedIcon sx={{ fontSize: 20 }} />
           </ListItemIcon>
           <ListItemText>Unassigned</ListItemText>
         </MenuItem>

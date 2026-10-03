@@ -1,32 +1,10 @@
-import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import { clientConfig, isSupabaseConfigured } from './clientConfig';
-
-let instance: SupabaseClient | null = null;
+import type { SupabaseClient } from '@supabase/supabase-js';
+import { supabase as sharedClient } from '@common-lib/integrations/supabase/supabaseClient';
+import { isSupabaseConfigured } from './clientConfig';
 
 /**
- * Returns a lazily-instantiated Supabase client, or `null` when the project
- * env vars are missing so callers can degrade gracefully instead of throwing.
+ * Browser Supabase client, reusing the common-lib singleton (which reads
+ * NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY). Nullable so
+ * callers can degrade gracefully when env vars are missing.
  */
-export function getSupabaseClient(): SupabaseClient | null {
-  if (instance) {
-    return instance;
-  }
-
-  if (!isSupabaseConfigured) {
-    console.warn(
-      'Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env.',
-    );
-    return null;
-  }
-
-  instance = createClient(clientConfig.supabaseUrl, clientConfig.supabaseAnonKey, {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-    },
-  });
-
-  return instance;
-}
-
-export const supabase: SupabaseClient | null = getSupabaseClient();
+export const supabase: SupabaseClient | null = isSupabaseConfigured ? sharedClient : null;

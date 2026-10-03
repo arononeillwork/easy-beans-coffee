@@ -44,3 +44,43 @@ hs_err_pid*
 replay_pid*
 
 .env
+# Next.js
+.next
+.next-e2e
+.next-build
+out
+next-env.d.ts
+
+# Playwright
+test-results
+playwright-report
+
+# Supabase table dumps taken before a reseed
+supabase/backups
+
+# Photography masters, never served. drinks/ and syrups/ (~150 MB of PNGs) are
+# pulled from the café's Drive by `npm run media:drinks` — re-run it to restore
+# them; the rest are brand masters fed to `npm run optimize:media`. The encoded
+# WebP in public/media/ is what ships.
+media-src/
+
+# TypeScript's incremental build cache.
+tsconfig.tsbuildinfo
+
+# Personal Claude Code settings and its scheduler lock.
+.claude/settings.local.json
+.claude/*.lock
+
+# The /admin board's seed list, and the scripts and SQL generated from it, hold
+# internal jobs and staff names. This repo is public, so they stay on this
+# machine; the live list itself is in the BusinessAgent database.
+scripts/lib/taskSeed.ts
+scripts/lib/boardConnection.ts
+scripts/build-board-sql.ts
+scripts/seed-todo-board.ts
+scripts/fix-todo-board.ts
+scripts/inspect-todo-board.ts
+supabase/business-agent-todo-board.sql
+supabase/seed-task-board.sql
+supabase/apply-todo-board.sql
+supabase/seed/

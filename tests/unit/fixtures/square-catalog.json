@@ -1,0 +1,4730 @@
+[
+  {
+    "type": "ITEM",
+    "id": "IEZTBORPMVPJ7XEDRCH3NR7Y",
+    "updatedAt": "2026-07-22T21:38:08.214Z",
+    "createdAt": "2026-07-09T16:04:29.547Z",
+    "version": 1784756288214,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Latte",
+      "abbreviation": "La",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "E5M4IJXWBWWOSSCC3HO7SDEX",
+          "updatedAt": "2026-07-22T21:38:08.214Z",
+          "createdAt": "2026-07-10T12:03:16.628Z",
+          "version": 1784756288214,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "IEZTBORPMVPJ7XEDRCH3NR7Y",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "VARIABLE_PRICING",
+            "trackInventory": false,
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "skipModifierScreen": false,
+      "ecomVisibility": "UNAVAILABLE",
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "VI2OCVMNVDIUCMU6O7IALGDA",
+    "updatedAt": "2026-07-13T11:20:24.825Z",
+    "createdAt": "2026-07-10T12:16:15.414Z",
+    "version": 1783941624825,
+    "isDeleted": false,
+    "presentAtAllLocations": true,
+    "itemData": {
+      "name": "Mapple Pecan",
+      "abbreviation": "Ma",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "MS6ASCDN4QOYMOMQK77MKMYT",
+          "updatedAt": "2026-07-13T11:20:24.825Z",
+          "createdAt": "2026-07-10T12:16:15.414Z",
+          "version": 1783941624825,
+          "isDeleted": false,
+          "presentAtAllLocations": true,
+          "itemVariationData": {
+            "itemId": "VI2OCVMNVDIUCMU6O7IALGDA",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 340,
+              "currency": "EUR"
+            },
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "skipModifierScreen": false,
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+          "ordinal": -2251799713021952
+        },
+        {
+          "id": "PFQURD24VEHOU2IUMHXUMUOJ",
+          "ordinal": 1
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+        "ordinal": -2251799713021952
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "VHJDXGB2CD32QXLU5A5AVDFH",
+    "updatedAt": "2026-07-22T20:12:54.188Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1784751174188,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Ice Ube Matcha Latte",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "XKNOLELEYKIZ4JCTQJV6MR7O",
+          "updatedAt": "2026-07-22T20:12:54.188Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1784751174188,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "VHJDXGB2CD32QXLU5A5AVDFH",
+            "name": "Regular",
+            "sku": "EB-SPC-005",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 790,
+              "currency": "EUR"
+            },
+            "trackInventory": false,
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "skipModifierScreen": false,
+      "ecomVisibility": "VISIBLE",
+      "imageIds": [
+        "6LD3VINFAHPPWAJPB2HTF52R"
+      ],
+      "categories": [
+        {
+          "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+          "ordinal": -2251799796908032
+        },
+        {
+          "id": "PFQURD24VEHOU2IUMHXUMUOJ",
+          "ordinal": 4
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+        "ordinal": -2251799796908032
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "XZFJQMYI7H5IZMTGHXHFBTCY",
+    "updatedAt": "2026-07-10T19:05:14.468Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783710314468,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Flat White",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "PV4FN6S3IWEU7GHVTIOXIHQU",
+          "updatedAt": "2026-07-10T19:05:14.468Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783710314468,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "XZFJQMYI7H5IZMTGHXHFBTCY",
+            "name": "Regular",
+            "sku": "EB-COF-006",
+            "ordinal": 1,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 380,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+          "ordinal": -2251799796908032
+        },
+        {
+          "id": "TSTJQHKILAIQTGOETGK2UBSM",
+          "ordinal": 6
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+        "ordinal": -2251799796908032
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "PNOJ6WZS7LYWJGITUFCP2C5J",
+    "updatedAt": "2026-07-13T10:57:45.673Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783940265673,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Can Upgrade (Lata Para Llevar)",
+      "description": "Serve the drink in a can.",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "NWTNX7B3DDPY4EONX4KFU7MY",
+          "updatedAt": "2026-07-13T10:57:45.673Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783940265673,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "PNOJ6WZS7LYWJGITUFCP2C5J",
+            "name": "Regular",
+            "sku": "EB-ADD-003",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 80,
+              "currency": "EUR"
+            },
+            "locationOverrides": [
+              {
+                "locationId": "LKGQR7QKGC2S0"
+              }
+            ],
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "TMPRMBFWB2ZHFC3UBMJTN6DE",
+          "ordinal": -2251799796908032
+        }
+      ],
+      "descriptionHtml": "<p>Serve the drink in a can.</p>",
+      "descriptionPlaintext": "Serve the drink in a can.",
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "TMPRMBFWB2ZHFC3UBMJTN6DE",
+        "ordinal": -2251799796908032
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "5BOAX42OWF5EKLYOJE2UR2EF",
+    "updatedAt": "2026-07-15T10:48:49.605Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1784112529605,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Double Espresso",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "OUGD2TYX3B4D3GMVWUXI4HFF",
+          "updatedAt": "2026-07-15T10:48:49.605Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1784112529605,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "5BOAX42OWF5EKLYOJE2UR2EF",
+            "name": "Regular",
+            "sku": "EB-COF-001",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 240,
+              "currency": "EUR"
+            },
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+          "ordinal": -2251799780130816
+        },
+        {
+          "id": "TSTJQHKILAIQTGOETGK2UBSM",
+          "ordinal": 5
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+        "ordinal": -2251799780130816
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "CLK3WTSHVCTCZV7LINV5D7MJ",
+    "updatedAt": "2026-07-14T15:20:54.514Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1784042454514,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Syrup Add-on ( SIROPES)",
+      "description": "Add one syrup flavour to a drink.",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "FASWA53J3BGKCSUKMKVQJTAC",
+          "updatedAt": "2026-07-14T15:20:54.514Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1784042454514,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "CLK3WTSHVCTCZV7LINV5D7MJ",
+            "name": "Caramel",
+            "sku": "EB-ADD-002-CAR",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 50,
+              "currency": "EUR"
+            },
+            "trackInventory": false,
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        },
+        {
+          "type": "ITEM_VARIATION",
+          "id": "IQEO5CVJ3BZUIGGSOMC5HNE6",
+          "updatedAt": "2026-07-14T15:20:54.514Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1784042454514,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "CLK3WTSHVCTCZV7LINV5D7MJ",
+            "name": "Hazelnut",
+            "sku": "EB-ADD-002-HAZ",
+            "ordinal": 1,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 50,
+              "currency": "EUR"
+            },
+            "trackInventory": false,
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        },
+        {
+          "type": "ITEM_VARIATION",
+          "id": "QYNDFKLI3BNQJU2PQRFIEBW3",
+          "updatedAt": "2026-07-14T15:20:54.514Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1784042454514,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "CLK3WTSHVCTCZV7LINV5D7MJ",
+            "name": "Vanilla",
+            "sku": "EB-ADD-002-VAN",
+            "ordinal": 2,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 50,
+              "currency": "EUR"
+            },
+            "trackInventory": false,
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        },
+        {
+          "type": "ITEM_VARIATION",
+          "id": "HEMC6GKFRIYDTBH5BRQSLI3R",
+          "updatedAt": "2026-07-14T15:20:54.514Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1784042454514,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "CLK3WTSHVCTCZV7LINV5D7MJ",
+            "name": "Mango",
+            "sku": "EB-ADD-002-MAN",
+            "ordinal": 4,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 50,
+              "currency": "EUR"
+            },
+            "trackInventory": false,
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        },
+        {
+          "type": "ITEM_VARIATION",
+          "id": "5OR6UQY4NBLHO4Y5BOBUUNKL",
+          "updatedAt": "2026-07-14T15:20:54.514Z",
+          "createdAt": "2026-07-13T09:30:08.577Z",
+          "version": 1784042454514,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "CLK3WTSHVCTCZV7LINV5D7MJ",
+            "name": "Strawberry",
+            "ordinal": 5,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 50,
+              "currency": "EUR"
+            },
+            "trackInventory": false,
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        },
+        {
+          "type": "ITEM_VARIATION",
+          "id": "Y7DJGGYHRWMU6NJC3OVPXGPQ",
+          "updatedAt": "2026-07-14T15:20:54.514Z",
+          "createdAt": "2026-07-13T09:30:08.577Z",
+          "version": 1784042454514,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "CLK3WTSHVCTCZV7LINV5D7MJ",
+            "name": "Passion fruit",
+            "ordinal": 6,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 50,
+              "currency": "EUR"
+            },
+            "trackInventory": false,
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "skipModifierScreen": false,
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "TMPRMBFWB2ZHFC3UBMJTN6DE",
+          "ordinal": -2251799780130816
+        }
+      ],
+      "descriptionHtml": "<p>Add one syrup flavour to a drink.</p>",
+      "descriptionPlaintext": "Add one syrup flavour to a drink.",
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "TMPRMBFWB2ZHFC3UBMJTN6DE",
+        "ordinal": -2251799780130816
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "QVQNJBZAJRIOA34RFMS66RET",
+    "updatedAt": "2026-07-22T21:37:34.706Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1784756254706,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Latte Caliente",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "JCCZ2GPPBWXKLGP6FZ7IFVS5",
+          "updatedAt": "2026-07-22T21:37:34.706Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1784756254706,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "QVQNJBZAJRIOA34RFMS66RET",
+            "name": "Regular",
+            "sku": "EB-COF-007",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 400,
+              "currency": "EUR"
+            },
+            "trackInventory": false,
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "skipModifierScreen": false,
+      "ecomVisibility": "VISIBLE",
+      "imageIds": [
+        "QQN6XQPI5GHZWDFKXHY4S7PT"
+      ],
+      "categories": [
+        {
+          "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+          "ordinal": -2251799763353600
+        },
+        {
+          "id": "TSTJQHKILAIQTGOETGK2UBSM",
+          "ordinal": 7
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+        "ordinal": -2251799763353600
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "DJCZEQ4QRU4I7LNCZP3H4GIB",
+    "updatedAt": "2026-07-13T13:09:10.095Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783948150095,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Water ( AGUA)",
+      "description": "Still or sparkling water.",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "DKMMSDZORCBQIZACFDPYLT6W",
+          "updatedAt": "2026-07-13T13:09:10.095Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783948150095,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "DJCZEQ4QRU4I7LNCZP3H4GIB",
+            "name": "Still",
+            "sku": "EB-CLD-001-ST",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 200,
+              "currency": "EUR"
+            },
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        },
+        {
+          "type": "ITEM_VARIATION",
+          "id": "QCXXMXW2M366LVLQWK4O26UN",
+          "updatedAt": "2026-07-13T13:09:10.095Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783948150095,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "DJCZEQ4QRU4I7LNCZP3H4GIB",
+            "name": "Sparkling",
+            "sku": "EB-CLD-001-SP",
+            "ordinal": 1,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 200,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "OIVFP2SKFWLH7QJVSCZUQS4B",
+          "ordinal": -2251799796908032
+        },
+        {
+          "id": "YONJCCWRFBNUWAXBJWJGK7HU",
+          "ordinal": 3
+        }
+      ],
+      "descriptionHtml": "<p>Still or sparkling water.</p>",
+      "descriptionPlaintext": "Still or sparkling water.",
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "OIVFP2SKFWLH7QJVSCZUQS4B",
+        "ordinal": -2251799796908032
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "VZOXDQVIOAH3S3A55UWHFP5H",
+    "updatedAt": "2026-07-10T19:05:14.468Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783710314468,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Doble Cortado",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "OT6YMCGRDSGXHXTSJEZW7WTN",
+          "updatedAt": "2026-07-10T19:05:14.468Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783710314468,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "VZOXDQVIOAH3S3A55UWHFP5H",
+            "name": "Regular",
+            "sku": "EB-COF-004",
+            "ordinal": 1,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 350,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+          "ordinal": -2251799746576384
+        },
+        {
+          "id": "TSTJQHKILAIQTGOETGK2UBSM",
+          "ordinal": 4
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+        "ordinal": -2251799746576384
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "HPEIXHRSJXPZUJI523JWLVCC",
+    "updatedAt": "2026-07-10T12:24:36.271Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783686276271,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Gym Nut",
+      "description": "Banana, oats, peanut butter and almond milk.",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "XL5SZEWQVAQJDOVJA6NM7RRS",
+          "updatedAt": "2026-07-10T12:24:36.271Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783686276271,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "HPEIXHRSJXPZUJI523JWLVCC",
+            "name": "Regular",
+            "sku": "EB-SMO-003",
+            "ordinal": 1,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 650,
+              "currency": "EUR"
+            },
+            "locationOverrides": [
+              {
+                "locationId": "LKGQR7QKGC2S0"
+              }
+            ],
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "WEVOWKP3HYX33GN3F6XH77SX",
+          "ordinal": -2251799796908032
+        }
+      ],
+      "descriptionHtml": "<p>Banana, oats, peanut butter and almond milk.</p>",
+      "descriptionPlaintext": "Banana, oats, peanut butter and almond milk.",
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "WEVOWKP3HYX33GN3F6XH77SX",
+        "ordinal": -2251799796908032
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "D4TXQQNGGZJBP643XNH53P5X",
+    "updatedAt": "2026-07-13T13:08:48.707Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783948128707,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Soft Drinks (Coca cola, Agua,  Acuarius, Zumo Piña, Manzana, Fanta)",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "QPWWG2UKS4EAIGU4T2WIVFQN",
+          "updatedAt": "2026-07-13T13:08:48.707Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783948128707,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "D4TXQQNGGZJBP643XNH53P5X",
+            "name": "Regular",
+            "sku": "EB-CLD-002",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 250,
+              "currency": "EUR"
+            },
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "OIVFP2SKFWLH7QJVSCZUQS4B",
+          "ordinal": -2251799780130816
+        },
+        {
+          "id": "YONJCCWRFBNUWAXBJWJGK7HU",
+          "ordinal": 2
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "OIVFP2SKFWLH7QJVSCZUQS4B",
+        "ordinal": -2251799780130816
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "TD2QO4ZIMKWOKM7UGXUXV7WP",
+    "updatedAt": "2026-07-10T12:24:36.271Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783686276271,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Berry Blast",
+      "description": "Strawberries, raspberries and blueberries with fresh orange juice.",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "SRZQPWCCXQLV4JBP75N5FMPC",
+          "updatedAt": "2026-07-10T12:24:36.271Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783686276271,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "TD2QO4ZIMKWOKM7UGXUXV7WP",
+            "name": "Regular",
+            "sku": "EB-SMO-004",
+            "ordinal": 1,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 650,
+              "currency": "EUR"
+            },
+            "locationOverrides": [
+              {
+                "locationId": "LKGQR7QKGC2S0"
+              }
+            ],
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "WEVOWKP3HYX33GN3F6XH77SX",
+          "ordinal": -2251799780130816
+        }
+      ],
+      "descriptionHtml": "<p>Strawberries, raspberries and blueberries with fresh orange juice.</p>",
+      "descriptionPlaintext": "Strawberries, raspberries and blueberries with fresh orange juice.",
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "WEVOWKP3HYX33GN3F6XH77SX",
+        "ordinal": -2251799780130816
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "DXE525TUNZYDVUMMRST7QMHO",
+    "updatedAt": "2026-07-13T10:38:17.315Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783939097315,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Matcha Latte",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "QIFN4NRFCY2HLSA75HYN5JKO",
+          "updatedAt": "2026-07-13T10:38:17.315Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783939097315,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "DXE525TUNZYDVUMMRST7QMHO",
+            "name": "Regular",
+            "sku": "EB-SPC-003",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 550,
+              "currency": "EUR"
+            },
+            "locationOverrides": [
+              {
+                "locationId": "LKGQR7QKGC2S0"
+              }
+            ],
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+          "ordinal": -2251799780130816
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+        "ordinal": -2251799780130816
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "BIUACUDJIFIOTRBM5YWTMGT4",
+    "updatedAt": "2026-07-10T12:24:36.271Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783686276271,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Tropical",
+      "description": "Mango, pineapple and fresh orange juice.",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "M7WV66ZWRSY3WW7IUFIDSMGX",
+          "updatedAt": "2026-07-10T12:24:36.271Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783686276271,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "BIUACUDJIFIOTRBM5YWTMGT4",
+            "name": "Regular",
+            "sku": "EB-SMO-002",
+            "ordinal": 1,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 650,
+              "currency": "EUR"
+            },
+            "locationOverrides": [
+              {
+                "locationId": "LKGQR7QKGC2S0"
+              }
+            ],
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "WEVOWKP3HYX33GN3F6XH77SX",
+          "ordinal": -2251799763353600
+        }
+      ],
+      "descriptionHtml": "<p>Mango, pineapple and fresh orange juice.</p>",
+      "descriptionPlaintext": "Mango, pineapple and fresh orange juice.",
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "WEVOWKP3HYX33GN3F6XH77SX",
+        "ordinal": -2251799763353600
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "Y765WKUDVZYC6DCJ5VG36IA7",
+    "updatedAt": "2026-07-10T12:24:36.271Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783686276271,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Cold Brew",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "XXKO35GGWRYU2PBEAAXWVGVU",
+          "updatedAt": "2026-07-10T12:24:36.271Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783686276271,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "Y765WKUDVZYC6DCJ5VG36IA7",
+            "name": "Regular",
+            "sku": "EB-SPC-001",
+            "ordinal": 1,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 470,
+              "currency": "EUR"
+            },
+            "locationOverrides": [
+              {
+                "locationId": "LKGQR7QKGC2S0"
+              }
+            ],
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+          "ordinal": -2251799763353600
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+        "ordinal": -2251799763353600
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "JQGM6AAUSFOTBAW2ILYE7BMD",
+    "updatedAt": "2026-07-10T19:05:14.468Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783710314468,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Powerade",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "M66U52QBCTS5UIFZCJLIHTWZ",
+          "updatedAt": "2026-07-10T19:05:14.468Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783710314468,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "JQGM6AAUSFOTBAW2ILYE7BMD",
+            "name": "Regular",
+            "sku": "EB-CLD-003",
+            "ordinal": 1,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 300,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "OIVFP2SKFWLH7QJVSCZUQS4B",
+          "ordinal": -2251799763353600
+        },
+        {
+          "id": "YONJCCWRFBNUWAXBJWJGK7HU",
+          "ordinal": 1
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "OIVFP2SKFWLH7QJVSCZUQS4B",
+        "ordinal": -2251799763353600
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "RMXWC27YFYEA2BFFOTOGGX2M",
+    "updatedAt": "2026-07-10T19:05:14.468Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783710314468,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Cortado",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "P4RVXGMJCWGY4FVXLLHCRHYY",
+          "updatedAt": "2026-07-10T19:05:14.468Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783710314468,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "RMXWC27YFYEA2BFFOTOGGX2M",
+            "name": "Regular",
+            "sku": "EB-COF-003",
+            "ordinal": 1,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 300,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+          "ordinal": -2251799729799168
+        },
+        {
+          "id": "TSTJQHKILAIQTGOETGK2UBSM",
+          "ordinal": 3
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+        "ordinal": -2251799729799168
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "2HKEHADJN5PQ6SG7N2PJ6ZXV",
+    "updatedAt": "2026-07-10T12:24:36.271Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783686276271,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Extra de Espresso",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "RLJNNTAYCKE7MZVMWMXW6DRJ",
+          "updatedAt": "2026-07-10T12:24:36.271Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783686276271,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "2HKEHADJN5PQ6SG7N2PJ6ZXV",
+            "name": "Regular",
+            "sku": "EB-ADD-001",
+            "ordinal": 1,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 50,
+              "currency": "EUR"
+            },
+            "locationOverrides": [
+              {
+                "locationId": "LKGQR7QKGC2S0"
+              }
+            ],
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "TMPRMBFWB2ZHFC3UBMJTN6DE",
+          "ordinal": -2251799763353600
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "TMPRMBFWB2ZHFC3UBMJTN6DE",
+        "ordinal": -2251799763353600
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "K33NGFR2WMSRWNUPBOLSS672",
+    "updatedAt": "2026-07-13T10:31:45.504Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783938705504,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Cappuccino",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "Y25POJ4JCXIRM6QDYP24KIBM",
+          "updatedAt": "2026-07-13T10:31:45.504Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783938705504,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "K33NGFR2WMSRWNUPBOLSS672",
+            "name": "Regular",
+            "sku": "EB-COF-005",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 350,
+              "currency": "EUR"
+            },
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+          "ordinal": -2251799713021952
+        },
+        {
+          "id": "TSTJQHKILAIQTGOETGK2UBSM",
+          "ordinal": 2
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+        "ordinal": -2251799713021952
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "6CGKBRM2FBVCX2GXI7F2J7XV",
+    "updatedAt": "2026-07-10T12:24:36.271Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783686276271,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Strawberry Sunrise",
+      "description": "Strawberries, banana, fresh orange juice and Greek yogurt.",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "2FJUPSR5VSPHP5YR24KGMW5V",
+          "updatedAt": "2026-07-10T12:24:36.271Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783686276271,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "6CGKBRM2FBVCX2GXI7F2J7XV",
+            "name": "Regular",
+            "sku": "EB-SMO-001",
+            "ordinal": 1,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 650,
+              "currency": "EUR"
+            },
+            "locationOverrides": [
+              {
+                "locationId": "LKGQR7QKGC2S0"
+              }
+            ],
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "WEVOWKP3HYX33GN3F6XH77SX",
+          "ordinal": -2251799746576384
+        }
+      ],
+      "descriptionHtml": "<p>Strawberries, banana, fresh orange juice and Greek yogurt.</p>",
+      "descriptionPlaintext": "Strawberries, banana, fresh orange juice and Greek yogurt.",
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "WEVOWKP3HYX33GN3F6XH77SX",
+        "ordinal": -2251799746576384
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "3UGQGIGSEVOA7H5X6F27KDOQ",
+    "updatedAt": "2026-07-13T14:07:24.703Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783951644703,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Bumble (Zumo De Naranja + 1 Espresso)",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "DQ64PLX2X22ZMCJZ7UG2NXQV",
+          "updatedAt": "2026-07-13T14:07:24.703Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783951644703,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "3UGQGIGSEVOA7H5X6F27KDOQ",
+            "name": "Regular",
+            "sku": "EB-COF-008",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 600,
+              "currency": "EUR"
+            },
+            "locationOverrides": [
+              {
+                "locationId": "LKGQR7QKGC2S0"
+              }
+            ],
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+          "ordinal": -2251799713021952
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+        "ordinal": -2251799713021952
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "5FUSEISANDHGABAKVQDBPYLP",
+    "updatedAt": "2026-07-13T09:21:13.067Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783934473067,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Americano",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "5SCKADWIAVMEW6L5JHKRYY5U",
+          "updatedAt": "2026-07-13T09:21:13.067Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783934473067,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "5FUSEISANDHGABAKVQDBPYLP",
+            "name": "Regular",
+            "sku": "EB-COF-002",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 280,
+              "currency": "EUR"
+            },
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+          "ordinal": -2251799679467520
+        },
+        {
+          "id": "TSTJQHKILAIQTGOETGK2UBSM",
+          "ordinal": 0
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+        "ordinal": -2251799679467520
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "RIWHK5F5VACPGJJZR5DJTUKZ",
+    "updatedAt": "2026-07-13T10:47:57.578Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783939677578,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Pink Chai Latte",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "DFTM54NEHOGAGO4QN6SDNOYP",
+          "updatedAt": "2026-07-13T10:47:57.578Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783939677578,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "RIWHK5F5VACPGJJZR5DJTUKZ",
+            "name": "Regular",
+            "sku": "EB-SPC-002",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 550,
+              "currency": "EUR"
+            },
+            "locationOverrides": [
+              {
+                "locationId": "LKGQR7QKGC2S0"
+              }
+            ],
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+          "ordinal": -2251799746576384
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+        "ordinal": -2251799746576384
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "SO5OI6K7R4HS3KEE3PEOKSJ6",
+    "updatedAt": "2026-07-16T17:30:29.994Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1784223029994,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Ube Latte",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "HC2SCSUUL7QI26POM6CULUR4",
+          "updatedAt": "2026-07-16T17:30:29.994Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1784223029994,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "SO5OI6K7R4HS3KEE3PEOKSJ6",
+            "name": "Regular",
+            "sku": "EB-SPC-004",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 590,
+              "currency": "EUR"
+            },
+            "trackInventory": false,
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "skipModifierScreen": false,
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+          "ordinal": -2251799729799168
+        },
+        {
+          "id": "PFQURD24VEHOU2IUMHXUMUOJ",
+          "ordinal": 3
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+        "ordinal": -2251799729799168
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "C3OVS7AHFJN7C6M5THS52RAB",
+    "updatedAt": "2026-07-13T13:09:34.889Z",
+    "createdAt": "2026-07-10T12:24:34.845Z",
+    "version": 1783948174889,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Fresh Orange Juice (ZUMO DE NARANJA)",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "NZJGNHBSJPOXKBVXN3XQUTUJ",
+          "updatedAt": "2026-07-13T13:09:34.889Z",
+          "createdAt": "2026-07-10T12:24:34.845Z",
+          "version": 1783948174889,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "C3OVS7AHFJN7C6M5THS52RAB",
+            "name": "Regular",
+            "sku": "EB-CLD-004",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 380,
+              "currency": "EUR"
+            },
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "OIVFP2SKFWLH7QJVSCZUQS4B",
+          "ordinal": -2251799746576384
+        },
+        {
+          "id": "YONJCCWRFBNUWAXBJWJGK7HU",
+          "ordinal": 0
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "OIVFP2SKFWLH7QJVSCZUQS4B",
+        "ordinal": -2251799746576384
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "SWRBKA2SRW4CIKXMA46X3QWD",
+    "updatedAt": "2026-07-22T20:05:12.643Z",
+    "createdAt": "2026-07-13T08:49:48.297Z",
+    "version": 1784750712643,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "TEA (green\\ Iris\\ English)",
+      "abbreviation": "TE",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "XTOEONGPI5B4OP6CKNMWIYCZ",
+          "updatedAt": "2026-07-22T20:05:12.643Z",
+          "createdAt": "2026-07-13T08:49:48.297Z",
+          "version": 1784750712643,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "SWRBKA2SRW4CIKXMA46X3QWD",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 290,
+              "currency": "EUR"
+            },
+            "trackInventory": false,
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "skipModifierScreen": false,
+      "ecomVisibility": "UNAVAILABLE",
+      "imageIds": [
+        "K5RDRZHUTAEQYYRU6IFRYN56"
+      ],
+      "categories": [
+        {
+          "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+          "ordinal": -2251799696244736
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+        "ordinal": -2251799696244736
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "ANF5UREDDODGFCCCMWNQSVXC",
+    "updatedAt": "2026-07-13T09:08:36.515Z",
+    "createdAt": "2026-07-13T09:08:36.609Z",
+    "version": 1783933716515,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Croissant",
+      "abbreviation": "Cr",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "OQZFYBNYAUIW7JZ2IJ5OHBAQ",
+          "updatedAt": "2026-07-13T09:08:36.515Z",
+          "createdAt": "2026-07-13T09:08:36.609Z",
+          "version": 1783933716515,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "ANF5UREDDODGFCCCMWNQSVXC",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 270,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+          "ordinal": -2251799796908032
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+        "ordinal": -2251799796908032
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "6I2XO3GR5P3UFPRCPZJPWCNU",
+    "updatedAt": "2026-07-13T09:17:52.364Z",
+    "createdAt": "2026-07-13T09:15:14.869Z",
+    "version": 1783934272364,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Cinamon Swirl",
+      "abbreviation": "Ci",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "HSMRU5KV4XO74JIQ6D7BUIHW",
+          "updatedAt": "2026-07-13T09:15:14.818Z",
+          "createdAt": "2026-07-13T09:15:14.869Z",
+          "version": 1783934114818,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "6I2XO3GR5P3UFPRCPZJPWCNU",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 330,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+          "ordinal": -2251799780130816
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+        "ordinal": -2251799780130816
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "XR3EK3URRXG3UA3UDYR2MV2F",
+    "updatedAt": "2026-07-13T09:17:52.364Z",
+    "createdAt": "2026-07-13T09:15:50.995Z",
+    "version": 1783934272364,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Pain Du Chocolat",
+      "abbreviation": "Pa",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "4ZUH3OPJLFDUV7HQJVOHUTSN",
+          "updatedAt": "2026-07-13T09:15:50.947Z",
+          "createdAt": "2026-07-13T09:15:50.995Z",
+          "version": 1783934150947,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "XR3EK3URRXG3UA3UDYR2MV2F",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 330,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+          "ordinal": -2251799763353600
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+        "ordinal": -2251799763353600
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "ZPWB55RCQBZL5V23XRMN6RAZ",
+    "updatedAt": "2026-07-13T09:36:38.491Z",
+    "createdAt": "2026-07-13T09:36:38.568Z",
+    "version": 1783935398491,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Ham & Cheese Croissant",
+      "abbreviation": "Ha",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "VRGNIZ7JFCPKUKGQ5KIRJRHI",
+          "updatedAt": "2026-07-13T09:36:38.491Z",
+          "createdAt": "2026-07-13T09:36:38.568Z",
+          "version": 1783935398491,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "ZPWB55RCQBZL5V23XRMN6RAZ",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 420,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+          "ordinal": -2251799746576384
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+        "ordinal": -2251799746576384
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "LO3Z76TI7IEDRR4P4G6D5OF2",
+    "updatedAt": "2026-07-13T09:37:47.455Z",
+    "createdAt": "2026-07-13T09:37:47.531Z",
+    "version": 1783935467455,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Pan De Pasas ( Raisin Swirl)",
+      "abbreviation": "Pa",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "22ACKC5AIFLZ6DN2YHQOEPCR",
+          "updatedAt": "2026-07-13T09:37:47.455Z",
+          "createdAt": "2026-07-13T09:37:47.531Z",
+          "version": 1783935467455,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "LO3Z76TI7IEDRR4P4G6D5OF2",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 330,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+          "ordinal": -2251799729799168
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+        "ordinal": -2251799729799168
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "B7YHT7Z6BGEDY7NTXLQXELTX",
+    "updatedAt": "2026-07-13T09:44:10.675Z",
+    "createdAt": "2026-07-13T09:44:07.929Z",
+    "version": 1783935850675,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Ice Latte",
+      "abbreviation": "Ic",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "OHJUN5MJ3PTG2ETKBTRTV565",
+          "updatedAt": "2026-07-13T09:44:07.853Z",
+          "createdAt": "2026-07-13T09:44:07.929Z",
+          "version": 1783935847853,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "B7YHT7Z6BGEDY7NTXLQXELTX",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 460,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+          "ordinal": -2251799679467520
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+        "ordinal": -2251799679467520
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "AWPPCVSMGV74RFSOFOJDEAOQ",
+    "updatedAt": "2026-07-13T09:52:52.194Z",
+    "createdAt": "2026-07-13T09:49:02.524Z",
+    "version": 1783936372194,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Cold Foam Strawberry",
+      "abbreviation": "Co",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "WQ5XKBQ3QQJQJMWCDX6ZL7BX",
+          "updatedAt": "2026-07-13T09:52:52.194Z",
+          "createdAt": "2026-07-13T09:49:02.524Z",
+          "version": 1783936372194,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "AWPPCVSMGV74RFSOFOJDEAOQ",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 100,
+              "currency": "EUR"
+            },
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "TMPRMBFWB2ZHFC3UBMJTN6DE",
+          "ordinal": -2251799746576384
+        },
+        {
+          "id": "AJRCRHDQUQ42343TI5JWJLU7",
+          "ordinal": -2251799796908032
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "TMPRMBFWB2ZHFC3UBMJTN6DE",
+        "ordinal": -2251799746576384
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "ZTFJZQWX5A3H4XM2HMDHQ7NP",
+    "updatedAt": "2026-07-13T09:52:35.159Z",
+    "createdAt": "2026-07-13T09:51:21.056Z",
+    "version": 1783936355159,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Cold Foam Matcha",
+      "abbreviation": "Co",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "KV7HU4QXJHWCMCWKH3WM3YUX",
+          "updatedAt": "2026-07-13T09:51:20.985Z",
+          "createdAt": "2026-07-13T09:51:21.056Z",
+          "version": 1783936280985,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "ZTFJZQWX5A3H4XM2HMDHQ7NP",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 100,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "AJRCRHDQUQ42343TI5JWJLU7",
+          "ordinal": -2251799780130816
+        },
+        {
+          "id": "TMPRMBFWB2ZHFC3UBMJTN6DE",
+          "ordinal": -2251799729799168
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "AJRCRHDQUQ42343TI5JWJLU7",
+        "ordinal": -2251799780130816
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "TQJK3TCXVMMRLC2TYRAURS2O",
+    "updatedAt": "2026-07-13T09:52:35.159Z",
+    "createdAt": "2026-07-13T09:51:51.133Z",
+    "version": 1783936355159,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Cold Foam UBE",
+      "abbreviation": "Co",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "NRO3NTSXZBYFGW3ILKNUFFKQ",
+          "updatedAt": "2026-07-13T09:51:51.053Z",
+          "createdAt": "2026-07-13T09:51:51.133Z",
+          "version": 1783936311053,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "TQJK3TCXVMMRLC2TYRAURS2O",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 100,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "AJRCRHDQUQ42343TI5JWJLU7",
+          "ordinal": -2251799763353600
+        },
+        {
+          "id": "TMPRMBFWB2ZHFC3UBMJTN6DE",
+          "ordinal": -2251799713021952
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "AJRCRHDQUQ42343TI5JWJLU7",
+        "ordinal": -2251799763353600
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "2B7RT4I2TQ4WQM5TGKCLEBZX",
+    "updatedAt": "2026-07-13T09:52:35.159Z",
+    "createdAt": "2026-07-13T09:52:32.961Z",
+    "version": 1783936355159,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Cold Foam Vainilla",
+      "abbreviation": "Co",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "ODU37Z7CCTPIABJ3FZLBHQNB",
+          "updatedAt": "2026-07-13T09:52:32.882Z",
+          "createdAt": "2026-07-13T09:52:32.961Z",
+          "version": 1783936352882,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "2B7RT4I2TQ4WQM5TGKCLEBZX",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 100,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "AJRCRHDQUQ42343TI5JWJLU7",
+          "ordinal": -2251799746576384
+        },
+        {
+          "id": "TMPRMBFWB2ZHFC3UBMJTN6DE",
+          "ordinal": -2251799696244736
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "AJRCRHDQUQ42343TI5JWJLU7",
+        "ordinal": -2251799746576384
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "RTS4AMWA4YUVLV3GX5QSNNVY",
+    "updatedAt": "2026-07-22T21:21:05.258Z",
+    "createdAt": "2026-07-13T10:48:50.192Z",
+    "version": 1784755265258,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Ice Ube Latte",
+      "abbreviation": "Ic",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "2FZTLCHLDLL6YXB4D3JGGFME",
+          "updatedAt": "2026-07-22T21:21:05.258Z",
+          "createdAt": "2026-07-13T10:48:50.192Z",
+          "version": 1784755265258,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "RTS4AMWA4YUVLV3GX5QSNNVY",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 690,
+              "currency": "EUR"
+            },
+            "trackInventory": false,
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "skipModifierScreen": false,
+      "ecomVisibility": "UNAVAILABLE",
+      "imageIds": [
+        "JIICXIKNFDB2GPKRKMUIGN4M"
+      ],
+      "categories": [
+        {
+          "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+          "ordinal": -2251799662690304
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+        "ordinal": -2251799662690304
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "KSF5ADCQZBATQJDOY2X7OL2R",
+    "updatedAt": "2026-07-13T14:05:41.911Z",
+    "createdAt": "2026-07-13T10:49:17.697Z",
+    "version": 1783951541911,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Ice Pink Chai Latte",
+      "abbreviation": "Ic",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "U5453IMEDQ32LGPSXQLAAOFY",
+          "updatedAt": "2026-07-13T14:05:41.911Z",
+          "createdAt": "2026-07-13T10:49:17.697Z",
+          "version": 1783951541911,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "KSF5ADCQZBATQJDOY2X7OL2R",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 650,
+              "currency": "EUR"
+            },
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+          "ordinal": -2251799645913088
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+        "ordinal": -2251799645913088
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "IIKO2GBQ467H36LQN2WAFQ5S",
+    "updatedAt": "2026-07-13T10:51:04.269Z",
+    "createdAt": "2026-07-13T10:49:49.682Z",
+    "version": 1783939864269,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Chai Latte",
+      "abbreviation": "Ch",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "G5FENJ5XB54QDEOSN2CZVBQV",
+          "updatedAt": "2026-07-13T10:49:49.621Z",
+          "createdAt": "2026-07-13T10:49:49.682Z",
+          "version": 1783939789621,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "IIKO2GBQ467H36LQN2WAFQ5S",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 450,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+          "ordinal": -2251799629135872
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+        "ordinal": -2251799629135872
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "FR4GP32HCNB6HWQL2YOBKKNW",
+    "updatedAt": "2026-07-13T10:51:04.269Z",
+    "createdAt": "2026-07-13T10:50:11.41Z",
+    "version": 1783939864269,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Hot Chocolate",
+      "abbreviation": "Ho",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "YORLXVYE64O2RKCIMXKQBWXV",
+          "updatedAt": "2026-07-13T10:50:11.36Z",
+          "createdAt": "2026-07-13T10:50:11.41Z",
+          "version": 1783939811360,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "FR4GP32HCNB6HWQL2YOBKKNW",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 400,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+          "ordinal": -2251799612358656
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+        "ordinal": -2251799612358656
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "AQMJNMKRFKYOOKRBO6AMHD72",
+    "updatedAt": "2026-07-13T10:53:07.453Z",
+    "createdAt": "2026-07-13T10:52:34.234Z",
+    "version": 1783939987453,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Add Ice (Agregar Hielo)",
+      "abbreviation": "Ad",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "7M62IWLQUWY6RBMFQD6OE3UA",
+          "updatedAt": "2026-07-13T10:53:07.453Z",
+          "createdAt": "2026-07-13T10:52:34.234Z",
+          "version": 1783939987453,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "AQMJNMKRFKYOOKRBO6AMHD72",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 50,
+              "currency": "EUR"
+            },
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "TMPRMBFWB2ZHFC3UBMJTN6DE",
+          "ordinal": -2251799679467520
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "TMPRMBFWB2ZHFC3UBMJTN6DE",
+        "ordinal": -2251799679467520
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "H3JEBMA4CZ2F4REBMQDCA4UG",
+    "updatedAt": "2026-07-13T14:05:29.961Z",
+    "createdAt": "2026-07-13T11:16:37.499Z",
+    "version": 1783951529961,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Ice Matcha Latte",
+      "abbreviation": "Ic",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "57QCDD76626WPUA42IVWS773",
+          "updatedAt": "2026-07-13T14:05:29.961Z",
+          "createdAt": "2026-07-13T11:16:37.499Z",
+          "version": 1783951529961,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "H3JEBMA4CZ2F4REBMQDCA4UG",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 650,
+              "currency": "EUR"
+            },
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+          "ordinal": -2251799595581440
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+        "ordinal": -2251799595581440
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "UDGLX7YBCC7GOXWK4GCVB7SX",
+    "updatedAt": "2026-07-13T13:12:23.183Z",
+    "createdAt": "2026-07-13T13:12:17.827Z",
+    "version": 1783948343183,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Cafe Con Leche",
+      "abbreviation": "Ca",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "NGMQ7QEW53XDU7G2TVAFYSX4",
+          "updatedAt": "2026-07-13T13:12:17.761Z",
+          "createdAt": "2026-07-13T13:12:17.827Z",
+          "version": 1783948337761,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "UDGLX7YBCC7GOXWK4GCVB7SX",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 300,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+          "ordinal": -2251799662690304
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+        "ordinal": -2251799662690304
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "H4RSNPEND5P7N3I22M7TGYBV",
+    "updatedAt": "2026-07-31T12:13:16.944Z",
+    "createdAt": "2026-07-14T15:30:43.187Z",
+    "version": 1785499996944,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Purée",
+      "description": "Add one syrup flavour to a drink.",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "NYDWDYZXLHES5WGGEFZ5KYIZ",
+          "updatedAt": "2026-07-31T12:13:16.944Z",
+          "createdAt": "2026-07-14T15:30:43.187Z",
+          "version": 1785499996944,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "H4RSNPEND5P7N3I22M7TGYBV",
+            "name": "Passion fruit",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 50,
+              "currency": "EUR"
+            },
+            "trackInventory": false,
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        },
+        {
+          "type": "ITEM_VARIATION",
+          "id": "EUGWEAFFQ25EBHZB7EADMHMN",
+          "updatedAt": "2026-07-31T12:13:16.944Z",
+          "createdAt": "2026-07-14T15:30:43.187Z",
+          "version": 1785499996944,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "H4RSNPEND5P7N3I22M7TGYBV",
+            "name": "Mango",
+            "ordinal": 1,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 50,
+              "currency": "EUR"
+            },
+            "trackInventory": false,
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ],
+            "itemVariationVendorInfoIds": [
+              "PTML4XYMIC7LLBNBUCBEOKXB"
+            ],
+            "itemVariationVendorInfos": [
+              {
+                "type": "ITEM_VARIATION_VENDOR_INFO",
+                "id": "PTML4XYMIC7LLBNBUCBEOKXB",
+                "updatedAt": "2026-07-31T12:13:16.944Z",
+                "createdAt": "2026-07-31T12:13:17.059Z",
+                "version": 1785499996944,
+                "isDeleted": false,
+                "presentAtAllLocations": false,
+                "presentAtLocationIds": [
+                  "LKGQR7QKGC2S0"
+                ],
+                "itemVariationVendorInfoData": {
+                  "ordinal": 0,
+                  "itemVariationId": "EUGWEAFFQ25EBHZB7EADMHMN"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "ITEM_VARIATION",
+          "id": "Y34OGGZRLFFKSOHYZUZJJS32",
+          "updatedAt": "2026-07-31T12:13:16.944Z",
+          "createdAt": "2026-07-14T15:30:43.187Z",
+          "version": 1785499996944,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "H4RSNPEND5P7N3I22M7TGYBV",
+            "name": "Strawberry",
+            "ordinal": 2,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 50,
+              "currency": "EUR"
+            },
+            "trackInventory": false,
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ],
+            "itemVariationVendorInfoIds": [
+              "4IY34LRPNUDL64JYO3CIWA3M"
+            ],
+            "itemVariationVendorInfos": [
+              {
+                "type": "ITEM_VARIATION_VENDOR_INFO",
+                "id": "4IY34LRPNUDL64JYO3CIWA3M",
+                "updatedAt": "2026-07-31T12:13:16.944Z",
+                "createdAt": "2026-07-31T12:13:17.059Z",
+                "version": 1785499996944,
+                "isDeleted": false,
+                "presentAtAllLocations": false,
+                "presentAtLocationIds": [
+                  "LKGQR7QKGC2S0"
+                ],
+                "itemVariationVendorInfoData": {
+                  "ordinal": 0,
+                  "itemVariationId": "Y34OGGZRLFFKSOHYZUZJJS32"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "skipModifierScreen": false,
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "TMPRMBFWB2ZHFC3UBMJTN6DE",
+          "ordinal": -2251799662690304
+        }
+      ],
+      "descriptionHtml": "<p>Add one syrup flavour to a drink.</p>",
+      "descriptionPlaintext": "Add one syrup flavour to a drink.",
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "TMPRMBFWB2ZHFC3UBMJTN6DE",
+        "ordinal": -2251799662690304
+      },
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "WBQF4YXHPSDNFBN6OZGR5ZOQ",
+    "updatedAt": "2026-07-15T08:44:23.425Z",
+    "createdAt": "2026-07-15T08:44:23.526Z",
+    "version": 1784105063425,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "PROMO ( Croissant + Cafe)",
+      "abbreviation": "PR",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "4M562DCYF3JCEMG53EGMOY7L",
+          "updatedAt": "2026-07-15T08:44:23.425Z",
+          "createdAt": "2026-07-15T08:44:23.526Z",
+          "version": 1784105063425,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "WBQF4YXHPSDNFBN6OZGR5ZOQ",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 500,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+          "ordinal": -2251799578804224
+        },
+        {
+          "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+          "ordinal": -2251799645913088
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+        "ordinal": -2251799578804224
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "67I6FQN5X2WDL527BQHQKYDX",
+    "updatedAt": "2026-07-15T10:47:30.975Z",
+    "createdAt": "2026-07-15T10:47:31.033Z",
+    "version": 1784112450975,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Espresso",
+      "abbreviation": "Es",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "BNJYT3FQR4TJXTMMILVP45FU",
+          "updatedAt": "2026-07-15T10:47:30.975Z",
+          "createdAt": "2026-07-15T10:47:31.033Z",
+          "version": 1784112450975,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "67I6FQN5X2WDL527BQHQKYDX",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 200,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+          "ordinal": -2251799629135872
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+        "ordinal": -2251799629135872
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "AVHM5OOFJKSXJMICT2RSBBNV",
+    "updatedAt": "2026-07-16T11:16:19.547Z",
+    "createdAt": "2026-07-16T11:16:19.633Z",
+    "version": 1784200579547,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Brownie Gluten Free",
+      "abbreviation": "Br",
+      "labelColor": "",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "2TGY67AHXR6USXDXRAWKLRPS",
+          "updatedAt": "2026-07-16T11:16:19.547Z",
+          "createdAt": "2026-07-16T11:16:19.633Z",
+          "version": 1784200579547,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "AVHM5OOFJKSXJMICT2RSBBNV",
+            "name": "Estándar",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 350,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+          "ordinal": -2251799696244736
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+        "ordinal": -2251799696244736
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "6COSW3ZBBZ3YIOMOTOJ25XPH",
+    "updatedAt": "2026-07-17T08:04:22.2Z",
+    "createdAt": "2026-07-17T08:04:21.446Z",
+    "version": 1784275462200,
+    "isDeleted": false,
+    "presentAtAllLocations": true,
+    "itemData": {
+      "name": "Chia Fruit Parfait",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "BLLUBMDTDHCAUEBNSLZ3YYTR",
+          "updatedAt": "2026-07-17T08:04:22.2Z",
+          "createdAt": "2026-07-17T08:04:21.446Z",
+          "version": 1784275462200,
+          "isDeleted": false,
+          "presentAtAllLocations": true,
+          "itemVariationData": {
+            "itemId": "6COSW3ZBBZ3YIOMOTOJ25XPH",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 450,
+              "currency": "EUR"
+            },
+            "trackInventory": false,
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "skipModifierScreen": true,
+      "ecomVisibility": "UNAVAILABLE",
+      "kitchenName": "Chia Fruit Parfait",
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "isAlcoholic": false
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "XDMI7UQKY6X6BDP62F2YRVVM",
+    "updatedAt": "2026-07-25T09:05:35.488Z",
+    "createdAt": "2026-07-25T09:05:35.583Z",
+    "version": 1784970335488,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Iced Americano",
+      "abbreviation": "Ic",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "LFBLFCEVUJ7XZ62DKLRED5ON",
+          "updatedAt": "2026-07-25T09:05:35.488Z",
+          "createdAt": "2026-07-25T09:05:35.583Z",
+          "version": 1784970335488,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "XDMI7UQKY6X6BDP62F2YRVVM",
+            "name": "Normal",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 390,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+          "ordinal": -2251799562027008
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+        "ordinal": -2251799562027008
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "ECUI4JD3YE4Q37KUYAB4SG4C",
+    "updatedAt": "2026-08-03T10:17:55.256Z",
+    "createdAt": "2026-08-03T10:16:52.666Z",
+    "version": 1785752275256,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Crossiant De Almendra",
+      "abbreviation": "Cr",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "YF5BEJW5K7SJA4KCYRARWDYC",
+          "updatedAt": "2026-08-03T10:17:55.256Z",
+          "createdAt": "2026-08-03T10:16:52.666Z",
+          "version": 1785752275256,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "ECUI4JD3YE4Q37KUYAB4SG4C",
+            "name": "Regular",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 340,
+              "currency": "EUR"
+            },
+            "priceDescription": "",
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+          "ordinal": -2251799679467520
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+        "ordinal": -2251799679467520
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "7RUXHHZ4V6X3OHDHU3LLNAR4",
+    "updatedAt": "2026-08-03T12:22:11.314Z",
+    "createdAt": "2026-08-03T12:22:11.395Z",
+    "version": 1785759731314,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "Pistacho Cheescske",
+      "abbreviation": "Pi",
+      "isTaxable": true,
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "YDZFDRX3WC6BPXJQKDRMEZ2H",
+          "updatedAt": "2026-08-03T12:22:11.314Z",
+          "createdAt": "2026-08-03T12:22:11.395Z",
+          "version": 1785759731314,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "7RUXHHZ4V6X3OHDHU3LLNAR4",
+            "name": "Normal",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 650,
+              "currency": "EUR"
+            },
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "ecomVisibility": "UNAVAILABLE",
+      "categories": [
+        {
+          "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+          "ordinal": -2251799662690304
+        }
+      ],
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+        "ordinal": -2251799662690304
+      }
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "BXJCVXKR3UWXLCZL5GB4RWEN",
+    "updatedAt": "2026-08-06T21:36:32.893Z",
+    "createdAt": "2026-08-06T21:18:20.776Z",
+    "version": 1786052192893,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "itemData": {
+      "name": "TEST Latte",
+      "abbreviation": "TESTL",
+      "isTaxable": true,
+      "taxIds": [
+        "HT7KP5KDYHGXIK3NZDUWB2SI"
+      ],
+      "modifierListInfo": [
+        {
+          "modifierListId": "TT2I7DJD6CP5MRUOFKBGWCD4",
+          "modifierOverrides": [
+            {
+              "modifierId": "ZORWPKES4SIRB3QE5JG5PE6J",
+              "onByDefault": true,
+              "hiddenOnlineOverride": "NOT_SET",
+              "onByDefaultOverride": "NOT_SET"
+            }
+          ],
+          "minSelectedModifiers": 1,
+          "maxSelectedModifiers": 1,
+          "enabled": true,
+          "hiddenFromCustomer": false,
+          "ordinal": 0,
+          "allowQuantities": "NO",
+          "isConversational": "NO",
+          "hiddenFromCustomerOverride": "NO"
+        },
+        {
+          "modifierListId": "6JZ4KZGWYSOQMNPAT5ND3QT5",
+          "minSelectedModifiers": 0,
+          "maxSelectedModifiers": 3,
+          "enabled": true,
+          "hiddenFromCustomer": false,
+          "ordinal": 1,
+          "allowQuantities": "NOT_SET",
+          "isConversational": "NOT_SET",
+          "hiddenFromCustomerOverride": "NOT_SET"
+        },
+        {
+          "modifierListId": "LFF6YBGX74BFL5FZFPOMQDRO",
+          "minSelectedModifiers": 0,
+          "maxSelectedModifiers": 2,
+          "enabled": true,
+          "hiddenFromCustomer": false,
+          "ordinal": 2,
+          "allowQuantities": "NOT_SET",
+          "isConversational": "NOT_SET",
+          "hiddenFromCustomerOverride": "NOT_SET"
+        }
+      ],
+      "variations": [
+        {
+          "type": "ITEM_VARIATION",
+          "id": "4QSYCAA5P2U36MC5GRSKZ6KE",
+          "updatedAt": "2026-08-06T21:36:32.893Z",
+          "createdAt": "2026-08-06T21:18:20.776Z",
+          "version": 1786052192893,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "BXJCVXKR3UWXLCZL5GB4RWEN",
+            "name": "Hot",
+            "sku": "TEST-LAT-H",
+            "ordinal": 0,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 400,
+              "currency": "EUR"
+            },
+            "trackInventory": false,
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o",
+              "CH_AEXCGF0uUlpUa4vPk0gzwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        },
+        {
+          "type": "ITEM_VARIATION",
+          "id": "ZI5AR5CITLXW5MUPD3RZ3JTZ",
+          "updatedAt": "2026-08-06T21:36:32.893Z",
+          "createdAt": "2026-08-06T21:18:20.776Z",
+          "version": 1786052192893,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "itemVariationData": {
+            "itemId": "BXJCVXKR3UWXLCZL5GB4RWEN",
+            "name": "Iced",
+            "sku": "TEST-LAT-I",
+            "ordinal": 1,
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
+              "amount": 500,
+              "currency": "EUR"
+            },
+            "trackInventory": false,
+            "sellable": true,
+            "stockable": true,
+            "channels": [
+              "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o",
+              "CH_AEXCGF0uUlpUa4vPk0gzwefDrftLONjJFSRsIVR29945o"
+            ]
+          }
+        }
+      ],
+      "productType": "FOOD_AND_BEV",
+      "skipModifierScreen": false,
+      "ecomVisibility": "VISIBLE",
+      "categories": [
+        {
+          "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+          "ordinal": -2251799612358656
+        }
+      ],
+      "channels": [
+        "CH_AEXCGF0uUlpUa4vPk0gzwefDrftLONjJFSRsIVR29945o",
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "isArchived": false,
+      "reportingCategory": {
+        "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+        "ordinal": -2251799612358656
+      }
+    }
+  },
+  {
+    "type": "IMAGE",
+    "id": "K5RDRZHUTAEQYYRU6IFRYN56",
+    "updatedAt": "2026-07-22T20:05:05.638Z",
+    "createdAt": "2026-07-22T20:05:05.671Z",
+    "version": 1784750705638,
+    "isDeleted": false,
+    "presentAtAllLocations": true,
+    "imageData": {
+      "name": "barrys_tea.jpg",
+      "url": "https://items-images-production.s3.us-west-2.amazonaws.com/files/c76af1f2c679f74d8703f5940c50329ec8358559/original.jpeg"
+    }
+  },
+  {
+    "type": "IMAGE",
+    "id": "6LD3VINFAHPPWAJPB2HTF52R",
+    "updatedAt": "2026-07-22T20:12:42.388Z",
+    "createdAt": "2026-07-22T20:12:42.424Z",
+    "version": 1784751162388,
+    "isDeleted": false,
+    "presentAtAllLocations": true,
+    "imageData": {
+      "name": "Iced Ube Matcha (1) (1).png",
+      "url": "https://items-images-production.s3.us-west-2.amazonaws.com/files/b1214c860fcd62a8330868ab325148622f25eded/original.png"
+    }
+  },
+  {
+    "type": "IMAGE",
+    "id": "JIICXIKNFDB2GPKRKMUIGN4M",
+    "updatedAt": "2026-07-22T21:21:01.486Z",
+    "createdAt": "2026-07-22T21:21:01.51Z",
+    "version": 1784755261486,
+    "isDeleted": false,
+    "presentAtAllLocations": true,
+    "imageData": {
+      "name": "1784754891987.publer.com (1).jpg",
+      "url": "https://items-images-production.s3.us-west-2.amazonaws.com/files/2f2df402ad37c8ab424dcf7da7fbd864635824dd/original.jpeg"
+    }
+  },
+  {
+    "type": "IMAGE",
+    "id": "QQN6XQPI5GHZWDFKXHY4S7PT",
+    "updatedAt": "2026-07-22T21:37:13.636Z",
+    "createdAt": "2026-07-22T21:37:13.668Z",
+    "version": 1784756233636,
+    "isDeleted": false,
+    "presentAtAllLocations": true,
+    "imageData": {
+      "name": "Image 22-07-2026 at 23.36.png",
+      "url": "https://items-images-production.s3.us-west-2.amazonaws.com/files/abbefbd867128607df29d5bcbaa1e9dfe9e5a6e6/original.png"
+    }
+  },
+  {
+    "type": "CATEGORY",
+    "id": "WEVOWKP3HYX33GN3F6XH77SX",
+    "updatedAt": "2026-07-13T09:30:08.234Z",
+    "createdAt": "2026-07-10T12:24:34.462Z",
+    "version": 1783935008234,
+    "isDeleted": false,
+    "presentAtAllLocations": true,
+    "categoryData": {
+      "name": "Smoothies",
+      "labelColor": "D936B0",
+      "locationOverrides": [
+        {
+          "locationId": "LKGQR7QKGC2S0",
+          "ordinal": 16777216
+        }
+      ],
+      "categoryType": "REGULAR_CATEGORY",
+      "parentCategory": {
+        "ordinal": -2251799796908032
+      },
+      "isTopLevel": true,
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "onlineVisibility": true
+    }
+  },
+  {
+    "type": "CATEGORY",
+    "id": "T7CYZ2EZWDY4LLC6UOQTNGGI",
+    "updatedAt": "2026-07-13T09:32:25.305Z",
+    "createdAt": "2026-07-10T12:24:34.462Z",
+    "version": 1783935145305,
+    "isDeleted": false,
+    "presentAtAllLocations": true,
+    "categoryData": {
+      "name": "Coffee",
+      "labelColor": "A67C53",
+      "locationOverrides": [
+        {
+          "locationId": "LKGQR7QKGC2S0",
+          "ordinal": 33554432
+        }
+      ],
+      "categoryType": "REGULAR_CATEGORY",
+      "parentCategory": {
+        "ordinal": -2251799780130816
+      },
+      "isTopLevel": true,
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "onlineVisibility": true
+    }
+  },
+  {
+    "type": "CATEGORY",
+    "id": "OIVFP2SKFWLH7QJVSCZUQS4B",
+    "updatedAt": "2026-07-13T13:13:07.98Z",
+    "createdAt": "2026-07-10T12:24:34.462Z",
+    "version": 1783948387980,
+    "isDeleted": false,
+    "presentAtAllLocations": true,
+    "categoryData": {
+      "name": "Cold Drinks (Zumo de naranja) (Coca cola, Agua,  Acuarius)",
+      "labelColor": "2693FF",
+      "locationOverrides": [
+        {
+          "locationId": "LKGQR7QKGC2S0",
+          "ordinal": 50331648
+        }
+      ],
+      "categoryType": "REGULAR_CATEGORY",
+      "parentCategory": {
+        "ordinal": -2251799763353600
+      },
+      "isTopLevel": true,
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "onlineVisibility": true
+    }
+  },
+  {
+    "type": "CATEGORY",
+    "id": "TMPRMBFWB2ZHFC3UBMJTN6DE",
+    "updatedAt": "2026-07-13T09:47:42.85Z",
+    "createdAt": "2026-07-10T12:24:34.462Z",
+    "version": 1783936062850,
+    "isDeleted": false,
+    "presentAtAllLocations": true,
+    "categoryData": {
+      "name": "Add-ons (EXTRAS)",
+      "labelColor": "12BF94",
+      "locationOverrides": [
+        {
+          "locationId": "LKGQR7QKGC2S0",
+          "ordinal": 67108864
+        }
+      ],
+      "categoryType": "REGULAR_CATEGORY",
+      "parentCategory": {
+        "ordinal": -2251799746576384
+      },
+      "isTopLevel": true,
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "onlineVisibility": true
+    }
+  },
+  {
+    "type": "CATEGORY",
+    "id": "QT6BKG7FUBPE4TIEUZ4FUVHK",
+    "updatedAt": "2026-07-13T13:16:15.299Z",
+    "createdAt": "2026-07-10T12:24:34.462Z",
+    "version": 1783948575299,
+    "isDeleted": false,
+    "presentAtAllLocations": true,
+    "categoryData": {
+      "name": "Speciality Drinks ( MATCHA, ICED LATTE, UBE, PINK CHAI)",
+      "labelColor": "8716D9",
+      "locationOverrides": [
+        {
+          "locationId": "LKGQR7QKGC2S0",
+          "ordinal": 83886080
+        }
+      ],
+      "categoryType": "REGULAR_CATEGORY",
+      "parentCategory": {
+        "ordinal": -2251799729799168
+      },
+      "isTopLevel": true,
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "onlineVisibility": true
+    }
+  },
+  {
+    "type": "CATEGORY",
+    "id": "KYHVUBBCAMCAAAZKJTG4ZPM2",
+    "updatedAt": "2026-07-10T19:05:14.468Z",
+    "createdAt": "2026-07-10T19:05:14.644Z",
+    "version": 1783710314468,
+    "isDeleted": false,
+    "presentAtAllLocations": true,
+    "categoryData": {
+      "name": "Drinks Menu",
+      "categoryType": "MENU_CATEGORY",
+      "parentCategory": {
+        "ordinal": -2251799713021952
+      },
+      "isTopLevel": true,
+      "channels": [
+        "CH_AEXCGF0uUlpUa4vPk0gzwefDrftLONjJFSRsIVR29945o",
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o",
+        "CH_NSIRgokqChof193wJZJywefDrftLONjJFSRsIVR29945o"
+      ],
+      "availabilityPeriodIds": [
+        "7PH7APRZQBSMKTJRQ3ZXCVLH",
+        "VVWX2CNKMKCKY45T6LZBNX7D",
+        "IDVHGSUTZZ2GS2I73PKHETI3",
+        "DR6G2AQE3URXX5CBVPD57FVH",
+        "GY4HUXCWONO42W35AZOIOSVL",
+        "CVFVGOXGPWYJ2DDVTIWT5IAC"
+      ],
+      "onlineVisibility": true
+    }
+  },
+  {
+    "type": "CATEGORY",
+    "id": "TSTJQHKILAIQTGOETGK2UBSM",
+    "updatedAt": "2026-07-10T19:05:14.468Z",
+    "createdAt": "2026-07-10T19:05:14.644Z",
+    "version": 1783710314468,
+    "isDeleted": false,
+    "presentAtAllLocations": true,
+    "categoryData": {
+      "name": "Coffee",
+      "categoryType": "MENU_CATEGORY",
+      "parentCategory": {
+        "id": "KYHVUBBCAMCAAAZKJTG4ZPM2",
+        "ordinal": 0
+      },
+      "isTopLevel": false,
+      "channels": [
+        "CH_AEXCGF0uUlpUa4vPk0gzwefDrftLONjJFSRsIVR29945o",
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o",
+        "CH_NSIRgokqChof193wJZJywefDrftLONjJFSRsIVR29945o"
+      ],
+      "onlineVisibility": true,
+      "rootCategory": "KYHVUBBCAMCAAAZKJTG4ZPM2"
+    }
+  },
+  {
+    "type": "CATEGORY",
+    "id": "PFQURD24VEHOU2IUMHXUMUOJ",
+    "updatedAt": "2026-07-10T19:05:14.468Z",
+    "createdAt": "2026-07-10T19:05:14.644Z",
+    "version": 1783710314468,
+    "isDeleted": false,
+    "presentAtAllLocations": true,
+    "categoryData": {
+      "name": "Speciality Drinks",
+      "categoryType": "MENU_CATEGORY",
+      "parentCategory": {
+        "id": "KYHVUBBCAMCAAAZKJTG4ZPM2",
+        "ordinal": 1
+      },
+      "isTopLevel": false,
+      "channels": [
+        "CH_AEXCGF0uUlpUa4vPk0gzwefDrftLONjJFSRsIVR29945o",
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o",
+        "CH_NSIRgokqChof193wJZJywefDrftLONjJFSRsIVR29945o"
+      ],
+      "onlineVisibility": true,
+      "rootCategory": "KYHVUBBCAMCAAAZKJTG4ZPM2"
+    }
+  },
+  {
+    "type": "CATEGORY",
+    "id": "L2IVW6GJ2HW65K24FQNFKUDZ",
+    "updatedAt": "2026-07-10T19:05:14.468Z",
+    "createdAt": "2026-07-10T19:05:14.644Z",
+    "version": 1783710314468,
+    "isDeleted": false,
+    "presentAtAllLocations": true,
+    "categoryData": {
+      "name": "Smoothies",
+      "categoryType": "MENU_CATEGORY",
+      "parentCategory": {
+        "id": "KYHVUBBCAMCAAAZKJTG4ZPM2",
+        "ordinal": 2
+      },
+      "isTopLevel": false,
+      "channels": [
+        "CH_AEXCGF0uUlpUa4vPk0gzwefDrftLONjJFSRsIVR29945o",
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o",
+        "CH_NSIRgokqChof193wJZJywefDrftLONjJFSRsIVR29945o"
+      ],
+      "onlineVisibility": true,
+      "rootCategory": "KYHVUBBCAMCAAAZKJTG4ZPM2"
+    }
+  },
+  {
+    "type": "CATEGORY",
+    "id": "YONJCCWRFBNUWAXBJWJGK7HU",
+    "updatedAt": "2026-07-10T19:05:14.468Z",
+    "createdAt": "2026-07-10T19:05:14.644Z",
+    "version": 1783710314468,
+    "isDeleted": false,
+    "presentAtAllLocations": true,
+    "categoryData": {
+      "name": "Cold Drinks",
+      "categoryType": "MENU_CATEGORY",
+      "parentCategory": {
+        "id": "KYHVUBBCAMCAAAZKJTG4ZPM2",
+        "ordinal": 3
+      },
+      "isTopLevel": false,
+      "channels": [
+        "CH_AEXCGF0uUlpUa4vPk0gzwefDrftLONjJFSRsIVR29945o",
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o",
+        "CH_NSIRgokqChof193wJZJywefDrftLONjJFSRsIVR29945o"
+      ],
+      "onlineVisibility": true,
+      "rootCategory": "KYHVUBBCAMCAAAZKJTG4ZPM2"
+    }
+  },
+  {
+    "type": "CATEGORY",
+    "id": "IMR5X4W7OSC2KH2OJKH5P74J",
+    "updatedAt": "2026-07-13T09:38:31.494Z",
+    "createdAt": "2026-07-13T09:06:12.921Z",
+    "version": 1783935511494,
+    "isDeleted": false,
+    "presentAtAllLocations": true,
+    "categoryData": {
+      "name": "REPOSTERÍA",
+      "abbreviation": "FRESH BAKES",
+      "labelColor": "FFBF00",
+      "locationOverrides": [
+        {
+          "locationId": "LKGQR7QKGC2S0",
+          "ordinal": 117440512
+        }
+      ],
+      "categoryType": "REGULAR_CATEGORY",
+      "parentCategory": {
+        "ordinal": -2251799696244736
+      },
+      "isTopLevel": true,
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "onlineVisibility": true
+    }
+  },
+  {
+    "type": "CATEGORY",
+    "id": "AJRCRHDQUQ42343TI5JWJLU7",
+    "updatedAt": "2026-07-13T09:50:11.523Z",
+    "createdAt": "2026-07-13T09:50:11.574Z",
+    "version": 1783936211523,
+    "isDeleted": false,
+    "presentAtAllLocations": true,
+    "categoryData": {
+      "name": "Cold Foam",
+      "abbreviation": "Cold Foam",
+      "labelColor": "00B23B",
+      "categoryType": "REGULAR_CATEGORY",
+      "parentCategory": {
+        "id": "TMPRMBFWB2ZHFC3UBMJTN6DE",
+        "ordinal": -2251799796908032
+      },
+      "isTopLevel": false,
+      "channels": [
+        "CH_nL5r1HlIQ9XmcbYSWmZvwefDrftLONjJFSRsIVR29945o"
+      ],
+      "onlineVisibility": true,
+      "rootCategory": "TMPRMBFWB2ZHFC3UBMJTN6DE"
+    }
+  },
+  {
+    "type": "MODIFIER_LIST",
+    "id": "YR4LMQZC2NJYBT6BR7KC7RLJ",
+    "updatedAt": "2026-07-06T14:48:32.45Z",
+    "createdAt": "2026-07-06T14:47:57.516Z",
+    "version": 1783349312450,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "modifierListData": {
+      "name": "Temperatura",
+      "ordinal": 1,
+      "selectionType": "SINGLE",
+      "modifiers": [
+        {
+          "type": "MODIFIER",
+          "id": "YAUNPRHGGC2GZQBFYGT6OJGO",
+          "updatedAt": "2026-07-06T14:48:32.45Z",
+          "createdAt": "2026-07-06T14:47:57.516Z",
+          "version": 1783349312450,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Poco hecho",
+            "onByDefault": false,
+            "ordinal": 0,
+            "modifierListId": "YR4LMQZC2NJYBT6BR7KC7RLJ"
+          }
+        },
+        {
+          "type": "MODIFIER",
+          "id": "XIABDRSINYND5UJQEHG7UUOB",
+          "updatedAt": "2026-07-06T14:48:32.45Z",
+          "createdAt": "2026-07-06T14:47:57.516Z",
+          "version": 1783349312450,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Medio hecho",
+            "onByDefault": false,
+            "ordinal": 1,
+            "modifierListId": "YR4LMQZC2NJYBT6BR7KC7RLJ"
+          }
+        },
+        {
+          "type": "MODIFIER",
+          "id": "INDSB3BTFQ5NQGFHLWRQYTCU",
+          "updatedAt": "2026-07-06T14:48:32.45Z",
+          "createdAt": "2026-07-06T14:47:57.516Z",
+          "version": 1783349312450,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Término medio",
+            "onByDefault": false,
+            "ordinal": 2,
+            "modifierListId": "YR4LMQZC2NJYBT6BR7KC7RLJ"
+          }
+        },
+        {
+          "type": "MODIFIER",
+          "id": "PVSO6DY3KIDG7YM7UIXG7QXH",
+          "updatedAt": "2026-07-06T14:48:32.45Z",
+          "createdAt": "2026-07-06T14:47:57.516Z",
+          "version": 1783349312450,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Bien hecho",
+            "onByDefault": false,
+            "ordinal": 3,
+            "modifierListId": "YR4LMQZC2NJYBT6BR7KC7RLJ"
+          }
+        }
+      ],
+      "isConversational": true,
+      "modifierType": "LIST",
+      "minSelectedModifiers": 1,
+      "maxSelectedModifiers": 1
+    }
+  },
+  {
+    "type": "MODIFIER_LIST",
+    "id": "HDIMBF4Q7IUQW2KCYWNQNYFI",
+    "updatedAt": "2026-08-03T23:34:41.495Z",
+    "createdAt": "2026-07-10T19:05:14.644Z",
+    "version": 1785800081495,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "modifierListData": {
+      "name": "Preparation Option",
+      "ordinal": 2,
+      "selectionType": "SINGLE",
+      "modifiers": [
+        {
+          "type": "MODIFIER",
+          "id": "VUEB23DT6GA2VY63VHSR6GLI",
+          "updatedAt": "2026-08-03T23:34:41.495Z",
+          "createdAt": "2026-07-10T19:05:14.644Z",
+          "version": 1785800081495,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Can",
+            "priceMoney": {
+              "amount": 80,
+              "currency": "EUR"
+            },
+            "onByDefault": false,
+            "ordinal": 0,
+            "modifierListId": "HDIMBF4Q7IUQW2KCYWNQNYFI"
+          }
+        }
+      ],
+      "isConversational": false,
+      "modifierType": "LIST",
+      "minSelectedModifiers": 0,
+      "maxSelectedModifiers": 1
+    }
+  },
+  {
+    "type": "MODIFIER_LIST",
+    "id": "TT2I7DJD6CP5MRUOFKBGWCD4",
+    "updatedAt": "2026-08-06T21:18:20.689Z",
+    "createdAt": "2026-08-06T21:18:20.776Z",
+    "version": 1786051100689,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "modifierListData": {
+      "name": "TEST - Milk",
+      "ordinal": 3,
+      "selectionType": "SINGLE",
+      "modifiers": [
+        {
+          "type": "MODIFIER",
+          "id": "ZORWPKES4SIRB3QE5JG5PE6J",
+          "updatedAt": "2026-08-06T21:18:20.689Z",
+          "createdAt": "2026-08-06T21:18:20.776Z",
+          "version": 1786051100689,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Whole",
+            "priceMoney": {
+              "amount": 0,
+              "currency": "EUR"
+            },
+            "ordinal": 0,
+            "modifierListId": "TT2I7DJD6CP5MRUOFKBGWCD4"
+          }
+        },
+        {
+          "type": "MODIFIER",
+          "id": "M26MBRF3MDKYJTX44XDLO4B7",
+          "updatedAt": "2026-08-06T21:18:20.689Z",
+          "createdAt": "2026-08-06T21:18:20.776Z",
+          "version": 1786051100689,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Semi-skimmed",
+            "priceMoney": {
+              "amount": 0,
+              "currency": "EUR"
+            },
+            "ordinal": 1,
+            "modifierListId": "TT2I7DJD6CP5MRUOFKBGWCD4"
+          }
+        },
+        {
+          "type": "MODIFIER",
+          "id": "46ZKKJMNPY36OBQWAVTI6FNM",
+          "updatedAt": "2026-08-06T21:18:20.689Z",
+          "createdAt": "2026-08-06T21:18:20.776Z",
+          "version": 1786051100689,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Oat",
+            "priceMoney": {
+              "amount": 0,
+              "currency": "EUR"
+            },
+            "ordinal": 2,
+            "modifierListId": "TT2I7DJD6CP5MRUOFKBGWCD4"
+          }
+        },
+        {
+          "type": "MODIFIER",
+          "id": "6JTCSV7KRX6VCEQV342LLATZ",
+          "updatedAt": "2026-08-06T21:18:20.689Z",
+          "createdAt": "2026-08-06T21:18:20.776Z",
+          "version": 1786051100689,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Oat - gluten free",
+            "priceMoney": {
+              "amount": 0,
+              "currency": "EUR"
+            },
+            "ordinal": 3,
+            "modifierListId": "TT2I7DJD6CP5MRUOFKBGWCD4"
+          }
+        },
+        {
+          "type": "MODIFIER",
+          "id": "GS7YRSBI3MDPHKNTTDIYY4CA",
+          "updatedAt": "2026-08-06T21:18:20.689Z",
+          "createdAt": "2026-08-06T21:18:20.776Z",
+          "version": 1786051100689,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Almond",
+            "priceMoney": {
+              "amount": 0,
+              "currency": "EUR"
+            },
+            "ordinal": 4,
+            "modifierListId": "TT2I7DJD6CP5MRUOFKBGWCD4"
+          }
+        },
+        {
+          "type": "MODIFIER",
+          "id": "UDEB3GSYLVWDCNRGZUMOBM3F",
+          "updatedAt": "2026-08-06T21:18:20.689Z",
+          "createdAt": "2026-08-06T21:18:20.776Z",
+          "version": 1786051100689,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Coconut",
+            "priceMoney": {
+              "amount": 0,
+              "currency": "EUR"
+            },
+            "ordinal": 5,
+            "modifierListId": "TT2I7DJD6CP5MRUOFKBGWCD4"
+          }
+        },
+        {
+          "type": "MODIFIER",
+          "id": "GYYPS3O4YWI7W5NQM7YAIV2K",
+          "updatedAt": "2026-08-06T21:18:20.689Z",
+          "createdAt": "2026-08-06T21:18:20.776Z",
+          "version": 1786051100689,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Lactose free",
+            "priceMoney": {
+              "amount": 0,
+              "currency": "EUR"
+            },
+            "ordinal": 6,
+            "modifierListId": "TT2I7DJD6CP5MRUOFKBGWCD4"
+          }
+        }
+      ],
+      "modifierType": "LIST",
+      "minSelectedModifiers": 1,
+      "maxSelectedModifiers": 1
+    }
+  },
+  {
+    "type": "MODIFIER_LIST",
+    "id": "6JZ4KZGWYSOQMNPAT5ND3QT5",
+    "updatedAt": "2026-08-06T21:31:40.566Z",
+    "createdAt": "2026-08-06T21:31:40.688Z",
+    "version": 1786051900566,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "modifierListData": {
+      "name": "TEST - Syrup",
+      "ordinal": 4,
+      "selectionType": "MULTIPLE",
+      "modifiers": [
+        {
+          "type": "MODIFIER",
+          "id": "VA7FI3KMB4WWUFXJSDFFRHGC",
+          "updatedAt": "2026-08-06T21:31:40.566Z",
+          "createdAt": "2026-08-06T21:31:40.688Z",
+          "version": 1786051900566,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Caramel",
+            "priceMoney": {
+              "amount": 50,
+              "currency": "EUR"
+            },
+            "ordinal": 0,
+            "modifierListId": "6JZ4KZGWYSOQMNPAT5ND3QT5"
+          }
+        },
+        {
+          "type": "MODIFIER",
+          "id": "AUFO67UYWM6UBCNHC6N5ZCI5",
+          "updatedAt": "2026-08-06T21:31:40.566Z",
+          "createdAt": "2026-08-06T21:31:40.688Z",
+          "version": 1786051900566,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Salted Caramel",
+            "priceMoney": {
+              "amount": 50,
+              "currency": "EUR"
+            },
+            "ordinal": 1,
+            "modifierListId": "6JZ4KZGWYSOQMNPAT5ND3QT5"
+          }
+        },
+        {
+          "type": "MODIFIER",
+          "id": "6NDPRD7J65BMTP3CKZBCNNIV",
+          "updatedAt": "2026-08-06T21:31:40.566Z",
+          "createdAt": "2026-08-06T21:31:40.688Z",
+          "version": 1786051900566,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Vanilla",
+            "priceMoney": {
+              "amount": 50,
+              "currency": "EUR"
+            },
+            "ordinal": 2,
+            "modifierListId": "6JZ4KZGWYSOQMNPAT5ND3QT5"
+          }
+        },
+        {
+          "type": "MODIFIER",
+          "id": "NA7ECEHYTMKEAPAHXLIW2UD7",
+          "updatedAt": "2026-08-06T21:31:40.566Z",
+          "createdAt": "2026-08-06T21:31:40.688Z",
+          "version": 1786051900566,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Hazelnut",
+            "priceMoney": {
+              "amount": 50,
+              "currency": "EUR"
+            },
+            "ordinal": 3,
+            "modifierListId": "6JZ4KZGWYSOQMNPAT5ND3QT5"
+          }
+        },
+        {
+          "type": "MODIFIER",
+          "id": "52MIJXX36WTVRVH6A7CM5EAA",
+          "updatedAt": "2026-08-06T21:31:40.566Z",
+          "createdAt": "2026-08-06T21:31:40.688Z",
+          "version": 1786051900566,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Fresca",
+            "priceMoney": {
+              "amount": 50,
+              "currency": "EUR"
+            },
+            "ordinal": 4,
+            "modifierListId": "6JZ4KZGWYSOQMNPAT5ND3QT5"
+          }
+        }
+      ],
+      "modifierType": "LIST"
+    }
+  },
+  {
+    "type": "MODIFIER_LIST",
+    "id": "LFF6YBGX74BFL5FZFPOMQDRO",
+    "updatedAt": "2026-08-06T21:31:40.566Z",
+    "createdAt": "2026-08-06T21:31:40.688Z",
+    "version": 1786051900566,
+    "isDeleted": false,
+    "presentAtAllLocations": false,
+    "presentAtLocationIds": [
+      "LKGQR7QKGC2S0"
+    ],
+    "modifierListData": {
+      "name": "TEST - Puree",
+      "ordinal": 5,
+      "selectionType": "MULTIPLE",
+      "modifiers": [
+        {
+          "type": "MODIFIER",
+          "id": "PCWVYS6Q2P3SEF4ME6P2XJXD",
+          "updatedAt": "2026-08-06T21:31:40.566Z",
+          "createdAt": "2026-08-06T21:31:40.688Z",
+          "version": 1786051900566,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Mango",
+            "priceMoney": {
+              "amount": 100,
+              "currency": "EUR"
+            },
+            "ordinal": 0,
+            "modifierListId": "LFF6YBGX74BFL5FZFPOMQDRO"
+          }
+        },
+        {
+          "type": "MODIFIER",
+          "id": "RTYQKHYXHANRIGGRBMZJQAVL",
+          "updatedAt": "2026-08-06T21:31:40.566Z",
+          "createdAt": "2026-08-06T21:31:40.688Z",
+          "version": 1786051900566,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Strawberry",
+            "priceMoney": {
+              "amount": 100,
+              "currency": "EUR"
+            },
+            "ordinal": 1,
+            "modifierListId": "LFF6YBGX74BFL5FZFPOMQDRO"
+          }
+        },
+        {
+          "type": "MODIFIER",
+          "id": "4H6TTXKIHS3VXQHI7JQN6SL5",
+          "updatedAt": "2026-08-06T21:31:40.566Z",
+          "createdAt": "2026-08-06T21:31:40.688Z",
+          "version": 1786051900566,
+          "isDeleted": false,
+          "presentAtAllLocations": false,
+          "presentAtLocationIds": [
+            "LKGQR7QKGC2S0"
+          ],
+          "modifierData": {
+            "name": "Passion Fruit",
+            "priceMoney": {
+              "amount": 100,
+              "currency": "EUR"
+            },
+            "ordinal": 2,
+            "modifierListId": "LFF6YBGX74BFL5FZFPOMQDRO"
+          }
+        }
+      ],
+      "modifierType": "LIST"
+    }
+  }
+]

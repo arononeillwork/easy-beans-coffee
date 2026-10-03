@@ -1,12 +1,12 @@
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { adminTheme } from './adminTheme';
-import TodoApp from './TodoApp';
+import TaskBoard from './TaskBoard';
 
 export default function AdminPage() {
   return (
     <ThemeProvider theme={adminTheme}>
       <CssBaseline />
-      <TodoApp />
+      <TaskBoard />
     </ThemeProvider>
   );
 }
