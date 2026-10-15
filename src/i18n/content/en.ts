@@ -165,7 +165,7 @@ export const en = {
     eyebrow: 'Calle Pizarro 8',
     label: 'Collection point',
     headline: 'The terrace is small. Come early or come late.',
-    body: 'We are open\n8am - 3pm Tuesday to Friday\n9am - 3pm Saturday.\nClosed Sunday and Monday',
+    body: 'We are open\n8am - 3pm Monday to Friday\n9am - 3pm Saturday.\nClosed Sunday',
     address: 'C. Pizarro 8, 29670 San Pedro de Alcántara, Málaga.',
     directions: 'Open in Maps',
     whatsapp: 'Send us a WhatsApp',
@@ -383,8 +383,7 @@ export const en = {
     hoursTitle: 'Opening hours',
     /** Fallback only — the live hours come from Google Maps when configured. */
     hours: [
-      { label: 'Monday', value: 'Closed' },
-      { label: 'Tue – Fri', value: '8:00 – 15:00' },
+      { label: 'Mon – Fri', value: '8:00 – 15:00' },
       { label: 'Saturday', value: '9:00 – 15:00' },
       { label: 'Sunday', value: 'Closed' },
     ],

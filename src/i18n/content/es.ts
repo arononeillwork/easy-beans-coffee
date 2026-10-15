@@ -154,7 +154,7 @@ export const es: SiteContent = {
     eyebrow: 'Calle Pizarro 8',
     label: 'Punto de recogida',
     headline: 'La terraza es pequeña. Ven pronto o ven tarde.',
-    body: 'Estamos abiertos\n8:00 – 15:00 de martes a viernes\n9:00 – 15:00 los sábados.\nDomingos y lunes cerrado',
+    body: 'Estamos abiertos\n8:00 – 15:00 de lunes a viernes\n9:00 – 15:00 los sábados.\nDomingos cerrado',
     address: 'C. Pizarro 8, 29670 San Pedro de Alcántara, Málaga.',
     directions: 'Abrir en Maps',
     whatsapp: 'Envíanos un WhatsApp',
@@ -359,8 +359,7 @@ export const es: SiteContent = {
     learn: 'Aprende',
     hoursTitle: 'Horario',
     hours: [
-      { label: 'Lunes', value: 'Cerrado' },
-      { label: 'Mar – Vie', value: '8:00 – 15:00' },
+      { label: 'Lun – Vie', value: '8:00 – 15:00' },
       { label: 'Sábado', value: '9:00 – 15:00' },
       { label: 'Domingo', value: 'Cerrado' },
     ],
