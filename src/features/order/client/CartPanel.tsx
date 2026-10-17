@@ -90,13 +90,15 @@ export function CartPanel({ cart }: Props) {
         body: JSON.stringify(body),
       });
       if (!res.ok) {
-        const payload = (await res.json().catch(() => null)) as { error?: string } | null;
+        const payload = (await res.json().catch(() => null)) as { error?: string; reason?: string } | null;
         setError(
           payload?.error === 'catalog_mismatch'
             ? t.errors.cartChanged
             : payload?.error === 'pickup_invalid'
               ? t.errors.closed
-              : t.errors.generic,
+              : payload?.reason
+                ? `${t.errors.generic} (${payload.reason})`
+                : t.errors.generic,
         );
         return;
       }
