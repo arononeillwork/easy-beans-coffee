@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+import { SquareError } from 'square';
+import { ZodError } from 'zod';
 import { checkoutRequestSchema } from '@/server/validation/checkoutSchema';
 import { getCatalogForCheckout } from '@/server/square/catalogCache';
 import {
@@ -31,6 +33,26 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: err.code }, { status });
     }
     console.error('checkout failed', err);
-    return NextResponse.json({ error: 'checkout_failed' }, { status: 500 });
+    return NextResponse.json({ error: 'checkout_failed', reason: failureReason(err) }, { status: 500 });
   }
+}
+
+/**
+ * A short, secret-free label for why checkout failed, returned alongside the
+ * generic error so a failure can be diagnosed from the browser's network tab
+ * without server-log access. Square error codes and field names only — never
+ * messages that could echo tokens or customer data.
+ */
+function failureReason(err: unknown): string {
+  if (err instanceof SquareError) {
+    const first = err.errors?.[0];
+    const parts = ['square', String(err.statusCode ?? ''), first?.code ?? '', first?.field ?? ''];
+    return parts.filter(Boolean).join(':');
+  }
+  if (err instanceof ZodError) {
+    return `config:${err.issues.map((issue) => issue.path.join('.') || issue.message).join(',')}`;
+  }
+  if (err instanceof Error && err.message.startsWith('order insert failed')) return 'database:order_insert';
+  if (err instanceof Error && /SUPABASE/.test(err.message)) return 'config:supabase';
+  return 'unknown';
 }
