@@ -125,8 +125,10 @@ export const es: SiteContent = {
     headline: 'Para llevar a casa.',
     body: 'Café en grano, matcha y chai. Pide online y recoge en Calle Pizarro 8.',
     collectNote: 'Recogida en el mostrador, Calle Pizarro 8. Todavía no enviamos.',
-    comingSoon: 'El café en grano, el matcha y el chai para llevar llegan muy pronto.',
-    menuCta: 'Ver la carta',
+    soonTitle: 'Muy pronto.',
+    comingSoon: 'Te avisamos cuando abra la tienda.',
+    soonCta: 'Avisarme',
+    soonDone: 'Te avisaremos cuando abra.',
     categories: {
       beans: {
         name: 'Café en grano',

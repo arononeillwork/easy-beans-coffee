@@ -138,8 +138,10 @@ export const en = {
     headline: 'Take it home.',
     body: 'Coffee beans, matcha and chai. Order online, collect at Calle Pizarro 8.',
     collectNote: 'Collect at the counter, Calle Pizarro 8. No shipping yet.',
-    comingSoon: 'Beans, matcha and chai to take home are coming soon.',
-    menuCta: 'See the menu',
+    soonTitle: 'Coming soon.',
+    comingSoon: 'We will email you when the shop opens.',
+    soonCta: 'Notify me',
+    soonDone: 'We will let you know when it opens.',
     categories: {
       beans: {
         name: 'Coffee beans',

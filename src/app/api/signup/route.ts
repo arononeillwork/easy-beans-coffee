@@ -18,6 +18,9 @@ const CONSENT_BY_SOURCE = {
   first_visit_popup: { offerOptin: true, eventsOptin: true },
   newsletter_section: { offerOptin: false, eventsOptin: true },
   announcement_bar: { offerOptin: true, eventsOptin: true },
+  // "Coming soon" on /shop: a marketing newsletter signup, so the same
+  // consent as the popup — including the 10% code for online orders.
+  shop_page: { offerOptin: true, eventsOptin: true },
 } as const;
 
 /** A new capture point must be added here, which forces a consent decision. */
@@ -25,7 +28,7 @@ const bodySchema = z.object({
   email: z.email(),
   lang: z.enum(['en', 'es']).optional(),
   source: z
-    .enum(['first_visit_popup', 'newsletter_section', 'announcement_bar'])
+    .enum(['first_visit_popup', 'newsletter_section', 'announcement_bar', 'shop_page'])
     .default('first_visit_popup'),
   // Only the known topic keys survive; anything else is a 400, same as a bad
   // source. Deduplicated before storage.

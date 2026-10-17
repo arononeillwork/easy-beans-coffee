@@ -72,6 +72,23 @@ test.describe('shop', () => {
     await expect(shop.addToCartButtons()).toHaveCount(0);
   });
 
+  test('coming-soon signup subscribes the email to the newsletter from the shop page', async ({ page }) => {
+    const shop = await englishShop(page);
+    await shop.withMenu(defaultTestMenu());
+    let posted: Record<string, unknown> | null = null;
+    await page.route('**/api/signup', async (route) => {
+      posted = route.request().postDataJSON() as Record<string, unknown>;
+      await route.fulfill({ json: { ok: true, offerCode: 'EB-TEST10' } });
+    });
+    await shop.open();
+
+    await shop.comingSoon().getByLabel('Email').fill('shop@example.com');
+    await shop.comingSoon().getByRole('button', { name: /notify me/i }).click();
+
+    await expect(page.getByTestId('signup-done')).toContainText('EB-TEST10');
+    expect(posted).toMatchObject({ email: 'shop@example.com', source: 'shop_page', lang: 'en' });
+  });
+
   test('unknown collection is a 404', async ({ page }) => {
     const shop = await englishShop(page);
     await shop.withMenu(testMenuWithShop());
