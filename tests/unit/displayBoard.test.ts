@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import type { Square } from 'square';
 import { normalizeCatalog } from '@/server/square/catalog';
-import { buildDisplayPages } from '@/features/menu/display/boardData';
+import { buildDisplayBoard } from '@/features/menu/display/boardData';
 import { EMPTY_PRICE_BOOK, toPriceBook } from '@/features/menu/priceBook';
 import { DRINKS, SECTIONS } from '@/features/menu/drinks';
 
@@ -59,17 +59,17 @@ function fixtureBook() {
   return toPriceBook(normalizeCatalog(objects, LOCATION), '2026-10-17');
 }
 
-test('every section with drinks becomes a page, in board order', () => {
-  const pages = buildDisplayPages(fixtureBook());
+test('every section with drinks becomes a section, in board order', () => {
+  const board = buildDisplayBoard(fixtureBook());
   const expected = SECTIONS.map((s) => s.id).filter((id) =>
     DRINKS.some((drink) => drink.section === id),
   );
-  assert.deepEqual(pages.map((page) => page.section), expected);
+  assert.deepEqual(board.map((section) => section.id), expected);
 });
 
 test('temp-priced drinks carry the hot/iced pair from Square', () => {
-  const pages = buildDisplayPages(syntheticBook());
-  const coffee = pages.find((page) => page.section === 'coffee');
+  const board = buildDisplayBoard(syntheticBook());
+  const coffee = board.find((section) => section.id === 'coffee');
   const flatWhite = coffee?.rows.find((row) => row.id === 'flat-white');
   assert.ok(flatWhite);
   assert.ok(flatWhite.price.hot !== undefined && flatWhite.price.hot > 0);
@@ -78,55 +78,50 @@ test('temp-priced drinks carry the hot/iced pair from Square', () => {
 });
 
 test('serve-priced items collapse to one number', () => {
-  const pages = buildDisplayPages(syntheticBook());
-  const smoothie = pages
-    .find((page) => page.section === 'smoothies')
+  const board = buildDisplayBoard(syntheticBook());
+  const smoothie = board
+    .find((section) => section.id === 'smoothies')
     ?.rows.find((row) => row.id === 'berry-blast');
   assert.deepEqual(smoothie?.price, { one: 650 });
 });
 
-test('pick shelves expand into one priced row per bottle', () => {
-  const pages = buildDisplayPages(syntheticBook());
-  const cold = pages.find((page) => page.section === 'cold');
-  assert.ok(cold);
-  const cola = cold.rows.find((row) => row.id === 'soft-drinks:coca-cola');
-  assert.ok(cola, 'the shelf is its bottles, not one "Soft Drinks" line');
-  assert.ok((cola.price.one ?? 0) > 0);
-  assert.ok(!cold.rows.some((row) => row.id === 'soft-drinks'));
+test('a pick shelf stays one line, options spelled out, at its shared price', () => {
+  const board = buildDisplayBoard(syntheticBook());
+  const cold = board.find((section) => section.id === 'cold');
+  const shelf = cold?.rows.find((row) => row.id === 'soft-drinks');
+  assert.ok(shelf);
+  assert.deepEqual(shelf.price, { one: 250 });
+  assert.ok(shelf.options?.en.includes('Coca-Cola'));
+  assert.ok(shelf.options?.en.includes('Iced Tea'));
+  assert.ok(shelf.options?.es.includes('Té Frío'));
+  // No per-bottle rows: the shelf is a single line with its options as text.
+  assert.ok(!cold?.rows.some((row) => row.id.startsWith('soft-drinks:')));
 });
 
 test('a renamed variation falls back to the cheapest price instead of a gap', () => {
-  const pages = buildDisplayPages(syntheticBook());
-  const corona = pages
-    .find((page) => page.section === 'cold')
+  const board = buildDisplayBoard(syntheticBook());
+  const corona = board
+    .find((section) => section.id === 'cold')
     ?.rows.find((row) => row.id === 'corona');
   assert.deepEqual(corona?.price, { one: 350 });
 });
 
-test('a pick outside the fridge stays one dish', () => {
-  const pages = buildDisplayPages(syntheticBook());
-  const food = pages.find((page) => page.section === 'food');
-  assert.ok(food?.rows.some((row) => row.id === 'chia-fruit-parfait'));
-  assert.ok(!food?.rows.some((row) => row.id.startsWith('chia-fruit-parfait:')));
-});
-
 test('an empty book still builds the whole board, prices withheld', () => {
-  const pages = buildDisplayPages(EMPTY_PRICE_BOOK);
-  assert.ok(pages.length >= 5);
-  for (const page of pages) {
-    assert.ok(page.rows.length > 0);
-    for (const row of page.rows) {
+  const board = buildDisplayBoard(EMPTY_PRICE_BOOK);
+  assert.ok(board.length >= 5);
+  for (const section of board) {
+    assert.ok(section.rows.length > 0);
+    for (const row of section.rows) {
       assert.equal(row.price.hot ?? row.price.iced ?? row.price.one, undefined);
       assert.equal(row.soldOut, false);
     }
   }
 });
 
-test('rows that exist locally but not in Square render price-less, not missing', () => {
-  const pages = buildDisplayPages(fixtureBook());
-  const all = pages.flatMap((page) => page.rows.map((row) => row.id));
-  // Every non-pick drink appears exactly once, whatever Square carries.
-  for (const drink of DRINKS.filter((d) => d.variations.by !== 'pick')) {
-    assert.ok(all.includes(drink.id), `${drink.id} missing from the board`);
+test('every drink on the local board appears exactly once, whatever Square carries', () => {
+  const board = buildDisplayBoard(fixtureBook());
+  const all = board.flatMap((section) => section.rows.map((row) => row.id));
+  for (const drink of DRINKS) {
+    assert.equal(all.filter((id) => id === drink.id).length, 1, `${drink.id} missing or duplicated`);
   }
 });

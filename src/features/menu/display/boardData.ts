@@ -1,6 +1,5 @@
-import { DRINKS, SECTIONS, baseArt, drinkById } from '../drinks';
+import { DRINKS, SECTIONS, baseArt } from '../drinks';
 import { resolveArt } from '../drinkArt';
-import { paletteForDrink, type FamilyPalette } from '../palette';
 import {
   findVariation,
   indexPriceBook,
@@ -8,15 +7,15 @@ import {
   type PriceBook,
   type PricedItem,
 } from '../priceBook';
-import type { Bilingual, Drink, Section, Serve, Temp } from '../types';
+import type { Bilingual, Drink, Section, Temp } from '../types';
 import { normalizeName } from '@/features/shop/retail';
 
 /**
  * The in-café display board's data, built from the same two halves as the
  * studio: `drinks.ts` says what the menu *is* (names, sections, photography),
  * the price book says what Square charges for it today. Pure — the screen
- * component can rebuild pages whenever a fresh book arrives, and the whole
- * thing unit-tests without a network.
+ * component can rebuild the board whenever a fresh book arrives, and the
+ * whole thing unit-tests without a network.
  */
 
 /** What a row costs. Either one number, or the hot/iced pair side by side. */
@@ -30,37 +29,25 @@ export interface DisplayRow {
   id: string;
   name: Bilingual;
   tagline: Bilingual | null;
-  /** Resolved photograph for the row's thumbnail, if the library has one. */
+  /**
+   * A pick shelf's choices spelled out — "Coca-Cola · Sprite · …" — so the
+   * fridge reads as one line with its options, not one row per bottle.
+   */
+  options: Bilingual | null;
+  /** Resolved photograph, used by the featured section's thumbnails. */
   art: string | null;
   price: RowPrice;
   soldOut: boolean;
 }
 
-export interface DisplayPage {
-  section: Section;
+export interface DisplaySection {
+  id: Section;
   label: Bilingual;
   blurb: Bilingual;
-  palette: FamilyPalette;
-  /** Big photograph for the page, when the section has one worth leading with. */
-  hero: { src: string; alt: string } | null;
-  /** True when any row prices hot and iced apart, so the page shows the legend. */
+  /** True when any row prices hot and iced apart, for the board's legend. */
   hasTempPair: boolean;
   rows: DisplayRow[];
 }
-
-/**
- * The photograph each section leads with. Chosen by eye, resolved through the
- * same fallback ladder as the studio, so a reshuffled library degrades to a
- * near frame instead of a broken image. Bakery has no studio shots yet and
- * leads with type instead.
- */
-const HEROES: Partial<Record<Section, { drinkId: string; temp: Temp | null; serve: Serve }>> = {
-  coffee: { drinkId: 'flat-white', temp: 'hot', serve: 'sitIn' },
-  speciality: { drinkId: 'ube-latte', temp: 'iced', serve: 'can' },
-  smoothies: { drinkId: 'berry-blast', temp: 'iced', serve: 'sitIn' },
-  cold: { drinkId: 'fresh-orange-juice', temp: null, serve: 'sitIn' },
-  food: { drinkId: 'acai-bowl', temp: null, serve: 'sitIn' },
-};
 
 function cents(item: PricedItem | undefined, variationName: string | undefined): number | undefined {
   if (!variationName) return undefined;
@@ -109,9 +96,13 @@ function priceFor(drink: Drink, item: PricedItem | undefined): RowPrice {
     }
     case 'none':
       return { one: cents(item, v.name) ?? cheapest(item) };
-    case 'pick':
-      // Pick shelves are expanded into one row per pick — see buildRows.
-      return { one: undefined };
+    case 'pick': {
+      // One line for the shelf, at its (invariably shared) cheapest price.
+      const prices = v.picks
+        .map((pick) => cents(item, pick.square))
+        .filter((value): value is number => value !== undefined);
+      return { one: prices.length ? Math.min(...prices) : cheapest(item) };
+    }
   }
 }
 
@@ -123,82 +114,40 @@ function rowArt(drink: Drink): string | null {
   return resolveArt(baseArt(drink), temp, drink.serves[0] ?? 'sitIn');
 }
 
-function buildRows(drink: Drink, item: PricedItem | undefined): DisplayRow[] {
-  if (drink.variations.by === 'pick') {
-    const picks = drink.variations.picks;
+function toRow(drink: Drink, item: PricedItem | undefined): DisplayRow {
+  const options =
+    drink.variations.by === 'pick'
+      ? {
+          en: drink.variations.picks.map((pick) => pick.name.en).join(' · '),
+          es: drink.variations.picks.map((pick) => pick.name.es).join(' · '),
+        }
+      : null;
 
-    // The fridge reads as its bottles, not as one "Soft Drinks" line…
-    if (drink.section === 'cold') {
-      return picks.map((pick) => ({
-        id: `${drink.id}:${pick.id}`,
-        name: pick.name,
-        tagline: null,
-        art: resolveArt(pick.art ?? pick.id, null, 'takeaway') ?? rowArt(drink),
-        price: { one: cents(item, pick.square) },
-        soldOut: item?.soldOut ?? false,
-      }));
-    }
-
-    // …but a flavour choice ("Strawberry or Mango") stays one dish, priced
-    // from its cheapest pick. A bare "Strawberry" row says nothing.
-    const prices = picks
-      .map((pick) => cents(item, pick.square))
-      .filter((value): value is number => value !== undefined);
-    return [
-      {
-        id: drink.id,
-        name: drink.name,
-        tagline: drink.tagline,
-        art: rowArt(drink),
-        price: { one: prices.length ? Math.min(...prices) : undefined },
-        soldOut: item?.soldOut ?? false,
-      },
-    ];
-  }
-
-  return [
-    {
-      id: drink.id,
-      name: drink.name,
-      tagline: drink.tagline,
-      art: rowArt(drink),
-      price: priceFor(drink, item),
-      soldOut: item?.soldOut ?? false,
-    },
-  ];
+  return {
+    id: drink.id,
+    name: drink.name,
+    tagline: drink.tagline,
+    options,
+    art: rowArt(drink),
+    price: priceFor(drink, item),
+    soldOut: item?.soldOut ?? false,
+  };
 }
 
-/** One page per section, in board order, priced from the given snapshot. */
-export function buildDisplayPages(book: PriceBook): DisplayPage[] {
+/** The whole board, one section per entry, in the order the café reads it. */
+export function buildDisplayBoard(book: PriceBook): DisplaySection[] {
   const byKey = indexPriceBook(book);
 
   return SECTIONS.map((section) => {
-    const rows = DRINKS.filter((drink) => drink.section === section.id).flatMap((drink) =>
-      buildRows(drink, byKey.get(normalizeName(drink.square))),
+    const rows = DRINKS.filter((drink) => drink.section === section.id).map((drink) =>
+      toRow(drink, byKey.get(normalizeName(drink.square))),
     );
-
-    const heroRef = HEROES[section.id];
-    const heroDrink = heroRef ? drinkById(heroRef.drinkId) : undefined;
-    const heroSrc = heroRef && heroDrink ? resolveArt(baseArt(heroDrink), heroRef.temp, heroRef.serve) : null;
-
-    // The page is washed in its hero's colour; a heroless section (bakery)
-    // takes the first row's drink so it still arrives with a palette.
-    const paletteDrink = heroDrink ?? DRINKS.find((drink) => drink.section === section.id);
-
     return {
-      section: section.id,
+      id: section.id,
       label: section.label,
       blurb: section.blurb,
-      palette: paletteFor(paletteDrink),
-      hero: heroSrc && heroDrink ? { src: heroSrc, alt: heroDrink.name.en } : null,
       hasTempPair: rows.some((row) => row.price.hot !== undefined),
       rows,
     };
-  }).filter((page) => page.rows.length > 0);
-}
-
-function paletteFor(drink: Drink | undefined): FamilyPalette {
-  if (drink) return paletteForDrink(drink);
-  // Unreachable while DRINKS covers every section; a safe cream-side default.
-  return { wash: '#F3DED3', glow: '#F79BA4', accent: '#A85A68' };
+  }).filter((section) => section.rows.length > 0);
 }
