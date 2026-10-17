@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import Box from '@mui/material/Box';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { Providers } from '@/app/providers';
-import { AnnouncementBar } from '@/components/layout/AnnouncementBar';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { FirstVisitPopup } from '@/components/marketing/FirstVisitPopup';
@@ -81,7 +80,6 @@ export default async function SiteLayout({
           <Providers lang={lang} t={t}>
             <CartProvider>
               <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100dvh' }}>
-                <AnnouncementBar />
                 <Header />
                 <Box component="main" sx={{ flexGrow: 1 }}>
                   {children}

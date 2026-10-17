@@ -1,12 +1,13 @@
 'use client';
 
-import Alert from '@mui/material/Alert';
+import Link from 'next/link';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { useLanguage } from '@/i18n/LanguageProvider';
+import { localePath } from '@/i18n/config';
 import { useMenu } from '@/features/order/hooks/useMenu';
 import { CollectionTiles } from '@/features/shop/client/CollectionTiles';
 import { ProductGrid } from '@/features/shop/client/ProductGrid';
@@ -16,86 +17,64 @@ import type { MenuResponse } from '@/features/order/types';
 import { brand } from '@/theme/brand';
 
 /**
- * Shop landing body: collection tiles, a featured row, then the FAQ. Stock
- * arrives prerendered from the route, so the tiles and prices are in the
- * first paint; the spinner is only for the Square-unreachable fallback.
+ * Shop landing. Stock comes from Square, prerendered by the route: put an item
+ * in a retail category there ("Coffee beans", "Matcha", "Gift sets") and it
+ * appears here. Until Square has any, the page says so in one line and points
+ * to the menu — it never shows sample products to customers.
  */
 export function ShopView({ initialMenu }: { initialMenu: MenuResponse | null }) {
-  const { t } = useLanguage();
-  const { menu, loading, error, retry } = useMenu(initialMenu);
+  const { t, lang } = useLanguage();
+  const { menu, loading } = useMenu(initialMenu);
 
   const shop = shopCollections(menu);
   const collections = shop.categories;
   const featured = collections
     .flatMap((category) =>
-      category.retailSlug
-        ? category.items.map((item) => ({ item, collection: category.retailSlug! }))
-        : [],
+      category.retailSlug ? category.items.map((item) => ({ item, collection: category.retailSlug! })) : [],
     )
     .filter(({ item }) => item.badge !== undefined)
     .slice(0, 4);
 
   return (
-    <>
-      <Box sx={{ backgroundColor: brand.roseWash }}>
-        <Container maxWidth="lg" sx={{ py: { xs: 8, md: 12 } }}>
-          <Typography variant="h6" component="p" sx={{ color: brand.rosePinkDeep, mb: 2 }}>
-            {t.shop.eyebrow}
+    <Container maxWidth="lg" sx={{ pt: { xs: 4, md: 7 }, pb: { xs: 9, md: 14 } }}>
+      <Typography variant="h1" sx={{ fontSize: { xs: 'clamp(2.75rem, 12vw, 4rem)', md: 'clamp(4rem, 6.5vw, 6rem)' }, lineHeight: 0.96, letterSpacing: '-0.045em', maxWidth: '10ch' }}>
+        {t.shop.headline}
+      </Typography>
+
+      {loading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+          <CircularProgress color="secondary" aria-label={t.shop.eyebrow} />
+        </Box>
+      ) : shop.isPlaceholder ? (
+        <Box data-testid="shop-coming-soon" sx={{ mt: { xs: 3, md: 4 } }}>
+          <Typography sx={{ fontSize: { xs: '1.0625rem', md: '1.1875rem' }, color: brand.ink70, maxWidth: '40ch' }}>
+            {t.shop.comingSoon}
           </Typography>
-          <Typography variant="h1" sx={{ maxWidth: '16ch', mb: 3, textWrap: 'balance' }}>
-            {t.shop.headline}
-          </Typography>
-          <Typography color="text.secondary" sx={{ maxWidth: '52ch', mb: 2 }}>
+          <Button component={Link} href={localePath(lang, '/order')} variant="contained" sx={{ mt: 4 }}>
+            {t.shop.menuCta}
+          </Button>
+        </Box>
+      ) : (
+        <>
+          <Typography sx={{ mt: { xs: 3, md: 4 }, fontSize: { xs: '1.0625rem', md: '1.1875rem' }, color: brand.ink70, maxWidth: '40ch' }}>
             {t.shop.body}
           </Typography>
-          <Typography variant="body2" sx={{ color: brand.rosePinkDeep }}>
-            {t.shop.collectNote}
-          </Typography>
-        </Container>
-      </Box>
-
-      <Container maxWidth="lg" sx={{ py: { xs: 8, md: 12 } }}>
-        {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
-            <CircularProgress color="secondary" aria-label={t.shop.eyebrow} />
+          <Box sx={{ mt: { xs: 6, md: 9 } }}>
+            <CollectionTiles collections={collections.flatMap((c) => (c.retailSlug ? [c.retailSlug] : []))} />
           </Box>
-        ) : (
-          <>
-            {shop.isPlaceholder && (
-              <Alert
-                severity="info"
-                sx={{ mb: 5 }}
-                action={
-                  error ? (
-                    <Button onClick={retry} size="small" color="inherit">
-                      ↻
-                    </Button>
-                  ) : undefined
-                }
-              >
-                {t.shop.placeholderNotice}
-              </Alert>
-            )}
-
-            <CollectionTiles
-              collections={collections.flatMap((c) => (c.retailSlug ? [c.retailSlug] : []))}
-            />
-
-            {featured.length > 0 && (
-              <Box sx={{ mt: { xs: 8, md: 12 } }}>
-                <Typography variant="h3" sx={{ mb: 3 }}>
-                  {t.shop.featured}
-                </Typography>
-                <ProductGrid entries={featured} />
-              </Box>
-            )}
-
+          {featured.length > 0 && (
             <Box sx={{ mt: { xs: 8, md: 12 } }}>
-              <ShopFaq />
+              <Typography variant="h3" component="h2" sx={{ mb: 3 }}>
+                {t.shop.featured}
+              </Typography>
+              <ProductGrid entries={featured} />
             </Box>
-          </>
-        )}
-      </Container>
-    </>
+          )}
+          <Box sx={{ mt: { xs: 8, md: 12 } }}>
+            <ShopFaq />
+          </Box>
+        </>
+      )}
+    </Container>
   );
 }

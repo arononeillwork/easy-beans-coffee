@@ -103,9 +103,11 @@ export class ShopPage extends SitePage {
   }
 
   /** Scoped to the MUI Alert — Next's route announcer is also role="alert". */
-  placeholderNotice() {
-    return this.page.locator('.MuiAlert-root');
+  /** Shown instead of products while Square has no retail stock. */
+  comingSoon() {
+    return this.page.getByTestId('shop-coming-soon');
   }
+
 }
 
 export class AdminPage extends SitePage {

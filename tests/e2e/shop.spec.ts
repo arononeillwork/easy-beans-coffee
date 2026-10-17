@@ -59,16 +59,17 @@ test.describe('shop', () => {
     await expect(page.getByRole('radio', { name: /1 kg/ })).toBeVisible();
   });
 
-  test('shows placeholder stock and blocks ordering when Square has no retail items', async ({
+  test('says the shop is coming soon, and shows no sample products, when Square has no retail items', async ({
     page,
   }) => {
     const shop = await englishShop(page);
-    // defaultTestMenu is drinks only — the placeholder path.
+    // defaultTestMenu is drinks only — no retail stock in Square.
     await shop.withMenu(defaultTestMenu());
     await shop.open();
 
-    await expect(shop.placeholderNotice()).toBeVisible();
-    await expect(shop.placeholderNotice()).toContainText(/sample products/i);
+    await expect(shop.comingSoon()).toBeVisible();
+    await expect(shop.comingSoon()).toContainText(/coming soon/i);
+    await expect(shop.addToCartButtons()).toHaveCount(0);
   });
 
   test('unknown collection is a 404', async ({ page }) => {

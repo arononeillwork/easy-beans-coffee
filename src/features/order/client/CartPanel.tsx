@@ -20,7 +20,6 @@ import type { CartLine, CheckoutRequestBody } from '../types';
 import { formatEuros } from '../lib/price';
 import {
   FALLBACK_HOURS,
-  formatSlotLabel,
   isOpenForAsap,
   nextOrderingOpen,
   ORDER_CUTOFF_MIN,
@@ -28,6 +27,7 @@ import {
   RETAIL_PREP_TIME_MIN,
 } from '../lib/pickupTimes';
 import type { DayHours } from '@/shared/lib/openingHours';
+import { describeWhen } from '@/shared/lib/openNow';
 
 const CAFE_TZ = 'Europe/Madrid';
 const THUMB = 60;
@@ -356,7 +356,7 @@ function PickupNote({
   now: number;
 }) {
   const { t, lang } = useLanguage();
-  const reopenLabel = reopensAt ? describeReopen(reopensAt, now, lang) : null;
+  const reopenLabel = reopensAt ? describeWhen(reopensAt, now, lang, CAFE_TZ) : null;
   const timing =
     prepMinutes > 0
       ? t.order.pickupReadyIn.replace('{min}', String(prepMinutes))
@@ -422,15 +422,3 @@ function Field({
   );
 }
 
-/** "today at 8:00", "tomorrow at 8:00", "Monday at 8:00" — in café time. */
-function describeReopen(iso: string, nowMs: number, lang: string): string {
-  const time = formatSlotLabel(iso, CAFE_TZ).replace(/^0/, '');
-  const dayKey = (ms: number) =>
-    new Intl.DateTimeFormat('en-CA', { timeZone: CAFE_TZ, year: 'numeric', month: '2-digit', day: '2-digit' }).format(ms);
-  const target = Date.parse(iso);
-  const es = lang === 'es';
-  if (dayKey(target) === dayKey(nowMs)) return es ? `hoy a las ${time}` : `today at ${time}`;
-  if (dayKey(target) === dayKey(nowMs + 86_400_000)) return es ? `mañana a las ${time}` : `tomorrow at ${time}`;
-  const weekday = new Intl.DateTimeFormat(es ? 'es-ES' : 'en-GB', { timeZone: CAFE_TZ, weekday: 'long' }).format(target);
-  return es ? `el ${weekday} a las ${time}` : `${weekday} at ${time}`;
-}

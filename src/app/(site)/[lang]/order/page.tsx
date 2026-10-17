@@ -4,6 +4,7 @@ import { LANGS, isLang } from '@/i18n/config';
 import { getDictionary } from '@/i18n/dictionary';
 import { getPriceBookOrEmpty } from '@/server/square/priceCache';
 import { MenuView } from '@/features/menu/client/MenuView';
+import { AllergenTable } from '@/features/menu/AllergenTable';
 
 /**
  * The board itself is local, so nothing here waits on Square to draw a menu.
@@ -50,7 +51,13 @@ export async function generateMetadata({
 export default async function OrderPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
+  const t = getDictionary(lang);
   const prices = await getPriceBookOrEmpty();
 
-  return <MenuView initialPrices={prices} />;
+  return (
+    <>
+      <MenuView initialPrices={prices} />
+      <AllergenTable t={t} />
+    </>
+  );
 }

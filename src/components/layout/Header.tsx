@@ -8,6 +8,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -17,7 +18,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import CoffeeOutlinedIcon from '@mui/icons-material/CoffeeOutlined';
 import PersonOutlineRoundedIcon from '@mui/icons-material/PersonOutlineRounded';
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import logo from '@/assets/logo.png';
 import { useLanguage } from '@/i18n/LanguageProvider';
 import { localePath } from '@/i18n/config';
@@ -31,7 +31,7 @@ const NAV = [
   { href: '/order', key: 'menu' },
   { href: '/shop', key: 'shop' },
   { href: '/about', key: 'story' },
-  { href: '/#find-us', key: 'findUs' },
+  { href: '/#visit', key: 'findUs' },
 ] as const;
 
 export function Header() {
@@ -45,13 +45,12 @@ export function Header() {
       position="sticky"
       color="transparent"
       sx={{
-        backgroundColor: 'rgba(247, 236, 228, 0.88)',
+        backgroundColor: 'rgba(247, 236, 228, 0.92)',
         backdropFilter: 'blur(10px)',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
+        boxShadow: 'none',
       }}
     >
-      <Toolbar sx={{ maxWidth: 1280, width: '100%', mx: 'auto', gap: 2 }}>
+      <Toolbar sx={{ maxWidth: 1280, width: '100%', mx: 'auto', gap: { xs: 1, md: 2 }, minHeight: { xs: 64, md: 76 } }}>
         <IconButton
           edge="start"
           aria-label="Menu"
@@ -117,13 +116,18 @@ export function Header() {
           })}
         </Box>
 
+        <Button
+          component={Link}
+          href={localePath(lang, '/order')}
+          variant="contained"
+          size="small"
+          sx={{ display: { xs: 'none', md: 'inline-flex' }, ml: 1 }}
+        >
+          {t.nav.orderCta}
+        </Button>
+
         <LangToggle />
 
-        {/* Search is furniture for now — the affordance ships first, the
-            feature follows. Inert on purpose. */}
-        <IconButton aria-label={t.nav.search} size="small">
-          <SearchRoundedIcon />
-        </IconButton>
         <IconButton
           aria-label={t.nav.account}
           size="small"
