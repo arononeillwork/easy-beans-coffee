@@ -67,6 +67,20 @@ const COLUMNS: Section[][] = [
   ['smoothies', 'cold', 'bakery'],
 ];
 
+/**
+ * The sticker strip along the bottom, exactly as the printed menus sign off:
+ * die-cut illustrations with the white border and pink shadow. The croissant,
+ * açaí bowl and chia jar are cut from the café's own artwork; the iced can
+ * was drawn to match it. Aspect ratios are the files' real ones, so the row
+ * lays out before the images arrive.
+ */
+const STICKERS: Array<{ src: string; alt: string; ratio: string; height: string; tilt: number }> = [
+  { src: '/media/display/croissant.webp', alt: 'Croissant', ratio: '266 / 230', height: 'clamp(30px, 5.4vh, 96px)', tilt: -4 },
+  { src: '/media/display/acai-bowl.webp', alt: 'Açaí bowl', ratio: '269 / 291', height: 'clamp(36px, 6.6vh, 116px)', tilt: 3 },
+  { src: '/media/display/coffee-can.webp', alt: 'Iced latte in a can glass', ratio: '262 / 560', height: 'clamp(46px, 8.6vh, 150px)', tilt: -3 },
+  { src: '/media/display/chia-jar.webp', alt: 'Chia pudding jar', ratio: '204 / 282', height: 'clamp(36px, 6.6vh, 116px)', tilt: 4 },
+];
+
 export function DisplayBoard({
   initialBook,
   initialHours,
@@ -151,13 +165,17 @@ export function DisplayBoard({
         position: 'fixed',
         inset: 0,
         display: 'grid',
-        gridTemplateRows: 'auto minmax(0, 1fr) auto',
+        gridTemplateRows: 'auto minmax(0, 1fr) auto auto',
         backgroundColor: brand.cream,
         color: ESPRESSO,
         overflow: 'hidden',
         '@keyframes board-in': {
           from: { opacity: 0, transform: 'translateY(2vh)' },
           to: { opacity: 1, transform: 'translateY(0)' },
+        },
+        '@keyframes sticker-bob': {
+          from: { transform: 'translateY(-2.5%) rotate(var(--tilt))' },
+          to: { transform: 'translateY(2.5%) rotate(var(--tilt))' },
         },
         '@media (prefers-reduced-motion: reduce)': {
           '& *': { animation: 'none !important', transition: 'none !important' },
@@ -190,7 +208,40 @@ export function DisplayBoard({
         ))}
       </Box>
 
+      <StickerStrip />
       <Footer />
+    </Box>
+  );
+}
+
+/** The illustrations row above the footer — the menu's one playful moment. */
+function StickerStrip() {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'space-evenly',
+        px: 'clamp(16px, 6vw, 90px)',
+        pt: 'clamp(2px, 0.4vh, 8px)',
+      }}
+    >
+      {STICKERS.map((sticker, index) => (
+        <Box
+          key={sticker.src}
+          sx={{
+            position: 'relative',
+            height: sticker.height,
+            aspectRatio: sticker.ratio,
+            '--tilt': `${sticker.tilt}deg`,
+            transform: `rotate(${sticker.tilt}deg)`,
+            animation: 'sticker-bob 5.5s ease-in-out infinite alternate',
+            animationDelay: `${index * 800}ms`,
+          }}
+        >
+          <Image src={sticker.src} alt={sticker.alt} fill sizes="12vh" style={{ objectFit: 'contain' }} />
+        </Box>
+      ))}
     </Box>
   );
 }
@@ -216,12 +267,12 @@ function Header({ nowMs, timezone }: { nowMs: number | null; timezone: string })
         justifyContent: 'space-between',
         gap: 2,
         px: 'clamp(16px, 3.5vw, 56px)',
-        pt: 'clamp(10px, 1.6vh, 26px)',
-        pb: 'clamp(8px, 1.3vh, 20px)',
+        pt: 'clamp(6px, 1vh, 16px)',
+        pb: 'clamp(5px, 0.8vh, 12px)',
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 'clamp(10px, 1.2vw, 20px)' }}>
-        <Image src={logo} alt="Easy Beans Coffee" style={{ width: 'clamp(54px, 8vh, 110px)', height: 'auto' }} priority />
+        <Image src={logo} alt="Easy Beans Coffee" style={{ width: 'clamp(44px, 6.2vh, 88px)', height: 'auto' }} priority />
         <Box
           sx={{
             fontFamily: POPPINS,
@@ -253,7 +304,7 @@ function SectionCard({ section }: { section: DisplaySection }) {
   const tempCols = style.tempCols === true && section.rows.some((row) => row.tempAxis);
 
   return (
-    <Box sx={{ mb: 'clamp(6px, 1.1vh, 18px)', minWidth: 0 }}>
+    <Box sx={{ mb: 'clamp(5px, 0.85vh, 14px)', minWidth: 0 }}>
       <Box
         sx={{
           color: style.color,
@@ -261,8 +312,8 @@ function SectionCard({ section }: { section: DisplaySection }) {
           fontWeight: 600,
           letterSpacing: '0.08em',
           textTransform: 'uppercase',
-          fontSize: 'clamp(0.78rem, 1.85vh, 1.3rem)',
-          mb: 'clamp(3px, 0.5vh, 8px)',
+          fontSize: 'clamp(0.74rem, 1.7vh, 1.2rem)',
+          mb: 'clamp(2px, 0.4vh, 7px)',
           pl: 'clamp(2px, 0.3vw, 6px)',
         }}
       >
@@ -275,7 +326,7 @@ function SectionCard({ section }: { section: DisplaySection }) {
           borderRadius: 'clamp(12px, 1.8vh, 22px)',
           backgroundColor: style.fill ?? 'transparent',
           px: 'clamp(10px, 1.6vw, 26px)',
-          py: 'clamp(5px, 0.85vh, 14px)',
+          py: 'clamp(4px, 0.7vh, 12px)',
         }}
       >
         {tempCols && (
@@ -318,7 +369,7 @@ function Row({ row, tempCols, desc }: { row: DisplayRow; tempCols: boolean; desc
   return (
     <Box
       sx={{
-        py: 'clamp(2px, 0.28vh, 5px)',
+        py: 'clamp(1px, 0.2vh, 4px)',
         borderBottom: `1px solid ${brand.ink06}`,
         '&:last-of-type': { borderBottom: 'none' },
         opacity: row.soldOut ? 0.45 : 1,
@@ -343,7 +394,7 @@ function Row({ row, tempCols, desc }: { row: DisplayRow; tempCols: boolean; desc
         <RowPriceCells price={row.price} soldOut={row.soldOut} tempCols={tempCols} />
       </Box>
       {description && (
-        <Box sx={{ color: ESPRESSO_SOFT, fontSize: 'clamp(0.56rem, 1.28vh, 0.88rem)', lineHeight: 1.3, pr: 'clamp(6px, 0.8vw, 14px)' }}>
+        <Box sx={{ color: ESPRESSO_SOFT, fontSize: 'clamp(0.55rem, 1.2vh, 0.85rem)', lineHeight: 1.28, pr: 'clamp(6px, 0.8vw, 14px)' }}>
           {description}
         </Box>
       )}
@@ -405,7 +456,7 @@ function Footer() {
         justifyContent: 'space-between',
         gap: 2,
         px: 'clamp(16px, 3.5vw, 56px)',
-        py: 'clamp(6px, 1vh, 16px)',
+        py: 'clamp(5px, 0.8vh, 13px)',
       }}
     >
       <Box sx={{ color: brand.rosePinkDeep, fontWeight: 600, fontSize: 'clamp(0.75rem, 1.8vh, 1.2rem)' }}>
