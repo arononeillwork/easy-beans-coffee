@@ -2,7 +2,8 @@ import 'server-only';
 import { randomInt } from 'node:crypto';
 import { TZDate } from '@date-fns/tz';
 import { getSiteUrl } from '../env';
-import { sendAdminDrawEmail, sendAdminIssueEmail, sendWinnerEmail, monthLabel } from '../email/competitionEmails';
+import { sendAdminApprovedEmail, sendAdminDrawEmail, sendAdminIssueEmail, sendWinnerEmail, monthLabel } from '../email/competitionEmails';
+import { dmText } from './dmText';
 import { issuePrizeCard } from './giftCard';
 import { publishInstagramPhoto } from './instagramPost';
 import { DRAW_DAY } from './drawMonth';
@@ -161,7 +162,19 @@ export async function approve(month: string, opts: { manualCard?: boolean } = {}
     winnerToken: approved.winner_token,
   });
   if (sent) await updateDraw(month, { winner_emailed_at: new Date().toISOString() });
-  else return { ok: true, error: 'Approved, but the winner email did not send — check the email settings, or send the card number yourself.' };
+
+  // Instagram won't let us DM someone who hasn't messaged us first, so the
+  // owner gets the message ready to paste and a button into the winner's DMs.
+  await sendAdminApprovedEmail({
+    drawMonth: month,
+    winnerName: winner.full_name,
+    handle: winner.instagram_handle,
+    dm: dmText(winner, month),
+    cardSent: Boolean(gan),
+    adminToken: approved.admin_token,
+  });
+
+  if (!sent) return { ok: true, error: 'Approved, but the winner email did not send — check the email settings, or send the card number yourself.' };
   return { ok: true };
 }
 

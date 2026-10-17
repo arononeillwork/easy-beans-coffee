@@ -98,6 +98,33 @@ export async function sendAdminIssueEmail(subject: string, lines: string[]): Pro
   return sendMail({ to: adminEmail(), subject, text, html });
 }
 
+export async function sendAdminApprovedEmail(info: { drawMonth: string; winnerName: string; handle: string; dm: string; cardSent: boolean; adminToken: string }): Promise<boolean> {
+  const month = monthLabel(info.drawMonth);
+  const dmLink = `https://ig.me/m/${info.handle}`;
+  const page = `${getSiteUrl()}/admin/competition?t=${info.adminToken}`;
+  const subject = `Done: ${info.winnerName} is the ${month} winner`;
+  const text = [
+    `${info.winnerName} has been emailed${info.cardSent ? ' their €10 gift card' : ''}.`,
+    '',
+    'Last step — send them a quick Instagram message (Instagram doesn’t let websites start a DM):',
+    dmLink,
+    '',
+    info.dm,
+    '',
+    `Admin page: ${page}`,
+  ].join('\n');
+  const html = shell(
+    'en',
+    `<h1 style="margin:0 0 12px;font-size:22px;line-height:1.3;">${esc(subject)}</h1>
+     <p style="${P}">${esc(info.winnerName)} has been emailed${info.cardSent ? ' their €10 gift card' : ''}.</p>
+     <p style="${P}"><b>Last step:</b> send them a quick Instagram message. Instagram doesn’t let websites start a DM, so tap below, then paste this:</p>
+     <p style="margin:0 0 16px;padding:14px;border-radius:12px;background:#FBF5EF;font-size:15px;line-height:1.5;">${esc(info.dm)}</p>
+     <a href="${esc(dmLink)}" style="${BTN}">Message @${esc(info.handle)} on Instagram</a>
+     <p style="margin:16px 0 0;font-size:13px;"><a href="${esc(page)}" style="color:#A85A68;">Admin page</a></p>`,
+  );
+  return sendMail({ to: adminEmail(), subject, text, html });
+}
+
 // --------------------------------------------------------------- winner ---
 
 const WIN = {

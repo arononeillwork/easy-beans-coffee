@@ -6,6 +6,8 @@ import { approve, postWinnerToInstagram, redraw } from '@/server/competition/dra
 import { drawMonthFor } from '@/server/competition/drawMonth';
 import { monthLabel } from '@/server/email/competitionEmails';
 import { prizeCents } from '@/server/competition/giftCard';
+import { CopyButton } from './CopyButton';
+import { dmText } from '@/server/competition/dmText';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Competition · Easy Beans Coffee', robots: { index: false, follow: false } };
@@ -161,6 +163,20 @@ async function DrawCard({ draw, token }: { draw: DrawRow; token: string | null }
             </>
           )}
         </>
+      )}
+
+      {draw.status === 'approved' && winner && (
+        <div className="winner" style={{ marginTop: 8 }}>
+          <div style={{ fontWeight: 600, marginBottom: 6 }}>Message the winner on Instagram</div>
+          <textarea readOnly value={dmText(winner, draw.draw_month)} rows={4} style={{ width: '100%', boxSizing: 'border-box', borderRadius: 10, border: '1px solid #E2D0BD', padding: 10, font: 'inherit', fontSize: 14 }} />
+          <div>
+            <CopyButton text={dmText(winner, draw.draw_month)} />
+            <a href={`https://ig.me/m/${winner.instagram_handle}`} target="_blank" rel="noopener">
+              <button type="button" className="primary">Open DM with @{winner.instagram_handle} ↗</button>
+            </a>
+          </div>
+          <div className="muted" style={{ marginTop: 6 }}>Copy, open the DM, paste, send. It may land in their message requests.</div>
+        </div>
       )}
 
       {draw.status === 'approved' && (
