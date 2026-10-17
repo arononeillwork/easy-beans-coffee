@@ -17,9 +17,13 @@ import {
 
 const DAY = 86_400_000;
 
-/** `n` days before now, so the fixtures stay relative to the run. */
+/**
+ * `n` days before the start of the run. Pinned once: computing Date.now() per
+ * call let two calls straddle a millisecond and fail the equality check.
+ */
+const NOW = Date.now();
 function daysAgo(n: number): number {
-  return Date.now() - n * DAY;
+  return NOW - n * DAY;
 }
 
 test('keeps only well-rated reviews when there are enough of them', () => {

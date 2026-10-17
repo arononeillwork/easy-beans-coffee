@@ -37,8 +37,8 @@ export default function NotFound() {
             style={{
               margin: 0,
               fontSize: '0.75rem',
-              letterSpacing: '0.24em',
-              textTransform: 'uppercase',
+              letterSpacing: '0',
+              textTransform: 'none',
               color: brand.rosePinkDeep,
             }}
           >

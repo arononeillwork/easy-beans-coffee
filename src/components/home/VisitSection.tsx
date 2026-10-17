@@ -23,11 +23,11 @@ export function VisitSection({ t, place }: { t: SiteContent; place: PlaceDetails
     <Box id="visit" component="section" aria-labelledby="visit-title" sx={{ scrollMarginTop: 88, borderTop: `1px solid ${brand.ink12}` }}>
       <Container maxWidth="lg" sx={{ py: { xs: 9, md: 14 } }}>
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: 5, md: 10 }, alignItems: 'center' }}>
-          <Box sx={{ position: 'relative', aspectRatio: '4 / 5', borderRadius: `${radius.xl}px`, overflow: 'hidden', order: { xs: 2, md: 1 } }}>
+          <Box sx={{ position: 'relative', aspectRatio: '4 / 5', borderRadius: `${radius.xl}px`, overflow: 'hidden', order: 2 }}>
             <Image src="/media/terrace.webp" alt={t.location.photoAlt} fill sizes="(max-width: 900px) 100vw, 45vw" style={{ objectFit: 'cover' }} />
           </Box>
 
-          <Stack spacing={{ xs: 3, md: 4 }} sx={{ order: { xs: 1, md: 2 } }}>
+          <Stack spacing={{ xs: 3, md: 4 }} sx={{ order: 1 }}>
             <Box>
               <Typography id="visit-title" variant="h2">
                 {t.location.title}

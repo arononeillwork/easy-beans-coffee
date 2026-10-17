@@ -188,8 +188,8 @@ export const es: SiteContent = {
     done: 'Ya estás en la lista.',
   },
   popup: {
-    headline: 'Suscríbete a nuestra newsletter',
-    body: '10% en nuestra tienda online durante 6 meses al apuntarte.',
+    headline: '10% en tus pedidos online',
+    body: 'Durante 6 meses, al suscribirte.',
     interestsLabel: 'Quiero saber de',
     interests: {
       coffee: 'Trucos de café',

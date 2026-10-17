@@ -201,8 +201,8 @@ export const en = {
     done: 'You are on the list.',
   },
   popup: {
-    headline: 'Subscribe to our newsletter',
-    body: '10% off our online shop for 6 months when you join.',
+    headline: '10% off your online orders',
+    body: 'For 6 months, when you subscribe.',
     interestsLabel: 'I want to hear about',
     /** Pill labels — two words max so they sit on one line. Keys mirror `INTEREST_KEYS`. */
     interests: {

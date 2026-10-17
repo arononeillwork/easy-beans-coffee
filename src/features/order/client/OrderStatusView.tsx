@@ -124,7 +124,7 @@ export function OrderStatusView({ token, detailed = false }: Props) {
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <Stack direction="row" justifyContent="space-between" spacing={2}>
-      <Typography color="text.secondary" variant="body2" sx={{ textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+      <Typography color="text.secondary" variant="body2" sx={{ textTransform: 'none', letterSpacing: '0.1em' }}>
         {label}
       </Typography>
       <Typography sx={{ textAlign: 'right' }}>{value}</Typography>

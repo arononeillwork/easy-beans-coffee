@@ -123,7 +123,7 @@ export function FirstVisitDialog({
               <>
                 <Typography
                   variant="caption"
-                  sx={{ textTransform: 'uppercase', letterSpacing: '0.08em', color: brand.ink45 }}
+                  sx={{ textTransform: 'none', letterSpacing: '0', color: brand.ink45 }}
                 >
                   {t.popup.codeLabel}
                 </Typography>

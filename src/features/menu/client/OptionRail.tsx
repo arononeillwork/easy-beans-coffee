@@ -252,8 +252,8 @@ export function ComingSoonRail({
             backgroundColor: brand.limewashTint,
             fontSize: '0.6875rem',
             fontWeight: 600,
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
+            letterSpacing: '0',
+            textTransform: 'none',
             color: brand.ink45,
           }}
         >

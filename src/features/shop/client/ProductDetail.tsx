@@ -152,8 +152,8 @@ export function ProductDetail({ item, collection, related, isPlaceholder = false
                 backgroundColor: brand.rosePinkTint,
                 color: brand.ink,
                 fontSize: '0.6875rem',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
+                letterSpacing: '0',
+                textTransform: 'none',
               }}
             />
           )}

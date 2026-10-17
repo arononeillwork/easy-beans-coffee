@@ -203,7 +203,7 @@ export function DrinkStage({
           letterSpacing: '-0.04em',
           lineHeight: 1,
           whiteSpace: 'nowrap',
-          textTransform: 'uppercase',
+          textTransform: 'none',
           color: palette?.glow ?? brand.rosePink,
           opacity: 0.26,
           userSelect: 'none',

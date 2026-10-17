@@ -96,8 +96,8 @@ export function ProductCard({ item, collection }: Props) {
               backgroundColor: brand.white,
               color: brand.ink,
               fontSize: '0.6875rem',
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
+              letterSpacing: '0',
+              textTransform: 'none',
             }}
           />
         )}

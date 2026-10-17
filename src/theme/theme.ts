@@ -75,14 +75,13 @@ export const theme = createTheme({
       letterSpacing: '-0.015em',
       lineHeight: 1.25,
     },
-    // Eyebrow. Uppercase is reserved for eyebrows and tags — never sentences.
+    // Small label. Sentence case, like everything else on the site.
     h6: {
       fontFamily: body,
       fontWeight: 600,
-      fontSize: '0.6875rem',
-      textTransform: 'uppercase',
-      letterSpacing: '0.18em',
-      lineHeight: 1,
+      fontSize: '0.8125rem',
+      letterSpacing: 0,
+      lineHeight: 1.3,
     },
     subtitle1: { fontFamily: body, fontWeight: 500, fontSize: '1.125rem', lineHeight: 1.55 },
     body1: { fontWeight: 400, fontSize: '1rem', lineHeight: 1.6 },
@@ -91,9 +90,10 @@ export const theme = createTheme({
     button: { fontFamily: body, fontWeight: 500, textTransform: 'none', letterSpacing: 0 },
     overline: {
       fontWeight: 600,
-      fontSize: '0.6875rem',
-      textTransform: 'uppercase',
-      letterSpacing: '0.18em',
+      fontSize: '0.8125rem',
+      textTransform: 'none',
+      letterSpacing: 0,
+      lineHeight: 1.3,
     },
   },
   shape: { borderRadius: radius.md },
