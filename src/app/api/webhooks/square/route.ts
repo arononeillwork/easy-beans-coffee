@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { verifySquareSignature } from '@/server/square/webhookVerify';
+import { isWebhookConfigured, verifySquareSignature } from '@/server/square/webhookVerify';
 import { getSupabaseAdmin } from '@/server/supabaseAdmin';
 import { syncOrderFromSquare } from '@/server/orders/orderSync';
 
@@ -16,6 +16,31 @@ interface SquareWebhookEvent {
       order?: { id?: string };
     };
   };
+}
+
+/**
+ * Health check for the owner: is the webhook set up on this deployment, and
+ * when did Square last get through? No secrets — two booleans and a timestamp.
+ */
+export async function GET() {
+  const configured = isWebhookConfigured();
+  let lastEventAt: string | null = null;
+  let lastEventType: string | null = null;
+  try {
+    const { data } = await getSupabaseAdmin()
+      .from('webhook_events')
+      .select('event_type, received_at')
+      .order('received_at', { ascending: false })
+      .limit(1);
+    lastEventAt = data?.[0]?.received_at ?? null;
+    lastEventType = data?.[0]?.event_type ?? null;
+  } catch {
+    // Storage unreachable: report what we can.
+  }
+  return NextResponse.json(
+    { configured, lastEventAt, lastEventType },
+    { headers: { 'Cache-Control': 'no-store' } },
+  );
 }
 
 /**
