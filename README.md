@@ -34,7 +34,7 @@ npm run media:drinks         # pull the drink photography from Drive and encode 
 | `/order` | The drink studio: build a drink, then cart → Square hosted checkout |
 | `/order/status/[token]` | Live order status (polls; webhook-fed) |
 | `/admin` | Internal todo board (Supabase `ToDo`) |
-| `/display-menu` | In-café portrait menu board: the whole menu on one screen, Square prices re-read hourly while open, opening hours daily |
+| `/display-menu` | In-café portrait menu board: the whole menu on one screen; items & prices re-read from Square daily, an hour after opening |
 | `/api/menu·prices·checkout·orders/[token]/status·webhooks/square·signup` | Server endpoints |
 
 ## The menu

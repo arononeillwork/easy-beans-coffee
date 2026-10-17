@@ -8,8 +8,12 @@ import { getCafeTimezone } from '@/server/env';
  * easybeanscoffee.com/display-menu on the display's browser and leave it:
  * one screen carrying the whole board, keeping its own prices and opening
  * hours current — see DisplayBoard for the cadence.
+ *
+ * Rendered per request, not prerendered: a screen switched on in the morning
+ * must start from today's prices, and this page is asked for roughly once per
+ * screen per day. The catalog cache keeps Square to a handful of reads.
  */
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 export default async function DisplayMenuPage() {
   const [book, { hours }] = await Promise.all([getDisplayPriceBook(), getOrderingHours()]);

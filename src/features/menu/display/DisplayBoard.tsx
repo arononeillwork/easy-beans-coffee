@@ -7,9 +7,10 @@ import logo from '@/assets/logo.png';
 import { cafeDay, type PriceBook } from '@/features/menu/priceBook';
 import { formatMenuPrice } from '@/features/order/lib/price';
 import type { DayHours } from '@/shared/lib/openingHours';
-import { clockLabel, openState } from '@/shared/lib/openNow';
+import { clockLabel } from '@/shared/lib/openNow';
 import { brand } from '@/theme/brand';
 import { buildDisplayBoard, type DisplayRow, type DisplaySection, type RowPrice } from './boardData';
+import { priceReadDueMs } from './refreshSchedule';
 import type { Section } from '@/features/menu/types';
 
 /**
@@ -19,8 +20,9 @@ import type { Section } from '@/features/menu/types';
  * Spanish-first, like the print.
  *
  * It is left running for weeks, so it looks after itself:
- * - prices re-read from Square once an hour (via /api/display-menu), and only
- *   while the café is open — a closed café costs Square nothing overnight;
+ * - items and prices re-read from Square once per day, an hour after the café
+ *   opens (via /api/display-menu) — when the morning's price edits in Square
+ *   have actually been made. A day the café does not open reads nothing;
  * - opening hours re-read once per café day (via /api/ordering-hours) to run
  *   that cadence; the schedule itself is never shown on the wall;
  * - every fetch failure keeps the last good data on screen. The board never
@@ -84,22 +86,24 @@ export function DisplayBoard({
   // re-arming the interval.
   const hoursRef = useRef(initialHours);
   const hoursDayRef = useRef<string | null>(null);
-  const priceHourRef = useRef<string | null>(null);
+  /** Café day whose Square read is done (or not owed). */
+  const priceDayRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const hourKey = (ms: number) =>
-      `${cafeDay(ms, timezone)}T${new Intl.DateTimeFormat('en-GB', {
-        timeZone: timezone,
-        hour: '2-digit',
-        hour12: false,
-      }).format(ms)}`;
-
-    // The server just rendered this hour's snapshot and today's hours; the
-    // first client fetches are owed at the next hour / next day, not now.
     const mountedAt = Date.now();
-    hoursDayRef.current = cafeDay(mountedAt, timezone);
-    priceHourRef.current = hourKey(mountedAt);
     setNowMs(mountedAt);
+    hoursDayRef.current = cafeDay(mountedAt, timezone);
+
+    // Is today's read already done? Only when the snapshot the server handed
+    // us was itself taken after today's due moment — a cached page from
+    // before it still owes the read, or the morning's price edits would be
+    // missed. A day the café does not open owes nothing.
+    const dueAtMount = priceReadDueMs(hoursRef.current, mountedAt, timezone);
+    const snapshotMs = Date.parse(initialBook.fetchedAt) || 0;
+    priceDayRef.current =
+      dueAtMount === null || (mountedAt >= dueAtMount && snapshotMs >= dueAtMount)
+        ? cafeDay(mountedAt, timezone)
+        : null;
 
     const tick = () => {
       const ms = Date.now();
@@ -119,22 +123,27 @@ export function DisplayBoard({
           .catch(() => {});
       }
 
-      // Prices: once per hour, and only between opening hours.
-      const key = hourKey(ms);
-      if (key !== priceHourRef.current && openState(hoursRef.current, ms, timezone).open) {
-        priceHourRef.current = key;
-        fetch('/api/display-menu')
-          .then((res) => (res.ok ? res.json() : null))
-          .then((fresh: PriceBook | null) => {
-            if (fresh && Array.isArray(fresh.items)) setBook(fresh);
-          })
-          .catch(() => {});
+      // Items and prices: once per café day, an hour after opening. A closed
+      // day owes nothing and is marked done without a fetch.
+      if (day !== priceDayRef.current) {
+        const due = priceReadDueMs(hoursRef.current, ms, timezone);
+        if (due === null) {
+          priceDayRef.current = day;
+        } else if (ms >= due) {
+          priceDayRef.current = day;
+          fetch('/api/display-menu')
+            .then((res) => (res.ok ? res.json() : null))
+            .then((fresh: PriceBook | null) => {
+              if (fresh && Array.isArray(fresh.items)) setBook(fresh);
+            })
+            .catch(() => {});
+        }
       }
     };
 
     const interval = setInterval(tick, TICK_MS);
     return () => clearInterval(interval);
-  }, [timezone]);
+  }, [timezone, initialBook]);
 
   return (
     <Box
