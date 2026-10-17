@@ -28,8 +28,8 @@ const EDGE = 4;
  * currently holds; changing it re-measures and, where the rail mounts fresh
  * (the pick row), re-attaches to the new node.
  */
-export function useRailOverflow(contentKey: unknown) {
-  const scroller = useRef<HTMLDivElement | null>(null);
+export function useRailOverflow<T extends HTMLElement = HTMLDivElement>(contentKey: unknown) {
+  const scroller = useRef<T | null>(null);
   const [overflow, setOverflow] = useState({ back: false, ahead: false });
 
   useEffect(() => {

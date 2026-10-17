@@ -18,8 +18,8 @@ import { brand } from '@/theme/brand';
  * the offer code is issued. Signing up here also marks the offer seen, which
  * stops the popup interrupting the same visitor a moment later.
  *
- * Sits in normal flow, not fixed: it scrolls away and leaves the sticky header
- * at the top of the viewport, which is where a nav belongs.
+ * Pinned with the header (see the site layout), so the offer stays at the top
+ * of every page however far down the visitor scrolls.
  */
 export function AnnouncementBar() {
   const { t } = useLanguage();

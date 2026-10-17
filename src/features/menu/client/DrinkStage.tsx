@@ -15,19 +15,17 @@ import type { FamilyPalette } from '../palette';
  *
  * How it is drawn, in layers, back to front:
  *
- *   1. The wash — the drink's own brand tint — is painted by the *parent*
- *      (see MenuStudio's washed region), so the title above and the rail below
- *      share the colour and the whole band cross-fades as one surface.
- *   2. The watermark: the drink's name, oversized, in the family glow colour.
- *      It sits *behind* the photograph on purpose — the cups are composited
- *      with `mix-blend-mode: multiply`, so their white studio ground lets the
- *      type read through, and the drink appears to stand on its own name.
- *   3. The glow, a soft radial of the family colour under the cup.
- *   4. The strip of photographs. A real horizontal scroll container with CSS
+ *   1. The band behind it is plain white, painted by the parent (see
+ *      MenuStudio). The café asked for the photo alone: the tinted wash, the
+ *      blurred glow and the oversized drink-name watermark that used to sit
+ *      behind the cup are all gone.
+ *   2. The strip of photographs. A real horizontal scroll container with CSS
  *      scroll-snap — native scrolling gets momentum and rubber-banding right
  *      for free — read back with an IntersectionObserver, so which drink is
- *      "current" survives resizes and zoom without arithmetic.
- *   5. Glass arrows and the position dots, for everyone who does not think to
+ *      "current" survives resizes and zoom without arithmetic. (There used to
+ *      be a blurred colour glow under the cup; the café asked for the photo
+ *      alone.)
+ *   3. Glass arrows and the position dots, for everyone who does not think to
  *      swipe a web page.
  *
  * Two selection sources meet here and must not fight. A selection made
@@ -182,62 +180,9 @@ export function DrinkStage({
     return release;
   }, [activeIndex, panels.length]);
 
-  const active = panels[activeIndex] ?? panels[0];
-  const palette = active?.palette;
-
   return (
     <Box sx={{ position: 'relative', overflow: 'hidden' }}>
-      {/* Layer 2: the watermark. Keyed so each drink's name rises in fresh. */}
-      <Typography
-        aria-hidden
-        key={active?.id}
-        sx={{
-          position: 'absolute',
-          left: '50%',
-          top: '44%',
-          transform: 'translate(-50%, -50%)',
-          zIndex: 0,
-          fontFamily: 'var(--font-poppins), Montserrat, sans-serif',
-          fontWeight: 600,
-          fontSize: 'clamp(3.6rem, 19vw, 8.5rem)',
-          letterSpacing: '-0.04em',
-          lineHeight: 1,
-          whiteSpace: 'nowrap',
-          textTransform: 'none',
-          color: palette?.glow ?? brand.rosePink,
-          opacity: 0.26,
-          userSelect: 'none',
-          pointerEvents: 'none',
-          animation: `watermark-in ${motion.slow} ${motion.easeOutSoft}`,
-          '@keyframes watermark-in': {
-            from: { opacity: 0, transform: 'translate(-50%, -46%)' },
-            to: { opacity: 0.26, transform: 'translate(-50%, -50%)' },
-          },
-          '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
-        }}
-      >
-        {firstWord(active?.name)}
-      </Typography>
-
-      {/* Layer 3: the glow. */}
-      <Box
-        aria-hidden
-        sx={{
-          position: 'absolute',
-          left: '50%',
-          top: '46%',
-          width: 'min(78vw, 440px)',
-          aspectRatio: '1',
-          transform: 'translate(-50%, -50%)',
-          borderRadius: '50%',
-          background: `radial-gradient(circle, ${palette?.glow ?? brand.rosePink} 0%, transparent 68%)`,
-          opacity: 0.42,
-          filter: 'blur(8px)',
-          transition: `background ${motion.slow} ${motion.easeOutSoft}`,
-        }}
-      />
-
-      {/* Layer 4: the photographs. */}
+      {/* Layer 2: the photographs, on plain white. */}
       <Box
         ref={scroller}
         role="group"
@@ -284,7 +229,7 @@ export function DrinkStage({
         ))}
       </Box>
 
-      {/* Layer 5: arrows and dots. */}
+      {/* Layer 3: arrows and dots. */}
       {panels.length > 1 && (
         <>
           <StageArrow
@@ -341,13 +286,6 @@ export function DrinkStage({
       )}
     </Box>
   );
-}
-
-function firstWord(name: string | undefined): string {
-  if (!name) return '';
-  const words = name.split(/\s+/);
-  // A one-word ghost; two words when the first is an article-sized bite.
-  return words[0].length <= 3 ? words.slice(0, 2).join(' ') : words[0];
 }
 
 /** Frosted-glass step arrow, floating on the wash. */
@@ -495,6 +433,10 @@ function StageFrame({
               // lets the studio white behind every cup disappear into the
               // stage and the watermark show through.
               mixBlendMode: 'multiply',
+              // Lifts the studio's near-white (245–254) to pure white so the
+              // photo's edge never shows as a faint box on the wash — the
+              // blurred glow used to hide it.
+              filter: 'brightness(1.04)',
             }),
         // Fade and drift ride the same property; the drift is only for
         // cut-outs — a framed photograph should hang still (and owns its

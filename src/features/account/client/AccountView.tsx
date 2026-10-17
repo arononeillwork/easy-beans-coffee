@@ -20,7 +20,6 @@ import GoogleIcon from '@mui/icons-material/Google';
 import { useLanguage } from '@/i18n/LanguageProvider';
 import { getSupabaseAuth } from '@/shared/lib/supabaseAuthClient';
 import { brand, radius, shadow } from '@/theme/brand';
-import { AllergiesCard } from './AllergiesCard';
 import type { AccountProfile, AccountUpdate } from '../types';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -211,8 +210,6 @@ export function AccountView() {
                 setPhase('forgot');
               }}
             />
-            {/* Device-local, so it works before any account exists. */}
-            <AllergiesCard />
           </Stack>
         )}
 
@@ -256,7 +253,6 @@ export function AccountView() {
         {phase === 'signedIn' && payload && (
           <Stack spacing={3}>
             <RewardsCard />
-            <AllergiesCard />
             <ProfileCard
               payload={payload}
               onSaved={setPayload}

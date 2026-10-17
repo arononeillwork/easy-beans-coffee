@@ -9,6 +9,7 @@ import { formatEuros } from '@/features/order/lib/price';
 import { brand, motion, radius } from '@/theme/brand';
 import type { PricedGroup } from '../priceBook';
 import type { Lang, OptionRef } from '../types';
+import { SegmentedChoice } from './SegmentedChoice';
 
 /**
  * One modifier list, as a list: milks, syrups, purées, the extra shot. Every
@@ -217,6 +218,49 @@ export function OptionRail({
           />
         </Box>
       )}
+    </Box>
+  );
+}
+
+/**
+ * A two-way list shown side by side, e.g. Granola: Standard | Gluten free.
+ * Standard sends no modifier; the alternative sends the list's first one, at
+ * whatever Square charges for it.
+ */
+export function PairRail({
+  option: optionRef,
+  group,
+  chosen,
+  onChange,
+  lang,
+  accent,
+}: {
+  option: OptionRef & { pair: NonNullable<OptionRef['pair']> };
+  group: PricedGroup;
+  chosen: string[];
+  onChange: (next: string[]) => void;
+  lang: Lang;
+  accent: string;
+}) {
+  const alternative = group.modifiers[0];
+  if (!alternative) return null;
+  const surcharge = alternative.cents > 0 ? ` +${formatEuros(alternative.cents, lang)}` : '';
+  const value = chosen.includes(alternative.name) ? 'alternative' : 'standard';
+
+  return (
+    <Box sx={{ mb: 3 }} data-testid="pair-rail">
+      <Typography variant="h6" component="h3" sx={{ color: accent, mb: 1.25 }}>
+        {optionRef.label[lang]}
+      </Typography>
+      <SegmentedChoice
+        label={optionRef.label[lang]}
+        value={value}
+        options={[
+          { value: 'standard', label: optionRef.pair.standard[lang] },
+          { value: 'alternative', label: `${optionRef.pair.alternative[lang]}${surcharge}` },
+        ]}
+        onChange={(next) => onChange(next === 'alternative' ? [alternative.name] : [])}
+      />
     </Box>
   );
 }

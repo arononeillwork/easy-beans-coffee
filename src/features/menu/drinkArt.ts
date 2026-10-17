@@ -21,8 +21,11 @@ const SERVE_SLUG: Record<Serve, string> = {
   can: 'can',
 };
 
-/** Prefer the glass on the table, then the cup, then the can. */
-const SERVE_FALLBACK: Serve[] = ['sitIn', 'takeaway', 'can'];
+/**
+ * Prefer the takeaway cup (the menu's default view), then the glass on the
+ * table, then the can.
+ */
+const SERVE_FALLBACK: Serve[] = ['takeaway', 'sitIn', 'can'];
 
 export const DRINK_ART_BASE = '/media/drinks';
 

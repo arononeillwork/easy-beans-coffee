@@ -90,8 +90,19 @@ export default async function SiteLayout({
           <Providers lang={lang} t={t}>
             <CartProvider>
               <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100dvh' }}>
-                <AnnouncementBar />
-                <Header />
+                {/* Banner and header stay pinned together at the top of every
+                    page, so the offer is always one tap away. */}
+                <Box
+                  sx={{
+                    position: 'sticky',
+                    top: 0,
+                    // theme.zIndex.appBar; a number, as this is a server component.
+                    zIndex: 1100,
+                  }}
+                >
+                  <AnnouncementBar />
+                  <Header />
+                </Box>
                 <Box component="main" sx={{ flexGrow: 1 }}>
                   {children}
                 </Box>

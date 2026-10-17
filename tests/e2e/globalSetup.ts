@@ -16,6 +16,9 @@ const ROUTES = [
   '/es',
   '/en',
   '/es/about',
+  // Compiled up front so the phone-menu spec can follow the account link
+  // without waiting on a first dev compile.
+  '/es/account',
   '/es/shop',
   '/en/shop',
   '/en/shop/beans',

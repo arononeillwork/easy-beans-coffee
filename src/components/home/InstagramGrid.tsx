@@ -6,11 +6,11 @@ import Typography from '@mui/material/Typography';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import type { SiteContent } from '@/i18n/content/en';
 import { getSocialFeed } from '@/server/social/feed';
-import { INSTAGRAM_URL, TIKTOK_URL } from '@/shared/lib/social';
+import { INSTAGRAM_URL } from '@/shared/lib/social';
 import { brand, radius } from '@/theme/brand';
 
 /**
- * The newest posts, straight from Instagram (and TikTok once connected), each
+ * The newest posts, straight from Instagram, each
  * opening its own post. Until a feed answers it shows our own photography
  * linking to the profile — silently; visitors do not need to know which.
  */
@@ -27,15 +27,6 @@ export async function InstagramGrid({ t }: { t: SiteContent }) {
               {t.social.handle}
             </Box>
           </Typography>
-          <Box
-            component="a"
-            href={TIKTOK_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{ color: brand.rosePinkDeep, fontWeight: 500, whiteSpace: 'nowrap', textUnderlineOffset: 4, '&:hover': { color: brand.ink } }}
-          >
-            {t.social.tiktok}
-          </Box>
         </Stack>
 
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: { xs: 1, md: 1.5 } }}>
