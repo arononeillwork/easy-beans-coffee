@@ -15,7 +15,7 @@ export function CafeFilm({ t }: { t: SiteContent }) {
       <Container maxWidth="lg">
         <Box
           sx={{
-            backgroundColor: brand.rosePinkTint,
+            backgroundColor: brand.roseWash,
             borderRadius: `${radius.xl}px`,
             p: { xs: 3, sm: 5, md: 7 },
             display: 'grid',
@@ -45,7 +45,7 @@ export function CafeFilm({ t }: { t: SiteContent }) {
               rel="noopener noreferrer"
               variant="contained"
               startIcon={<InstagramIcon />}
-              sx={{ mt: 4, backgroundColor: brand.ink, color: brand.cream, '&:hover': { backgroundColor: '#000' } }}
+              sx={{ mt: 4 }}
             >
               {t.video.cta}
             </Button>

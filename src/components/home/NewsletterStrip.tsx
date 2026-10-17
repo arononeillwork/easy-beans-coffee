@@ -41,17 +41,17 @@ export function NewsletterStrip() {
   };
 
   return (
-    <Box component="section" aria-labelledby="news-title" sx={{ backgroundColor: brand.ink, color: brand.cream }}>
+    <Box component="section" aria-labelledby="news-title" sx={{ backgroundColor: brand.rosePink, color: brand.ink }}>
       <Container maxWidth="lg" sx={{ py: { xs: 6, md: 8 } }}>
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: 3, md: 8 }, alignItems: 'center' }}>
           <Box>
             <Typography id="news-title" variant="h3" component="h2">
               {t.newsletter.headline}
             </Typography>
-            <Typography sx={{ mt: 1, color: 'rgba(247,236,228,0.72)' }}>{t.newsletter.body}</Typography>
+            <Typography sx={{ mt: 1, color: brand.ink70 }}>{t.newsletter.body}</Typography>
           </Box>
           {state === 'done' ? (
-            <Typography role="status" sx={{ fontWeight: 500, color: brand.cream }}>
+            <Typography role="status" sx={{ fontWeight: 500 }}>
               {t.newsletter.done}
             </Typography>
           ) : (
@@ -69,9 +69,9 @@ export function NewsletterStrip() {
                 helperText={state === 'invalid' ? t.popup.invalidEmail : state === 'error' ? t.errors.generic : ' '}
                 autoComplete="email"
                 fullWidth
-                sx={{ '& .MuiOutlinedInput-root': { backgroundColor: brand.white, borderRadius: 999 }, '& fieldset': { borderColor: 'transparent' }, '& .MuiFormHelperText-root': { color: brand.rosePink } }}
+                sx={{ '& .MuiOutlinedInput-root': { backgroundColor: brand.white, borderRadius: 999 }, '& fieldset': { borderColor: 'transparent' }, '& .MuiFormHelperText-root.Mui-error': { color: brand.ink } }}
               />
-              <Button type="submit" variant="contained" disabled={state === 'sending'} sx={{ flexShrink: 0, height: 56 }}>
+              <Button type="submit" variant="contained" disabled={state === 'sending'} sx={{ flexShrink: 0, height: 56, backgroundColor: brand.cream, color: brand.ink, '&:hover': { backgroundColor: brand.white } }}>
                 {t.newsletter.cta}
               </Button>
             </Box>
