@@ -34,9 +34,15 @@ export interface DisplayRow {
    * fridge reads as one line with its options, not one row per bottle.
    */
   options: Bilingual | null;
-  /** Resolved photograph, used by the featured section's thumbnails. */
+  /** Resolved photograph, for any layout that wants thumbnails. */
   art: string | null;
   price: RowPrice;
+  /**
+   * True when the drink is priced along hot/iced, so the card can rule up
+   * caliente/frío columns from the menu's shape — before Square has answered,
+   * and even when one temperature is missing.
+   */
+  tempAxis: boolean;
   soldOut: boolean;
 }
 
@@ -77,16 +83,13 @@ function priceFor(drink: Drink, item: PricedItem | undefined): RowPrice {
     case 'temp': {
       const hot = cents(item, v.hot);
       const iced = cents(item, v.iced);
-      // One temperature is a plain price; two is the pair.
-      if (hot !== undefined && iced !== undefined) {
-        return hot === iced ? { one: hot } : { hot, iced };
-      }
+      // Kept apart even when only one exists: the board prints these drinks
+      // under caliente/frío columns, and which column a price falls in is
+      // part of the answer.
+      if (hot !== undefined || iced !== undefined) return { hot, iced };
       // Both temperature names missing is safe to bridge only when the item
       // has a single price — two unidentifiable prices could label iced as hot.
-      if (hot === undefined && iced === undefined) {
-        return { one: item && item.variations.length === 1 ? cheapest(item) : undefined };
-      }
-      return { one: hot ?? iced };
+      return { one: item && item.variations.length === 1 ? cheapest(item) : undefined };
     }
     case 'serve': {
       const prices = [cents(item, v.sitIn), cents(item, v.takeaway)].filter(
@@ -130,6 +133,7 @@ function toRow(drink: Drink, item: PricedItem | undefined): DisplayRow {
     options,
     art: rowArt(drink),
     price: priceFor(drink, item),
+    tempAxis: drink.variations.by === 'temp',
     soldOut: item?.soldOut ?? false,
   };
 }

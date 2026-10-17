@@ -5,17 +5,18 @@ import Image from 'next/image';
 import Box from '@mui/material/Box';
 import logo from '@/assets/logo.png';
 import { cafeDay, type PriceBook } from '@/features/menu/priceBook';
-import { resolveArt } from '@/features/menu/drinkArt';
 import { formatMenuPrice } from '@/features/order/lib/price';
 import type { DayHours } from '@/shared/lib/openingHours';
 import { clockLabel, openState } from '@/shared/lib/openNow';
-import { brand, radius } from '@/theme/brand';
-import { buildDisplayBoard, type DisplaySection, type RowPrice } from './boardData';
+import { brand } from '@/theme/brand';
+import { buildDisplayBoard, type DisplayRow, type DisplaySection, type RowPrice } from './boardData';
+import type { Section } from '@/features/menu/types';
 
 /**
- * The menu as the café's own wall: one portrait screen carrying the whole
- * board. The speciality drinks lead in a washed panel with their photography;
- * everything else runs underneath as a two-column list in the brand's cream.
+ * The menu as the café's own wall: one portrait screen in the language of the
+ * printed menus — rounded outlined cards on cream, caliente/frío price
+ * columns, the Especiales card filled matcha green and Comida filled rose.
+ * Spanish-first, like the print.
  *
  * It is left running for weeks, so it looks after itself:
  * - prices re-read from Square once an hour (via /api/display-menu), and only
@@ -33,8 +34,36 @@ const POPPINS = 'var(--font-poppins), sans-serif';
 
 const INSTAGRAM_HANDLE = '@easy.beans.coffee';
 
-/** The one photograph on the board: the ube latte can beside the specials. */
-const PANEL_ART = resolveArt('ube-latte', 'iced', 'can');
+/** The printed menus' dark roast brown — outlines, names and prices. */
+const ESPRESSO = '#3B2A20';
+const ESPRESSO_SOFT = 'rgba(59, 42, 32, 0.62)';
+
+/**
+ * How each section dresses, copied from the printed menus: its card title,
+ * the title's colour, whether the card carries the caliente/frío columns,
+ * and the two filled highlight cards (Especiales green, Comida rose).
+ */
+const CARD_STYLE: Record<Section, {
+  title: string;
+  color: string;
+  tempCols?: boolean;
+  fill?: string;
+  outline?: string;
+  desc?: 'tagline' | 'options' | 'both';
+}> = {
+  coffee: { title: 'Clásicos', color: ESPRESSO, tempCols: true },
+  speciality: { title: 'Especiales', color: brand.matchaGreenDeep, tempCols: true, fill: brand.matchaTint },
+  smoothies: { title: 'Smoothies', color: brand.rosePinkDeep, desc: 'tagline' },
+  cold: { title: 'Bebidas Frías', color: ESPRESSO, desc: 'options' },
+  bakery: { title: 'Bollería', color: ESPRESSO },
+  food: { title: 'Comida', color: brand.rosePinkDeep, fill: brand.rosePinkTint, outline: brand.rosePink, desc: 'both' },
+};
+
+/** The hand-tuned column split that keeps the whole list above the fold. */
+const COLUMNS: Section[][] = [
+  ['coffee', 'speciality', 'food'],
+  ['smoothies', 'cold', 'bakery'],
+];
 
 export function DisplayBoard({
   initialBook,
@@ -50,9 +79,6 @@ export function DisplayBoard({
   const [nowMs, setNowMs] = useState<number | null>(null);
 
   const board = useMemo(() => buildDisplayBoard(book), [book]);
-  const speciality = board.find((section) => section.id === 'speciality');
-  const rest = board.filter((section) => section.id !== 'speciality');
-  const hasTempPair = board.some((section) => section.hasTempPair);
 
   // Refresh bookkeeping lives in refs: ticks read and write it without
   // re-arming the interval.
@@ -118,58 +144,41 @@ export function DisplayBoard({
         display: 'grid',
         gridTemplateRows: 'auto minmax(0, 1fr) auto',
         backgroundColor: brand.cream,
-        color: brand.ink,
+        color: ESPRESSO,
         overflow: 'hidden',
         '@keyframes board-in': {
           from: { opacity: 0, transform: 'translateY(2vh)' },
           to: { opacity: 1, transform: 'translateY(0)' },
-        },
-        '@keyframes board-drift': {
-          from: { transform: 'translateY(-1.2%)' },
-          to: { transform: 'translateY(1.2%)' },
         },
         '@media (prefers-reduced-motion: reduce)': {
           '& *': { animation: 'none !important', transition: 'none !important' },
         },
       }}
     >
-      <Header nowMs={nowMs} timezone={timezone} legend={hasTempPair} />
+      <Header nowMs={nowMs} timezone={timezone} />
 
+      {/* Two hand-balanced columns of cards: the split is chosen so the whole
+          list fits one screen with nothing under the fold. */}
       <Box
         sx={{
           minHeight: 0,
           minWidth: 0,
-          display: 'flex',
-          flexDirection: 'column',
+          overflow: 'hidden',
+          display: 'grid',
+          gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
+          columnGap: 'clamp(14px, 2.6vw, 40px)',
+          alignItems: 'start',
           px: 'clamp(16px, 3.5vw, 56px)',
-          gap: 'clamp(6px, 1vh, 16px)',
+          animation: 'board-in 700ms cubic-bezier(.16,1,.3,1) both',
         }}
       >
-        {speciality && <SpecialityPanel section={speciality} />}
-
-        {/* The rest of the board in two hand-balanced columns: the split is
-            chosen so the whole list fits one screen with nothing under the
-            fold, which CSS multicol cannot promise with unequal sections. */}
-        <Box
-          sx={{
-            flex: 1,
-            minHeight: 0,
-            overflow: 'hidden',
-            display: 'grid',
-            gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
-            columnGap: 'clamp(16px, 3vw, 48px)',
-            alignItems: 'start',
-            animation: 'board-in 700ms cubic-bezier(.16,1,.3,1) 150ms both',
-          }}
-        >
-          {splitColumns(rest).map((column, index) => (
-            <Box key={index} sx={{ minWidth: 0 }}>
-              {column.map((section) => (
-                <SectionList key={section.id} section={section} />
-              ))}
-            </Box>
-          ))}
-        </Box>
+        {splitColumns(board).map((column, index) => (
+          <Box key={index} sx={{ minWidth: 0 }}>
+            {column.map((section) => (
+              <SectionCard key={section.id} section={section} />
+            ))}
+          </Box>
+        ))}
       </Box>
 
       <Footer />
@@ -177,25 +186,19 @@ export function DisplayBoard({
   );
 }
 
-/** The hand-tuned column split that keeps the whole list above the fold. */
-const COLUMNS: string[][] = [
-  ['coffee', 'smoothies', 'food'],
-  ['cold', 'bakery'],
-];
-
 function splitColumns(sections: DisplaySection[]): DisplaySection[][] {
   const columns = COLUMNS.map((ids) =>
     ids.flatMap((id) => sections.filter((section) => section.id === id)),
   );
   // A section the split does not know lands in the second column rather than
   // vanishing — visible and fixable, like the rest of the board's failures.
-  const known = new Set(COLUMNS.flat());
+  const known = new Set<string>(COLUMNS.flat());
   columns[columns.length - 1].push(...sections.filter((section) => !known.has(section.id)));
   return columns;
 }
 
-/** Big logo top left; café-time clock top right. Nothing else. */
-function Header({ nowMs, timezone, legend }: { nowMs: number | null; timezone: string; legend: boolean }) {
+/** The round badge big on the left, the café-time clock on the right. */
+function Header({ nowMs, timezone }: { nowMs: number | null; timezone: string }) {
   return (
     <Box
       sx={{
@@ -205,247 +208,183 @@ function Header({ nowMs, timezone, legend }: { nowMs: number | null; timezone: s
         gap: 2,
         px: 'clamp(16px, 3.5vw, 56px)',
         pt: 'clamp(10px, 1.6vh, 26px)',
-        pb: 'clamp(6px, 0.9vh, 14px)',
+        pb: 'clamp(8px, 1.3vh, 20px)',
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 'clamp(10px, 1.2vw, 20px)' }}>
-        <Image src={logo} alt="Easy Beans Coffee" style={{ width: 'clamp(52px, 7.5vh, 104px)', height: 'auto' }} priority />
+        <Image src={logo} alt="Easy Beans Coffee" style={{ width: 'clamp(54px, 8vh, 110px)', height: 'auto' }} priority />
         <Box
           sx={{
             fontFamily: POPPINS,
             fontWeight: 600,
             letterSpacing: '-0.02em',
-            fontSize: 'clamp(1.1rem, 2.8vh, 2.1rem)',
-            lineHeight: 1.05,
+            fontSize: 'clamp(1.2rem, 3vh, 2.3rem)',
+            lineHeight: 1,
           }}
         >
           Easy Beans
-          <Box component="span" sx={{ display: 'block', fontWeight: 500, color: brand.ink70, fontSize: '0.58em' }}>
-            Coffee · San Pedro
-          </Box>
         </Box>
       </Box>
-      <Box sx={{ textAlign: 'right' }}>
-        {nowMs !== null && (
-          <Box sx={{ fontFamily: POPPINS, fontWeight: 600, fontSize: 'clamp(1.2rem, 3.4vh, 2.6rem)', fontVariantNumeric: 'tabular-nums' }}>
-            {clockLabel(new Date(nowMs).toISOString(), timezone)}
-          </Box>
-        )}
-        {legend && (
-          <Box sx={{ color: brand.ink45, fontSize: 'clamp(0.6rem, 1.4vh, 0.95rem)' }}>
-            caliente · hot&nbsp;&nbsp;/&nbsp;&nbsp;frío · iced
-          </Box>
-        )}
-      </Box>
+      {nowMs !== null && (
+        <Box sx={{ fontFamily: POPPINS, fontWeight: 600, fontSize: 'clamp(1.2rem, 3.2vh, 2.5rem)', fontVariantNumeric: 'tabular-nums' }}>
+          {clockLabel(new Date(nowMs).toISOString(), timezone)}
+        </Box>
+      )}
     </Box>
   );
 }
 
 /**
- * The speciality drinks, set apart: a rose-washed panel with each drink's own
- * photograph and tagline, and the ube can standing beside the list. The one
- * colour moment on an otherwise cream board, per the brand rules.
+ * One section as the print draws it: a bold coloured title sitting above a
+ * rounded, outlined card. Prices right-aligned; the coffee cards carry the
+ * caliente/frío column pair.
  */
-function SpecialityPanel({ section }: { section: DisplaySection }) {
-  return (
-    <Box
-      sx={{
-        backgroundColor: brand.roseWash,
-        borderRadius: `${radius.xl}px`,
-        px: 'clamp(14px, 2.4vw, 36px)',
-        py: 'clamp(8px, 1.3vh, 20px)',
-        display: 'grid',
-        gridTemplateColumns: PANEL_ART ? 'minmax(0, 1fr) clamp(90px, 17vh, 240px)' : 'minmax(0, 1fr)',
-        columnGap: 'clamp(12px, 2vw, 32px)',
-        animation: 'board-in 700ms cubic-bezier(.16,1,.3,1) both',
-      }}
-    >
-      <Box sx={{ minWidth: 0 }}>
-        <SectionHeading section={section} accent={brand.rosePinkDeep} />
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          {section.rows.map((row) => (
-            <Box
-              key={row.id}
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'clamp(8px, 1vw, 18px)',
-                py: 'clamp(1px, 0.25vh, 4px)',
-                borderBottom: `1px solid ${brand.ink06}`,
-                '&:last-of-type': { borderBottom: 'none' },
-                opacity: row.soldOut ? 0.45 : 1,
-              }}
-            >
-              {/* Wash painted on the thumb so the photo's multiply blend sees
-                  it even inside the panel's animated stacking context. */}
-              <Box
-                sx={{
-                  position: 'relative',
-                  aspectRatio: '1',
-                  flexShrink: 0,
-                  height: 'clamp(20px, 2.9vh, 42px)',
-                  backgroundColor: brand.roseWash,
-                }}
-              >
-                {row.art && (
-                  <Image src={row.art} alt="" fill sizes="6vh" style={{ objectFit: 'contain', mixBlendMode: 'multiply' }} />
-                )}
-              </Box>
-              <Box
-                sx={{
-                  minWidth: 0,
-                  fontFamily: POPPINS,
-                  fontWeight: 600,
-                  fontSize: 'clamp(0.85rem, 2.2vh, 1.5rem)',
-                  lineHeight: 1.1,
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
-              >
-                {row.name.en}
-                {row.name.es !== row.name.en && (
-                  <Box component="span" sx={{ fontWeight: 500, color: brand.ink45, fontSize: '0.72em' }}>
-                    {' '}· {row.name.es}
-                  </Box>
-                )}
-              </Box>
-              <Leader />
-              <Price price={row.price} soldOut={row.soldOut} size="clamp(0.85rem, 2.2vh, 1.5rem)" />
-            </Box>
-          ))}
-        </Box>
-      </Box>
+function SectionCard({ section }: { section: DisplaySection }) {
+  const style = CARD_STYLE[section.id] ?? { title: section.label.es, color: ESPRESSO };
+  const tempCols = style.tempCols === true && section.rows.some((row) => row.tempAxis);
 
-      {PANEL_ART && (
-        <Box sx={{ position: 'relative', backgroundColor: brand.roseWash, animation: 'board-drift 6s ease-in-out infinite alternate' }}>
-          <Image src={PANEL_ART} alt="Iced ube latte in a can" fill priority sizes="18vh" style={{ objectFit: 'contain', mixBlendMode: 'multiply' }} />
-        </Box>
-      )}
-    </Box>
-  );
-}
-
-/** One of the plain sections: a small heading, then name — leader — price. */
-function SectionList({ section }: { section: DisplaySection }) {
   return (
-    <Box sx={{ breakInside: 'avoid', mb: 'clamp(8px, 1.3vh, 20px)' }}>
-      <SectionHeading section={section} accent={brand.rosePinkDeep} />
-      {section.rows.map((row) => (
-        <Box
-          key={row.id}
-          sx={{
-            display: 'flex',
-            alignItems: 'baseline',
-            gap: 'clamp(6px, 0.8vw, 14px)',
-            py: 'clamp(1px, 0.18vh, 3px)',
-            opacity: row.soldOut ? 0.45 : 1,
-          }}
-        >
-          <Box sx={{ minWidth: 0 }}>
-            {/* One line per dish, whatever the name's length — the board's
-                height budget is exact and a wrapped row spends someone
-                else's line. */}
-            <Box
-              sx={{
-                fontWeight: 600,
-                fontSize: 'clamp(0.68rem, 1.5vh, 1.05rem)',
-                lineHeight: 1.15,
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-              }}
-            >
-              {row.name.en}
-              {row.name.es !== row.name.en && (
-                <Box component="span" sx={{ fontWeight: 500, color: brand.ink45, fontSize: '0.75em' }}>
-                  {' '}· {row.name.es}
-                </Box>
-              )}
-            </Box>
-            {row.options && (
-              <Box sx={{ color: brand.ink70, fontSize: 'clamp(0.58rem, 1.3vh, 0.9rem)', lineHeight: 1.25 }}>
-                {row.options.en}
-              </Box>
-            )}
-          </Box>
-          <Leader />
-          <Price price={row.price} soldOut={row.soldOut} size="clamp(0.68rem, 1.5vh, 1.05rem)" />
-        </Box>
-      ))}
-    </Box>
-  );
-}
-
-/** Small-caps section label — deliberately not a headline. */
-function SectionHeading({
-  section,
-  accent,
-  showBlurb = false,
-}: {
-  section: DisplaySection;
-  accent: string;
-  /** Only the featured panel earns the blurb; the list stays terse. */
-  showBlurb?: boolean;
-}) {
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'baseline',
-        gap: 'clamp(6px, 0.8vw, 14px)',
-        mb: 'clamp(3px, 0.5vh, 8px)',
-        pb: 'clamp(2px, 0.35vh, 5px)',
-        borderBottom: `1px solid ${brand.ink12}`,
-      }}
-    >
+    <Box sx={{ mb: 'clamp(6px, 1.1vh, 18px)', minWidth: 0 }}>
       <Box
         sx={{
-          color: accent,
+          color: style.color,
+          fontFamily: POPPINS,
           fontWeight: 600,
-          letterSpacing: '0.12em',
+          letterSpacing: '0.08em',
           textTransform: 'uppercase',
-          fontSize: 'clamp(0.56rem, 1.3vh, 0.9rem)',
-          whiteSpace: 'nowrap',
+          fontSize: 'clamp(0.78rem, 1.85vh, 1.3rem)',
+          mb: 'clamp(3px, 0.5vh, 8px)',
+          pl: 'clamp(2px, 0.3vw, 6px)',
         }}
       >
-        {section.label.es}
-        {section.label.es !== section.label.en && ` · ${section.label.en}`}
+        {style.title}
       </Box>
-      {showBlurb && (
-        <Box sx={{ color: brand.ink45, fontSize: 'clamp(0.55rem, 1.3vh, 0.9rem)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          {section.blurb.es} · {section.blurb.en}
+
+      <Box
+        sx={{
+          border: `2px solid ${style.outline ?? ESPRESSO}`,
+          borderRadius: 'clamp(12px, 1.8vh, 22px)',
+          backgroundColor: style.fill ?? 'transparent',
+          px: 'clamp(10px, 1.6vw, 26px)',
+          py: 'clamp(5px, 0.85vh, 14px)',
+        }}
+      >
+        {tempCols && (
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 'clamp(1px, 0.2vh, 4px)' }}>
+            <ColLabel>caliente</ColLabel>
+            <ColLabel>frío</ColLabel>
+          </Box>
+        )}
+        {section.rows.map((row) => (
+          <Row key={row.id} row={row} tempCols={tempCols} desc={style.desc} />
+        ))}
+      </Box>
+    </Box>
+  );
+}
+
+/** Both price columns share this width so the numbers rule up vertically. */
+const PRICE_COL_WIDTH = 'clamp(42px, 4.4vw, 76px)';
+
+function ColLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <Box sx={{ width: PRICE_COL_WIDTH, textAlign: 'right', color: ESPRESSO_SOFT, fontSize: 'clamp(0.52rem, 1.2vh, 0.82rem)', fontWeight: 500 }}>
+      {children}
+    </Box>
+  );
+}
+
+function Row({ row, tempCols, desc }: { row: DisplayRow; tempCols: boolean; desc?: 'tagline' | 'options' | 'both' }) {
+  const description =
+    desc === 'options'
+      ? row.options?.es ?? null
+      : desc === 'tagline'
+        ? row.tagline?.es ?? null
+        : desc === 'both'
+          ? [row.tagline?.es, row.options?.es].filter(Boolean).join(' — ') || null
+          : null;
+
+  return (
+    <Box
+      sx={{
+        py: 'clamp(2px, 0.28vh, 5px)',
+        borderBottom: `1px solid ${brand.ink06}`,
+        '&:last-of-type': { borderBottom: 'none' },
+        opacity: row.soldOut ? 0.45 : 1,
+      }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 'clamp(6px, 0.8vw, 14px)' }}>
+        {/* Long names wrap, exactly as the printed card does — "Tostada,
+            mantequilla y mermelada" takes two lines there too. */}
+        <Box
+          sx={{
+            minWidth: 0,
+            flex: 1,
+            fontWeight: 600,
+            textTransform: 'uppercase',
+            letterSpacing: '0.04em',
+            fontSize: 'clamp(0.64rem, 1.5vh, 1.05rem)',
+            lineHeight: 1.2,
+          }}
+        >
+          {row.name.es}
+        </Box>
+        <RowPriceCells price={row.price} soldOut={row.soldOut} tempCols={tempCols} />
+      </Box>
+      {description && (
+        <Box sx={{ color: ESPRESSO_SOFT, fontSize: 'clamp(0.56rem, 1.28vh, 0.88rem)', lineHeight: 1.3, pr: 'clamp(6px, 0.8vw, 14px)' }}>
+          {description}
         </Box>
       )}
     </Box>
   );
 }
 
-function Leader() {
-  return <Box aria-hidden sx={{ flex: 1, borderBottom: `2px dotted ${brand.ink12}`, alignSelf: 'center', mt: '0.4em', minWidth: 'clamp(8px, 1vw, 20px)' }} />;
-}
-
-function Price({ price, soldOut, size }: { price: RowPrice; soldOut: boolean; size: string }) {
+function RowPriceCells({ price, soldOut, tempCols }: { price: RowPrice; soldOut: boolean; tempCols: boolean }) {
+  const size = 'clamp(0.64rem, 1.5vh, 1.05rem)';
   if (soldOut) {
     return (
-      <Box sx={{ color: brand.rosePinkDeep, fontWeight: 600, fontSize: `calc(${size} * 0.72)`, textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>
-        Agotado · Sold out
+      <Box sx={{ color: brand.rosePinkDeep, fontWeight: 600, fontSize: `calc(${size} * 0.78)`, textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
+        Agotado
       </Box>
     );
   }
-  const label = (cents: number | undefined) => (cents === undefined ? '—' : formatMenuPrice(cents));
-  const text =
-    price.hot !== undefined || price.iced !== undefined
-      ? `${label(price.hot)} / ${label(price.iced)}`
-      : label(price.one);
+
+  const cell = (cents: number | undefined) => (cents === undefined ? '—' : formatMenuPrice(cents));
+
+  if (tempCols) {
+    // A single-priced drink in a column card (espresso, tea) sits under
+    // caliente, exactly as the printed menu sets it.
+    const hot = price.hot ?? price.one;
+    return (
+      <Box sx={{ display: 'flex' }}>
+        {[hot, price.iced].map((cents, index) => (
+          <Box
+            key={index}
+            sx={{
+              width: PRICE_COL_WIDTH,
+              textAlign: 'right',
+              fontWeight: 600,
+              fontSize: size,
+              fontVariantNumeric: 'tabular-nums',
+              color: cents === undefined ? ESPRESSO_SOFT : ESPRESSO,
+            }}
+          >
+            {cell(cents)}
+          </Box>
+        ))}
+      </Box>
+    );
+  }
+
   return (
-    <Box sx={{ fontFamily: POPPINS, fontWeight: 600, fontSize: size, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
-      {text}
+    <Box sx={{ fontWeight: 600, fontSize: size, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
+      {cell(price.one ?? price.hot ?? price.iced)}
     </Box>
   );
 }
 
-/** Instagram handle left, the site right. */
+/** Instagram handle left, the site right — the print's sign-off. */
 function Footer() {
   return (
     <Box
@@ -458,10 +397,10 @@ function Footer() {
         py: 'clamp(6px, 1vh, 16px)',
       }}
     >
-      <Box sx={{ color: brand.rosePinkDeep, fontWeight: 600, fontSize: 'clamp(0.75rem, 1.9vh, 1.25rem)' }}>
+      <Box sx={{ color: brand.rosePinkDeep, fontWeight: 600, fontSize: 'clamp(0.75rem, 1.8vh, 1.2rem)' }}>
         {INSTAGRAM_HANDLE}
       </Box>
-      <Box sx={{ color: brand.ink70, fontWeight: 500, fontSize: 'clamp(0.7rem, 1.7vh, 1.1rem)' }}>
+      <Box sx={{ color: ESPRESSO_SOFT, fontWeight: 500, fontSize: 'clamp(0.7rem, 1.6vh, 1.05rem)' }}>
         easybeanscoffee.com
       </Box>
     </Box>
