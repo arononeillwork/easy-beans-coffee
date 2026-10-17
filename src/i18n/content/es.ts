@@ -21,6 +21,25 @@ export const es: SiteContent = {
     play: 'Reproducir',
     pause: 'Pausar',
   },
+  banner: {
+    text: 'Suscríbete: 10% en tus pedidos online.',
+    cta: 'Suscribirme',
+  },
+  ticker: [
+    'Perros bienvenidos',
+    'Sellado delante de ti',
+    'Matcha ceremonial',
+    'Ube cocinado aquí',
+    'Chai infusionado, especia a especia',
+    'Terraza en Calle Pizarro',
+    'Pide antes, recoge sin cola',
+  ],
+  video: {
+    headline: 'Un local pequeño, todo el día.',
+    body: 'Mostrador, molinillo, terraza. Grabado un martes cualquiera.',
+    cta: 'Más en Instagram',
+    label: 'Un día normal en Easy Beans: mostrador, molinillo y terraza',
+  },
   hero: {
     headline: 'Enlatado delante de ti.',
     /** The headline as it is set: one phrase per line. */
@@ -96,8 +115,8 @@ export const es: SiteContent = {
     address: 'C. Pizarro 8, 29670 San Pedro de Alcántara, Málaga',
     directions: 'Cómo llegar',
     whatsapp: 'WhatsApp',
-    amenities: 'Terraza, wifi y perros bienvenidos.',
-    photoAlt: 'La terraza de Easy Beans en Calle Pizarro',
+    amenities: ['Perros bienvenidos', 'Wifi', 'Terraza'],
+    photoAlt: 'Matcha de fresa en la terraza de Calle Pizarro',
   },
   shop: {
     eyebrow: 'La tienda',

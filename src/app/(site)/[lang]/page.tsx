@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation';
 import { HomeHero } from '@/components/home/HomeHero';
 import { MenuBoard } from '@/components/home/MenuBoard';
+import { Ticker } from '@/components/home/Ticker';
+import { CafeFilm } from '@/components/home/CafeFilm';
 import { CanBand } from '@/components/home/CanBand';
 import { InstagramGrid } from '@/components/home/InstagramGrid';
 import { VisitSection } from '@/components/home/VisitSection';
@@ -28,8 +30,10 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
 
   return (
     <>
-      <HomeHero t={t} lang={lang} hours={ordering.hours} />
+      <HomeHero t={t} lang={lang} hours={ordering.hours} rating={place?.rating ?? null} reviews={place?.total ?? null} />
+      <Ticker t={t} />
       <MenuBoard t={t} lang={lang} prices={prices} />
+      <CafeFilm t={t} />
       <CanBand t={t} />
       <InstagramGrid t={t} />
       <VisitSection t={t} place={place} />

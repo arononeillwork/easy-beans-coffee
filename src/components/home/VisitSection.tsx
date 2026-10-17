@@ -5,11 +5,17 @@ import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import PetsOutlinedIcon from '@mui/icons-material/PetsOutlined';
+import WifiIcon from '@mui/icons-material/Wifi';
+import DeckOutlinedIcon from '@mui/icons-material/DeckOutlined';
 import type { SiteContent } from '@/i18n/content/en';
 import type { PlaceDetails } from '@/server/places/googlePlaces';
 import { brand, radius } from '@/theme/brand';
 import { Stars } from '@/components/marketing/Stars';
 import { MAPS_LINK, WHATSAPP_HREF } from './links';
+
+/** Same order as `location.amenities`: dogs, wifi, terrace. */
+const AMENITY_ICONS = [PetsOutlinedIcon, WifiIcon, DeckOutlinedIcon];
 
 /**
  * Where we are and what people say, both live from Google Maps. Opening hours
@@ -20,11 +26,11 @@ export function VisitSection({ t, place }: { t: SiteContent; place: PlaceDetails
   const mapsUrl = place?.mapsUrl ?? MAPS_LINK;
 
   return (
-    <Box id="visit" component="section" aria-labelledby="visit-title" sx={{ scrollMarginTop: 88, borderTop: `1px solid ${brand.ink12}` }}>
+    <Box id="visit" component="section" aria-labelledby="visit-title" sx={{ scrollMarginTop: 88, backgroundColor: brand.matchaTint }}>
       <Container maxWidth="lg" sx={{ py: { xs: 9, md: 14 } }}>
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: 5, md: 10 }, alignItems: 'center' }}>
           <Box sx={{ position: 'relative', aspectRatio: '4 / 5', borderRadius: `${radius.xl}px`, overflow: 'hidden', order: 2 }}>
-            <Image src="/media/terrace.webp" alt={t.location.photoAlt} fill sizes="(max-width: 900px) 100vw, 45vw" style={{ objectFit: 'cover' }} />
+            <Image src="/media/strawberry-matcha-can.webp" alt={t.location.photoAlt} fill sizes="(max-width: 900px) 100vw, 45vw" style={{ objectFit: 'cover', objectPosition: 'center 60%' }} />
           </Box>
 
           <Stack spacing={{ xs: 3, md: 4 }} sx={{ order: 1 }}>
@@ -60,7 +66,21 @@ export function VisitSection({ t, place }: { t: SiteContent; place: PlaceDetails
               </Box>
             )}
 
-            <Typography sx={{ color: brand.ink70 }}>{t.location.amenities}</Typography>
+            <Stack component="ul" direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ m: 0, p: 0, listStyle: 'none' }} data-testid="amenities">
+              {t.location.amenities.map((label, i) => {
+                const Icon = AMENITY_ICONS[i] ?? DeckOutlinedIcon;
+                return (
+                  <Box
+                    component="li"
+                    key={label}
+                    sx={{ display: 'inline-flex', alignItems: 'center', gap: 1, px: 1.75, py: 0.875, borderRadius: 999, backgroundColor: brand.white, fontWeight: 500, fontSize: '0.9375rem' }}
+                  >
+                    <Icon aria-hidden sx={{ fontSize: 19, color: brand.matchaGreenDeep }} />
+                    {label}
+                  </Box>
+                );
+              })}
+            </Stack>
 
             <Stack direction="row" spacing={1.5} useFlexGap flexWrap="wrap">
               <Button component="a" href={mapsUrl} target="_blank" rel="noopener noreferrer" variant="contained">
@@ -73,7 +93,7 @@ export function VisitSection({ t, place }: { t: SiteContent; place: PlaceDetails
                 rel="noopener noreferrer"
                 variant="outlined"
                 startIcon={<WhatsAppIcon />}
-                sx={{ color: brand.ink, borderColor: brand.ink12, '&:hover': { borderColor: brand.ink, backgroundColor: 'transparent' } }}
+                sx={{ color: brand.ink, borderColor: 'rgba(26,26,26,0.25)', backgroundColor: brand.white, '&:hover': { borderColor: brand.ink, backgroundColor: brand.white } }}
               >
                 {t.location.whatsapp}
               </Button>

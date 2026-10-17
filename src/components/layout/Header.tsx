@@ -74,7 +74,23 @@ export function Header() {
             '& img': { height: { xs: 44, sm: 52 }, width: 'auto' },
           }}
         >
-          <Image src={logo} alt="Easy Beans Coffee" width={52} height={52} priority />
+          <Image src={logo} alt="" width={52} height={52} priority />
+          {/* The name beside the roundel on wide screens; the roundel alone
+              on phones, where the header has no room for both. */}
+          <Box
+            component="span"
+            sx={{
+              display: { xs: 'none', md: 'inline' },
+              ml: 1.5,
+              fontFamily: 'var(--font-poppins)',
+              fontWeight: 600,
+              fontSize: '1.25rem',
+              letterSpacing: '-0.025em',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            Easy Beans Coffee
+          </Box>
         </Box>
 
         <Box sx={{ flexGrow: 1 }} />

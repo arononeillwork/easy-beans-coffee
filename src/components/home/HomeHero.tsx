@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import { localePath, type Lang } from '@/i18n/config';
 import type { SiteContent } from '@/i18n/content/en';
 import type { DayHours } from '@/shared/lib/openingHours';
@@ -15,9 +16,22 @@ import { LiveStatus } from './LiveStatus';
  * The headline at full volume beside the film it describes. The only line of
  * status is live: open or closed right now, from the Google Maps hours.
  */
-export function HomeHero({ t, lang, hours }: { t: SiteContent; lang: Lang; hours: DayHours[] }) {
+export function HomeHero({
+  t,
+  lang,
+  hours,
+  rating,
+  reviews,
+}: {
+  t: SiteContent;
+  lang: Lang;
+  hours: DayHours[];
+  rating: number | null;
+  reviews: number | null;
+}) {
+  const ratingLabel = rating ? rating.toLocaleString(lang === 'es' ? 'es-ES' : 'en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : null;
   return (
-    <Container maxWidth="lg" sx={{ pt: { xs: 4, md: 7 }, pb: { xs: 8, md: 12 } }}>
+    <Container maxWidth="lg" sx={{ pt: { xs: 4, md: 7 }, pb: { xs: 6, md: 9 } }}>
       <Box
         sx={{
           display: 'grid',
@@ -45,7 +59,21 @@ export function HomeHero({ t, lang, hours }: { t: SiteContent; lang: Lang; hours
           <Typography sx={{ fontSize: { xs: '1.0625rem', md: '1.1875rem' }, color: brand.ink70, maxWidth: '36ch' }}>
             {t.hero.sub}
           </Typography>
-          <LiveStatus hours={hours} />
+          <Stack direction="row" alignItems="center" spacing={3} useFlexGap flexWrap="wrap" sx={{ rowGap: 1 }}>
+            <LiveStatus hours={hours} />
+            {ratingLabel && (
+              <Box
+                component="a"
+                href="#visit"
+                data-testid="hero-rating"
+                sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75, color: brand.ink, textDecoration: 'none', fontWeight: 500, '&:hover': { color: brand.rosePinkDeep } }}
+              >
+                <StarRoundedIcon aria-hidden sx={{ fontSize: 22, color: brand.rosePinkDeep }} />
+                {t.status.rating.replace('{rating}', ratingLabel)}
+                {reviews ? <Box component="span" sx={{ color: brand.ink45, fontWeight: 400 }}>({reviews})</Box> : null}
+              </Box>
+            )}
+          </Stack>
           <Stack direction="row" spacing={1.5} useFlexGap flexWrap="wrap">
             <Button component={Link} href={localePath(lang, '/order')} variant="contained">
               {t.hero.ctaOrder}

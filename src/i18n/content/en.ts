@@ -29,6 +29,25 @@ export const en = {
     pause: 'Pause',
   },
   /** The launch bar above the header. Opens the same subscribe modal as the popup. */
+  banner: {
+    text: 'Subscribe: 10% off your online orders.',
+    cta: 'Subscribe',
+  },
+  ticker: [
+    'Dogs welcome',
+    'Sealed in front of you',
+    'Ceremonial matcha',
+    'Ube cooked here',
+    'Chai brewed spice by spice',
+    'Terrace on Calle Pizarro',
+    'Order ahead, skip the queue',
+  ],
+  video: {
+    headline: 'One small room, all day long.',
+    body: 'Counter, grinder, terrace. Filmed on a normal Tuesday.',
+    cta: 'More on Instagram',
+    label: 'A normal day at Easy Beans: counter, grinder and terrace',
+  },
   hero: {
     headline: 'Canned in front of you.',
     /** The headline as it is set: one phrase per line. */
@@ -109,8 +128,8 @@ export const en = {
     address: 'C. Pizarro 8, 29670 San Pedro de Alcántara, Málaga',
     directions: 'Get directions',
     whatsapp: 'WhatsApp',
-    amenities: 'Terrace, wifi, dogs welcome.',
-    photoAlt: 'The Easy Beans terrace on Calle Pizarro',
+    amenities: ['Dogs welcome', 'Wifi', 'Terrace'],
+    photoAlt: 'Strawberry matcha on the Calle Pizarro terrace',
   },
   shop: {
     eyebrow: 'The shop',

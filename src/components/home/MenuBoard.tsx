@@ -45,7 +45,7 @@ export function MenuBoard({ t, lang, prices }: { t: SiteContent; lang: Lang; pri
   });
 
   return (
-    <Box component="section" aria-labelledby="board-title" sx={{ pb: { xs: 9, md: 14 } }}>
+    <Box component="section" aria-labelledby="board-title" sx={{ pt: { xs: 8, md: 12 }, pb: { xs: 9, md: 14 } }}>
       <Container maxWidth="lg">
         <Stack direction="row" alignItems="baseline" justifyContent="space-between" sx={{ mb: { xs: 3, md: 4 } }}>
           <Typography id="board-title" variant="h2">

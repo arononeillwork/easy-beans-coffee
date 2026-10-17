@@ -8,7 +8,7 @@ import { brand, radius } from '@/theme/brand';
 /** The thing the café is known for, said once, beside the photograph of it. */
 export function CanBand({ t }: { t: SiteContent }) {
   return (
-    <Box component="section" sx={{ backgroundColor: brand.roseWash }}>
+    <Box component="section" sx={{ backgroundColor: brand.ubeLilac }}>
       <Container maxWidth="lg" sx={{ py: { xs: 8, md: 12 } }}>
         <Box
           sx={{
