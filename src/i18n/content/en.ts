@@ -249,16 +249,6 @@ export const en = {
   },
   /** The /account page: Supabase Auth sign-in, then the customer's own details. */
   account: {
-    /**
-     * The allergies preference. Chosen from the same five allergens as the
-     * counter sign; kept on the device, never sent to a server — the copy
-     * says so, and safety stays a conversation at the counter.
-     */
-    allergies: 'Allergies',
-    allergiesBody: 'Pick yours from the list and the site will remember them on this device.',
-    allergiesLabel: 'Choose from the list',
-    allergiesNote:
-      'Saved on this device only. Always tell us at the counter as well — the full allergen list lives there.',
     title: 'Account',
     eyebrow: 'Your account',
     signInHeadline: 'Sign in',

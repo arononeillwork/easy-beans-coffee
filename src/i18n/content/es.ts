@@ -234,11 +234,6 @@ export const es: SiteContent = {
     codeNote: 'También te lo enviamos por email. Vale un 10% en pedidos online durante 6 meses.',
   },
   account: {
-    allergies: 'Alergias',
-    allergiesBody: 'Elige las tuyas de la lista y el sitio las recordará en este dispositivo.',
-    allergiesLabel: 'Elige de la lista',
-    allergiesNote:
-      'Se guarda solo en este dispositivo. Dínoslo también en el mostrador — allí está la lista completa de alérgenos.',
     title: 'Cuenta',
     eyebrow: 'Tu cuenta',
     signInHeadline: 'Inicia sesión',
