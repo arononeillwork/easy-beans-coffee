@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Box from '@mui/material/Box';
 import logo from '@/assets/logo.png';
 import { cafeDay, type PriceBook } from '@/features/menu/priceBook';
-import { formatMenuPrice } from '@/features/order/lib/price';
 import type { DayHours } from '@/shared/lib/openingHours';
 import { clockLabel } from '@/shared/lib/openNow';
 import { brand } from '@/theme/brand';
@@ -36,8 +35,10 @@ const POPPINS = 'var(--font-poppins), sans-serif';
 
 const INSTAGRAM_HANDLE = '@easy.beans.coffee';
 
-/** The printed menus' dark roast brown — outlines, names and prices. */
+/** The printed menus' dark roast brown — names and prices. */
 const ESPRESSO = '#3B2A20';
+/** Card outline: the same brown, light enough to frame without shouting. */
+const CARD_BORDER = 'rgba(59, 42, 32, 0.30)';
 const ESPRESSO_SOFT = 'rgba(59, 42, 32, 0.62)';
 
 /**
@@ -58,7 +59,7 @@ const CARD_STYLE: Record<Section, {
   smoothies: { title: 'Smoothies', color: brand.rosePinkDeep, desc: 'tagline' },
   cold: { title: 'Bebidas Frías', color: ESPRESSO, desc: 'options' },
   bakery: { title: 'Bollería', color: ESPRESSO },
-  food: { title: 'Comida', color: brand.rosePinkDeep, fill: brand.rosePinkTint, outline: brand.rosePink, desc: 'both' },
+  food: { title: 'Comida', color: brand.rosePinkDeep, fill: brand.rosePinkTint, outline: 'rgba(247, 155, 164, 0.75)', desc: 'both' },
 };
 
 /** The hand-tuned column split that keeps the whole list above the fold. */
@@ -322,7 +323,7 @@ function SectionCard({ section }: { section: DisplaySection }) {
 
       <Box
         sx={{
-          border: `2px solid ${style.outline ?? ESPRESSO}`,
+          border: `1px solid ${style.outline ?? CARD_BORDER}`,
           borderRadius: 'clamp(12px, 1.8vh, 22px)',
           backgroundColor: style.fill ?? 'transparent',
           px: 'clamp(10px, 1.6vw, 26px)',
@@ -344,9 +345,20 @@ function SectionCard({ section }: { section: DisplaySection }) {
 }
 
 /** Both price columns share this width so the numbers rule up vertically. */
-const PRICE_COL_WIDTH = 'clamp(42px, 4.4vw, 76px)';
+const PRICE_COL_WIDTH = 'clamp(32px, 3.5vw, 60px)';
+
 /** Daylight between caliente and frío, so €3,80 €4,80 never reads as one number. */
 const PRICE_COL_GAP = 'clamp(5px, 0.7vw, 12px)';
+
+
+/**
+ * Menu-wall numbers, as the eye wants them: whole euros bare ("4"), the rest
+ * with both cents ("4.50"). The sign would repeat forty times on one screen,
+ * so it is left to the board's context — exactly like a chalkboard.
+ */
+function displayPrice(cents: number): string {
+  return cents % 100 === 0 ? String(cents / 100) : (cents / 100).toFixed(2);
+}
 
 function ColLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -412,7 +424,7 @@ function RowPriceCells({ price, soldOut, tempCols }: { price: RowPrice; soldOut:
     );
   }
 
-  const cell = (cents: number | undefined) => (cents === undefined ? '—' : formatMenuPrice(cents));
+  const cell = (cents: number | undefined) => (cents === undefined ? '—' : displayPrice(cents));
 
   if (tempCols) {
     // A single-priced drink in a column card (espresso, tea) sits under
