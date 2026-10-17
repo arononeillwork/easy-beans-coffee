@@ -106,8 +106,7 @@ const WIN = {
     heading: (name: string) => `Congratulations, ${name}!`,
     intro: (month: string) => `You’ve won our ${month} draw: a €10 Easy Beans gift card.`,
     cardLabel: 'Your gift card number',
-    how: 'Show this email at the till (or read out the number) next time you visit — the €10 comes off your order. Any balance left stays on the card until it expires.',
-    validUntil: (d: string) => `Valid until ${d}.`,
+    how: 'Show this email at the till (or read out the number) next time you visit — the €10 comes off your order. Any balance left stays on the card.',
     manual: 'We’ll send your gift card details in a separate email very soon.',
     igQ: 'Can we congratulate you on our Instagram? We’d tag your account in the post.',
     igYes: 'Yes, tag me',
@@ -119,8 +118,7 @@ const WIN = {
     heading: (name: string) => `¡Enhorabuena, ${name}!`,
     intro: (month: string) => `Has ganado nuestro sorteo de ${month}: una tarjeta regalo de Easy Beans de 10 €.`,
     cardLabel: 'Número de tu tarjeta regalo',
-    how: 'Enseña este email en caja (o di el número) en tu próxima visita y te descontamos los 10 €. El saldo que sobre se queda en la tarjeta hasta que caduque.',
-    validUntil: (d: string) => `Válida hasta el ${d}.`,
+    how: 'Enseña este email en caja (o di el número) en tu próxima visita y te descontamos los 10 €. El saldo que sobre se queda en la tarjeta.',
     manual: 'Te enviaremos los datos de tu tarjeta regalo en otro email muy pronto.',
     igQ: '¿Podemos felicitarte en nuestro Instagram? Te etiquetaríamos en la publicación.',
     igYes: 'Sí, etiquétame',
@@ -135,7 +133,6 @@ export interface WinnerEmailInput {
   lang: Lang;
   drawMonth: string;
   gan: string | null;
-  expiresAt: Date | null;
   winnerToken: string;
 }
 
@@ -148,11 +145,6 @@ export async function sendWinnerEmail(input: WinnerEmailInput): Promise<boolean>
   const month = monthLabel(input.drawMonth, input.lang);
   const base = `${getSiteUrl()}/${input.lang}/competition/winner?t=${input.winnerToken}`;
   const yes = `${base}&a=yes`;
-  const validUntil = input.expiresAt
-    ? t.validUntil(
-        input.expiresAt.toLocaleDateString(input.lang === 'es' ? 'es-ES' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Madrid' }),
-      )
-    : '';
   const no = `${base}&a=no`;
 
   const text = [
@@ -160,7 +152,7 @@ export async function sendWinnerEmail(input: WinnerEmailInput): Promise<boolean>
     '',
     t.intro(month),
     '',
-    ...(input.gan ? [`${t.cardLabel}: ${formatGan(input.gan)}`, validUntil, '', t.how] : [t.manual]),
+    ...(input.gan ? [`${t.cardLabel}: ${formatGan(input.gan)}`, '', t.how] : [t.manual]),
     '',
     t.igQ,
     `${t.igYes}: ${yes}`,
@@ -171,8 +163,7 @@ export async function sendWinnerEmail(input: WinnerEmailInput): Promise<boolean>
 
   const card = input.gan
     ? `<p style="margin:0 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(26,26,26,0.45);">${t.cardLabel}</p>
-       <p style="margin:0 0 4px;font-size:26px;font-weight:700;letter-spacing:0.06em;color:#3B2A20;font-family:'Courier New',monospace;">${esc(formatGan(input.gan))}</p>
-       <p style="margin:0 0 16px;font-size:14px;font-weight:600;color:#A85A68;">${esc(validUntil)}</p>
+       <p style="margin:0 0 16px;font-size:26px;font-weight:700;letter-spacing:0.06em;color:#3B2A20;font-family:'Courier New',monospace;">${esc(formatGan(input.gan))}</p>
        <p style="${P}">${t.how}</p>`
     : `<p style="${P}">${t.manual}</p>`;
 

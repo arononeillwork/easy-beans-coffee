@@ -44,7 +44,6 @@ const content: Record<Lang, { title: string; updated: string; back: string; sect
         h: '5. The prize',
         p: [
           'One €10 Easy Beans digital gift card per draw, redeemable in the café at C. Pizarro 8, San Pedro de Alcántara, subject to Square’s gift card terms.',
-          'The gift card is valid for 6 months from the date we email it to the winner (the exact date is shown in that email). Any balance not used by then is cancelled.',
           'The prize has no cash alternative and cannot be exchanged or transferred.',
         ],
       },
@@ -109,7 +108,6 @@ const content: Record<Lang, { title: string; updated: string; back: string; sect
         h: '5. Premio',
         p: [
           'Una tarjeta regalo digital de Easy Beans de 10 € por sorteo, canjeable en la cafetería de C. Pizarro 8, San Pedro de Alcántara, según las condiciones de las tarjetas regalo de Square.',
-          'La tarjeta regalo es válida durante 6 meses desde la fecha en que se la enviamos por email al ganador (la fecha exacta aparece en ese email). El saldo no usado en ese plazo se cancela.',
           'El premio no puede cambiarse por dinero ni transferirse.',
         ],
       },

@@ -3,7 +3,7 @@ import { randomInt } from 'node:crypto';
 import { TZDate } from '@date-fns/tz';
 import { getSiteUrl } from '../env';
 import { sendAdminDrawEmail, sendAdminIssueEmail, sendWinnerEmail, monthLabel } from '../email/competitionEmails';
-import { cardExpiry, clearPrizeCard, issuePrizeCard } from './giftCard';
+import { issuePrizeCard } from './giftCard';
 import { publishInstagramPhoto } from './instagramPost';
 import { DRAW_DAY } from './drawMonth';
 import {
@@ -148,12 +148,7 @@ export async function approve(month: string, opts: { manualCard?: boolean } = {}
     }
   }
 
-  const expires = opts.manualCard ? null : cardExpiry();
-  const approved = await updateDraw(
-    month,
-    { status: 'approved', approved_at: new Date().toISOString(), gift_card_expires_at: expires?.toISOString() ?? null },
-    'pending_approval',
-  );
+  const approved = await updateDraw(month, { status: 'approved', approved_at: new Date().toISOString() }, 'pending_approval');
   if (!approved) return { ok: false, error: 'This draw was already approved.' };
   await markEntryWinner(winner.id);
 
@@ -163,7 +158,6 @@ export async function approve(month: string, opts: { manualCard?: boolean } = {}
     lang: winner.lang === 'es' ? 'es' : 'en',
     drawMonth: month,
     gan,
-    expiresAt: expires,
     winnerToken: approved.winner_token,
   });
   if (sent) await updateDraw(month, { winner_emailed_at: new Date().toISOString() });
@@ -230,8 +224,7 @@ export async function runDailyCompetitionJob(now = new Date()) {
   const reminded: string[] = [];
   const posted: string[] = [];
 
-  const cleared: string[] = [];
-  for (const draw of await listDraws(12)) {
+  for (const draw of await listDraws(6)) {
     const age = (iso: string | null) => (iso ? now.getTime() - new Date(iso).getTime() : 0);
 
     if (draw.status === 'pending_approval' && draw.admin_notified_at && !draw.admin_reminded_at && age(draw.admin_notified_at) > REMIND_AFTER_DAYS * DAY_MS) {
@@ -252,17 +245,6 @@ export async function runDailyCompetitionJob(now = new Date()) {
       await updateDraw(draw.draw_month, { ig_consent: false });
       if ((await postWinnerToInstagram(draw.draw_month)).ok) posted.push(draw.draw_month);
     }
-
-    // Prize card past its 6 months: clear what's left on it in Square.
-    if (draw.gift_card_id && draw.gift_card_expires_at && !draw.gift_card_cleared_at && now > new Date(draw.gift_card_expires_at)) {
-      try {
-        await clearPrizeCard(draw.gift_card_id);
-        await updateDraw(draw.draw_month, { gift_card_cleared_at: now.toISOString() });
-        cleared.push(draw.draw_month);
-      } catch (err) {
-        console.error('[competition] clearing expired card failed', draw.draw_month, err);
-      }
-    }
   }
-  return { drawn, reminded, posted, cleared };
+  return { drawn, reminded, posted };
 }
