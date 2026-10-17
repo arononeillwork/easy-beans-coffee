@@ -7,8 +7,8 @@ import { competitionCopy } from './copy';
 
 /**
  * The competition poster, built as a real page section rather than a flat
- * image: live text, the café's own product cut-outs (transparent PNGs), and a
- * QR code — so it reflows from a phone up to the in-store TV.
+ * image: live text and QR code, with the poster's drinks scene as the one
+ * photo, so it reflows from a phone up to the in-store TV.
  *
  * Phone: headline → drinks → steps → "Enter now" button (no QR: they're
  * already on the page). Tablet/desktop/TV: text column left, drinks right,
@@ -16,29 +16,15 @@ import { competitionCopy } from './copy';
  */
 
 const ESPRESSO = '#3B2A20';
-const PLASTER = '#EADBCB';
 
-type Product = {
-  src: string;
-  alt: string;
-  w: number;
-  h: number;
-  /** Position inside the stage, in % of the stage box. */
-  left: string;
-  bottom: string;
-  height: string;
-  z: number;
+/** Soft fade on the photo's left and top edges so it melts into the cream. */
+const SCENE_MASK = {
+  // Phone: full-bleed, so only the top and bottom edges need to soften.
+  xs: 'linear-gradient(to bottom, transparent 0%, #000 10%, #000 88%, transparent 100%)',
+  // Big screens: the photo runs off the right and bottom edges; soften the
+  // left and top where it meets the text column.
+  md: 'linear-gradient(to right, transparent 0%, #000 14%), linear-gradient(to bottom, transparent 0%, #000 12%)',
 };
-
-// Back row first, hero cans last (painted on top).
-const PRODUCTS: Product[] = [
-  { src: 'hot-latte', alt: 'Hot latte with latte art', w: 625, h: 442, left: '0%', bottom: '31%', height: '24%', z: 1 },
-  { src: 'acai-bowl', alt: 'Açaí bowl', w: 647, h: 657, left: '77%', bottom: '30%', height: '31%', z: 1 },
-  { src: 'smoothie', alt: 'Strawberry smoothie', w: 375, h: 900, left: '6%', bottom: '8%', height: '46%', z: 2 },
-  { src: 'matcha-vanilla-can', alt: 'Iced matcha vanilla in a can glass', w: 369, h: 900, left: '21%', bottom: '8%', height: '70%', z: 3 },
-  { src: 'ube-matcha-can', alt: 'Iced ube matcha in a can glass', w: 313, h: 820, left: '61%', bottom: '8%', height: '66%', z: 3 },
-  { src: 'iced-latte-can', alt: 'Iced latte in a can glass', w: 354, h: 900, left: '40.5%', bottom: '3%', height: '80%', z: 4 },
-];
 
 /** A few small bean clusters for texture, drawn in SVG so they stay crisp. */
 function Beans({ sx }: { sx: object }) {
@@ -113,7 +99,7 @@ export function CompetitionPoster({ lang }: { lang: Lang }) {
         position: 'relative',
         overflow: 'hidden',
         // Warm cream with a soft light pool, like the poster's morning light.
-        background: `radial-gradient(120% 90% at 70% 15%, #FFF7EE 0%, ${brand.cream} 55%, #F1E2D3 100%)`,
+        background: 'radial-gradient(120% 90% at 70% 15%, #FCF5EC 0%, #FAF0E5 55%, #F4E6D7 100%)',
         height: { md: 'calc(100svh - 76px)' },
         minHeight: { md: 600 },
         display: 'grid',
@@ -128,7 +114,6 @@ export function CompetitionPoster({ lang }: { lang: Lang }) {
     >
       <Beans sx={{ top: { xs: 10, md: '2vw' }, left: { xs: 8, md: '36vw' }, width: { xs: 54, md: '5vw' }, height: { xs: 54, md: '5vw' } }} />
       <Beans sx={{ top: { xs: 10, md: '2vw' }, right: { xs: 8, md: '2vw' }, width: { xs: 54, md: '5.5vw' }, height: { xs: 54, md: '5.5vw' }, transform: 'scaleX(-1)' }} />
-      <Beans sx={{ bottom: { xs: 12, md: '2vw' }, right: { xs: 12, md: '3vw' }, width: { xs: 50, md: '5vw' }, height: { xs: 50, md: '5vw' }, transform: 'rotate(90deg)' }} />
 
       {/* Headline */}
       <Box sx={{ gridArea: 'head', textAlign: { xs: 'center', md: 'left' }, position: 'relative', zIndex: 5 }}>
@@ -174,50 +159,29 @@ export function CompetitionPoster({ lang }: { lang: Lang }) {
           justifySelf: { md: 'end' },
           // Width-led on phones; on big screens capped by the hero's height so
           // the drinks never push the text column or spill off the bottom.
-          width: { xs: '100%', md: 'min(100%, calc((100svh - 76px - 9vh) * 1.3333))' },
-          aspectRatio: { xs: '10 / 8.4', md: '4 / 3' },
+          width: { xs: 'calc(100% + 40px)', sm: 'calc(100% + 64px)', md: 'min(calc(100% + 4vw), calc((100svh - 76px - 5vh) * 1.536))' },
+          aspectRatio: '1828 / 1190',
+          WebkitMaskImage: SCENE_MASK,
+          maskImage: SCENE_MASK,
+          WebkitMaskComposite: 'source-in',
+          maskComposite: 'intersect',
           mt: { xs: 2, md: 0 },
-          mx: 'auto',
-          maxWidth: { xs: 560, md: '100%' },
+          // Bleed to the screen edges: both sides on phones, right and bottom
+          // on big screens (undoing the section's padding).
+          mx: { xs: -2.5, sm: -4, md: 0 },
+          mr: { md: '-4vw' },
+          mb: { md: 'calc(-1 * clamp(20px, 3.5vh, 48px))' },
+          maxWidth: { md: 'calc(100% + 4vw)' },
         }}
       >
-        {/* Plaster ledge the products stand on */}
-        <Box
-          aria-hidden
-          sx={{
-            position: 'absolute',
-            left: '-6%',
-            right: '-12%',
-            bottom: '-8%',
-            height: '30%',
-            borderRadius: '28px 28px 0 0',
-            background: `linear-gradient(180deg, #F3E7DA 0%, ${PLASTER} 35%, #E2D0BD 100%)`,
-            boxShadow: 'inset 0 10px 18px rgba(255,255,255,0.55)',
-          }}
+        <Image
+          src="/media/competition/drinks-scene.png"
+          alt="Iced matcha vanilla, iced latte and iced ube matcha in can glasses, with a hot latte, strawberry smoothie, açaí bowl and croissant"
+          fill
+          priority
+          sizes="(max-width: 899px) 100vw, 62vw"
+          style={{ objectFit: 'cover', objectPosition: 'center bottom' }}
         />
-        {PRODUCTS.map((p) => (
-          <Box
-            key={p.src}
-            sx={{
-              position: 'absolute',
-              left: p.left,
-              bottom: p.bottom,
-              height: p.height,
-              aspectRatio: `${p.w} / ${p.h}`,
-              zIndex: p.z,
-              filter: 'drop-shadow(0 14px 16px rgba(59,42,32,0.22))',
-            }}
-          >
-            <Image
-              src={`/media/competition/${p.src}.png`}
-              alt={p.alt}
-              fill
-              priority={p.z >= 3}
-              sizes="(max-width: 899px) 40vw, 22vw"
-              style={{ objectFit: 'contain' }}
-            />
-          </Box>
-        ))}
       </Box>
 
       {/* Steps */}
