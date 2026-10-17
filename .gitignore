@@ -46,8 +46,7 @@ replay_pid*
 .env
 # Next.js
 .next
-.next-e2e
-.next-build
+.next-*
 out
 next-env.d.ts
 
