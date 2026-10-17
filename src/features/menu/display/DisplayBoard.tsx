@@ -279,7 +279,7 @@ function SectionCard({ section }: { section: DisplaySection }) {
         }}
       >
         {tempCols && (
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 'clamp(1px, 0.2vh, 4px)' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: PRICE_COL_GAP, mb: 'clamp(1px, 0.2vh, 4px)' }}>
             <ColLabel>caliente</ColLabel>
             <ColLabel>frío</ColLabel>
           </Box>
@@ -294,6 +294,8 @@ function SectionCard({ section }: { section: DisplaySection }) {
 
 /** Both price columns share this width so the numbers rule up vertically. */
 const PRICE_COL_WIDTH = 'clamp(42px, 4.4vw, 76px)';
+/** Daylight between caliente and frío, so €3,80 €4,80 never reads as one number. */
+const PRICE_COL_GAP = 'clamp(5px, 0.7vw, 12px)';
 
 function ColLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -366,7 +368,7 @@ function RowPriceCells({ price, soldOut, tempCols }: { price: RowPrice; soldOut:
     // caliente, exactly as the printed menu sets it.
     const hot = price.hot ?? price.one;
     return (
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex', gap: PRICE_COL_GAP }}>
         {[hot, price.iced].map((cents, index) => (
           <Box
             key={index}
