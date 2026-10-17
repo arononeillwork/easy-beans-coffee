@@ -49,12 +49,14 @@ export const en = {
     label: 'A normal day at Easy Beans: counter, grinder and terrace',
   },
   hero: {
+    eyebrow: 'San Pedro de Alcántara',
     headline: 'Canned in front of you.',
     /** The headline as it is set: one phrase per line. */
     lines: ['Canned', 'in front', 'of you.'],
-    sub: 'Specialty coffee, matcha and ube on Calle Pizarro, San Pedro de Alcántara.',
+    sub: 'Specialty coffee, matcha and healthy drinks — made exactly the same way every time.',
     ctaOrder: 'Order for collection',
-    ctaFind: 'Get directions',
+    ctaMenu: 'See the menu',
+    ctaFind: 'Find the café',
     /** Names the hero film for screen readers. */
     filmLabel: 'An Easy Beans drink being made, from powder to sealed can',
   },

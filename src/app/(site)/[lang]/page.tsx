@@ -10,7 +10,6 @@ import { NewsletterStrip } from '@/components/home/NewsletterStrip';
 import { isLang } from '@/i18n/config';
 import { getDictionary } from '@/i18n/dictionary';
 import { getPlaceDetails } from '@/server/places/googlePlaces';
-import { getOrderingHours } from '@/server/places/orderingHours';
 import { getPriceBookOrEmpty } from '@/server/square/priceCache';
 
 /**
@@ -22,15 +21,11 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
   const { lang } = await params;
   if (!isLang(lang)) notFound();
   const t = getDictionary(lang);
-  const [place, ordering, prices] = await Promise.all([
-    getPlaceDetails(lang),
-    getOrderingHours(),
-    getPriceBookOrEmpty(),
-  ]);
+  const [place, prices] = await Promise.all([getPlaceDetails(lang), getPriceBookOrEmpty()]);
 
   return (
     <>
-      <HomeHero t={t} lang={lang} hours={ordering.hours} rating={place?.rating ?? null} reviews={place?.total ?? null} />
+      <HomeHero t={t} lang={lang} />
       <Ticker t={t} />
       <MenuBoard t={t} lang={lang} prices={prices} />
       <CafeFilm t={t} />

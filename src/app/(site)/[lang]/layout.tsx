@@ -38,7 +38,16 @@ export async function generateMetadata({
     metadataBase: new URL(siteUrl),
     title: { default: t.meta.title, template: '%s · Easy Beans Coffee' },
     description: t.meta.description,
-    icons: { icon: '/favicon.png' },
+    // The Easy Beans roundel, cut from src/assets/logo.png.
+    icons: {
+      icon: [
+        { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+        { url: '/favicon-48.png', sizes: '48x48', type: 'image/png' },
+        { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+        { url: '/favicon.png', sizes: '512x512', type: 'image/png' },
+      ],
+      apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
+    },
     // Google Search Console ownership — carried over from the old index.html,
     // where both tags were added. Removing either un-verifies that property.
     verification: {

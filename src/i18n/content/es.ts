@@ -41,12 +41,14 @@ export const es: SiteContent = {
     label: 'Un día normal en Easy Beans: mostrador, molinillo y terraza',
   },
   hero: {
+    eyebrow: 'San Pedro de Alcántara',
     headline: 'Enlatado delante de ti.',
     /** The headline as it is set: one phrase per line. */
     lines: ['Enlatado', 'delante', 'de ti.'],
-    sub: 'Café de especialidad, matcha y ube en Calle Pizarro, San Pedro de Alcántara.',
-    ctaOrder: 'Pedir para recoger',
-    ctaFind: 'Cómo llegar',
+    sub: 'Café de especialidad, matcha y bebidas saludables — hecho igual todas las veces.',
+    ctaOrder: 'Pide para recoger',
+    ctaMenu: 'Ver la carta',
+    ctaFind: 'Encuentra el café',
     filmLabel: 'Una bebida de Easy Beans preparándose, del polvo a la lata sellada',
   },
   status: {
