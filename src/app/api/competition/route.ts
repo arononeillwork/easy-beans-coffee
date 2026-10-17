@@ -4,6 +4,7 @@ import { captureLead, recentSignupCount } from '@/server/leads/leadRepo';
 import { recordCompetitionEntry } from '@/server/competition/entryRepo';
 import { drawMonthFor } from '@/server/competition/drawMonth';
 import { clientIp } from '@/server/requestIp';
+import { parseInstagramHandle } from '@/features/competition/instagram';
 
 /**
  * Monthly €10 competition entry. Signing up for news & offers is the entry
@@ -23,11 +24,12 @@ const bodySchema = z.object({
     .regex(/^\+?[\d\s()-]{6,20}$/)
     .optional()
     .or(z.literal('').transform(() => undefined)),
+  // A typed name, "@name" or a pasted profile link — normalised to the bare username.
   instagram: z
     .string()
-    .trim()
-    .transform((v) => v.replace(/^@+/, '').toLowerCase())
-    .pipe(z.string().regex(/^[a-z0-9._]{1,30}$/)),
+    .max(300)
+    .transform((v) => parseInstagramHandle(v))
+    .pipe(z.string()),
   acceptTerms: z.literal(true),
   marketingOptin: z.literal(true),
   lang: z.enum(['en', 'es']).default('en'),
