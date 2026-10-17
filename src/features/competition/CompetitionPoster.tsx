@@ -17,6 +17,9 @@ import { competitionCopy } from './copy';
 
 const ESPRESSO = '#3B2A20';
 
+const SCENE_ALT =
+  'Iced matcha vanilla, iced latte and iced ube matcha in can glasses, with a hot latte, strawberry smoothie, açaí bowl and croissant';
+
 /** Soft fade on the photo's left and top edges so it melts into the cream. */
 const SCENE_MASK = {
   // Phone: full-bleed, so only the top and bottom edges need to soften.
@@ -25,25 +28,6 @@ const SCENE_MASK = {
   // left and top where it meets the text column.
   md: 'linear-gradient(to right, transparent 0%, #000 14%), linear-gradient(to bottom, transparent 0%, #000 12%)',
 };
-
-/** A few small bean clusters for texture, drawn in SVG so they stay crisp. */
-function Beans({ sx }: { sx: object }) {
-  const beans = [
-    [14, 14, 20], [34, 10, -35], [24, 30, 60], [46, 26, 10], [8, 36, -60], [40, 44, 40],
-  ];
-  return (
-    <Box aria-hidden sx={{ position: 'absolute', pointerEvents: 'none', ...sx }}>
-      <svg viewBox="0 0 56 56" width="100%" height="100%">
-        {beans.map(([x, y, r], i) => (
-          <g key={i} transform={`translate(${x} ${y}) rotate(${r})`} opacity={0.5}>
-            <ellipse rx="5.2" ry="7.4" fill="#6F4C34" />
-            <path d="M0,-6 C2,-2 -2,2 0,6" stroke={brand.cream} strokeWidth="1.1" fill="none" strokeLinecap="round" />
-          </g>
-        ))}
-      </svg>
-    </Box>
-  );
-}
 
 function StepPill({ n, text, bg }: { n: number; text: string; bg: string }) {
   return (
@@ -87,7 +71,21 @@ function StepPill({ n, text, bg }: { n: number; text: string; bg: string }) {
   );
 }
 
-export function CompetitionPoster({ lang }: { lang: Lang }) {
+export function CompetitionPoster({
+  lang,
+  variant = 'page',
+}: {
+  lang: Lang;
+  /**
+   * `page`: the responsive web page, sitting under the site header and the
+   * offer bar. `screen`: the in-café display — fills the whole screen, always
+   * shows the QR code, no "Enter now" button.
+   */
+  variant?: 'page' | 'screen';
+}) {
+  const isScreen = variant === 'screen';
+  // Space taken above the hero on big screens (header + offer bar on the page).
+  const above = isScreen ? '0px' : '120px';
   const c = competitionCopy(lang);
   const termsHref = localePath(lang, '/competition-terms');
 
@@ -100,7 +98,7 @@ export function CompetitionPoster({ lang }: { lang: Lang }) {
         overflow: 'hidden',
         // Warm cream with a soft light pool, like the poster's morning light.
         background: 'radial-gradient(120% 90% at 70% 15%, #FCF5EC 0%, #FAF0E5 55%, #F4E6D7 100%)',
-        height: { md: 'calc(100svh - 76px)' },
+        height: { md: `calc(100svh - ${above})` },
         minHeight: { md: 600 },
         display: 'grid',
         gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 40fr) minmax(0, 60fr)' },
@@ -112,8 +110,6 @@ export function CompetitionPoster({ lang }: { lang: Lang }) {
         pb: { xs: 4, md: 'clamp(20px, 3.5vh, 48px)' },
       }}
     >
-      <Beans sx={{ top: { xs: 10, md: '2vw' }, left: { xs: 8, md: '36vw' }, width: { xs: 54, md: '5vw' }, height: { xs: 54, md: '5vw' } }} />
-      <Beans sx={{ top: { xs: 10, md: '2vw' }, right: { xs: 8, md: '2vw' }, width: { xs: 54, md: '5.5vw' }, height: { xs: 54, md: '5.5vw' }, transform: 'scaleX(-1)' }} />
 
       {/* Headline */}
       <Box sx={{ gridArea: 'head', textAlign: { xs: 'center', md: 'left' }, position: 'relative', zIndex: 5 }}>
@@ -159,8 +155,14 @@ export function CompetitionPoster({ lang }: { lang: Lang }) {
           justifySelf: { md: 'end' },
           // Width-led on phones; on big screens capped by the hero's height so
           // the drinks never push the text column or spill off the bottom.
-          width: { xs: 'calc(100% + 40px)', sm: 'calc(100% + 64px)', md: 'min(calc(100% + 4vw), calc((100svh - 76px - 5vh) * 1.536))' },
-          aspectRatio: '1828 / 1190',
+          width: {
+            xs: 'calc(100% + 40px)',
+            sm: 'calc(100% + 64px)',
+            md: `min(calc(100% + 4vw), calc((100svh - ${above} - 5vh) * 1.2026))`,
+          },
+          // Phones use the tighter crop; big screens the tall one with the
+          // palm-leaf shadow above the drinks.
+          aspectRatio: { xs: '1828 / 1190', md: '1828 / 1520' },
           WebkitMaskImage: SCENE_MASK,
           maskImage: SCENE_MASK,
           WebkitMaskComposite: 'source-in',
@@ -174,14 +176,12 @@ export function CompetitionPoster({ lang }: { lang: Lang }) {
           maxWidth: { md: 'calc(100% + 4vw)' },
         }}
       >
-        <Image
-          src="/media/competition/drinks-scene.png"
-          alt="Iced matcha vanilla, iced latte and iced ube matcha in can glasses, with a hot latte, strawberry smoothie, açaí bowl and croissant"
-          fill
-          priority
-          sizes="(max-width: 899px) 100vw, 62vw"
-          style={{ objectFit: 'cover', objectPosition: 'center bottom' }}
-        />
+        <Box sx={{ position: 'absolute', inset: 0, display: { xs: 'block', md: 'none' } }}>
+          <Image src="/media/competition/drinks-scene.png" alt={SCENE_ALT} fill priority sizes="100vw" style={{ objectFit: 'cover' }} />
+        </Box>
+        <Box sx={{ position: 'absolute', inset: 0, display: { xs: 'none', md: 'block' } }}>
+          <Image src="/media/competition/drinks-scene-tall.png" alt={SCENE_ALT} fill priority sizes="62vw" style={{ objectFit: 'cover' }} />
+        </Box>
       </Box>
 
       {/* Steps */}
@@ -205,7 +205,7 @@ export function CompetitionPoster({ lang }: { lang: Lang }) {
           component="a"
           href="#enter"
           sx={{
-            display: { xs: 'inline-flex', md: 'none' },
+            display: isScreen ? 'none' : { xs: 'inline-flex', md: 'none' },
             mt: 1.5,
             px: 4,
             py: 1.6,
@@ -232,7 +232,7 @@ export function CompetitionPoster({ lang }: { lang: Lang }) {
           zIndex: 5,
         }}
       >
-        <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: '1.6vw', mb: '2.2vw' }}>
+        <Box sx={{ display: isScreen ? 'flex' : { xs: 'none', md: 'flex' }, justifyContent: { xs: 'center', md: 'flex-start' }, alignItems: 'center', gap: { xs: 2, md: '1.6vw' }, mb: { xs: 2, md: '2.2vw' } }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/media/competition/qr.svg"

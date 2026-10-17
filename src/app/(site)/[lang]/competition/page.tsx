@@ -6,6 +6,7 @@ import { isLang } from '@/i18n/config';
 import { brand, radius } from '@/theme/brand';
 import { CompetitionPoster } from '@/features/competition/CompetitionPoster';
 import { CompetitionForm } from '@/features/competition/CompetitionForm';
+import { OfferBar } from '@/features/competition/OfferBar';
 import { competitionCopy } from '@/features/competition/copy';
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
@@ -35,6 +36,7 @@ export default async function CompetitionPage({
 
   return (
     <Box sx={{ backgroundColor: brand.cream }}>
+      <OfferBar />
       <CompetitionPoster lang={lang} />
 
       <Container maxWidth="sm" sx={{ py: { xs: 4, md: 6 } }}>
