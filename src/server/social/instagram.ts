@@ -1,6 +1,7 @@
 import 'server-only';
 import type { SocialPost } from './types';
 import { feedUrl } from '../feedBase';
+import { getInstagramToken } from './instagramToken';
 
 /**
  * Latest posts from the café's Instagram account, via the Instagram Graph API
@@ -30,7 +31,9 @@ type ApiMedia = {
 };
 
 export async function getInstagramPosts(limit: number): Promise<SocialPost[]> {
-  const token = process.env.INSTAGRAM_ACCESS_TOKEN?.trim();
+  // Under the e2e stand-in the env token is the whole story; never read the
+  // real token store from a test run.
+  const token = process.env.E2E_FEEDS_BASE ? process.env.INSTAGRAM_ACCESS_TOKEN?.trim() : await getInstagramToken();
   if (!token) return [];
 
   const url = feedUrl(
@@ -75,4 +78,28 @@ function toPost(media: ApiMedia): SocialPost[] {
 function firstLine(caption: string): string {
   const line = caption.split('\n')[0]?.replace(/#\S+/g, '').trim() ?? '';
   return line.length > 60 ? `${line.slice(0, 57).trimEnd()}…` : line;
+}
+
+export type InstagramHealth =
+  | { state: 'not_set' }
+  | { state: 'ok'; posts: number }
+  | { state: 'rejected'; status: number; code: number | null; message: string | null };
+
+/**
+ * One live call to Instagram, for the status page: is there a token, and does
+ * Instagram accept it? Error 190 means expired or revoked. Never returns the token.
+ */
+export async function instagramHealth(): Promise<InstagramHealth> {
+  const token = await getInstagramToken(false);
+  if (!token) return { state: 'not_set' };
+  try {
+    const res = await fetch(`${ENDPOINT}?fields=id&limit=3&access_token=${encodeURIComponent(token)}`, { cache: 'no-store' });
+    const body = (await res.json().catch(() => ({}))) as { data?: unknown[]; error?: { code?: number; message?: string } };
+    if (!res.ok) {
+      return { state: 'rejected', status: res.status, code: body.error?.code ?? null, message: body.error?.message?.slice(0, 160) ?? null };
+    }
+    return { state: 'ok', posts: body.data?.length ?? 0 };
+  } catch (error) {
+    return { state: 'rejected', status: 0, code: null, message: (error as Error).message.slice(0, 160) };
+  }
 }

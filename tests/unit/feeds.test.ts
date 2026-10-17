@@ -175,6 +175,7 @@ test('Ordering hours: Google down falls back to the known week, so ordering keep
 
 test('Instagram: latest posts become tiles linking to each post', async () => {
   process.env.INSTAGRAM_ACCESS_TOKEN = 'unit-token';
+  delete process.env.NEXT_PUBLIC_SUPABASE_URL;
   fakeNetwork((url) =>
     url.startsWith('https://graph.instagram.com/')
       ? {
@@ -198,6 +199,7 @@ test('Instagram: latest posts become tiles linking to each post', async () => {
 
 test('Instagram: an expired token yields no posts (the grid shows our own photos)', async () => {
   process.env.INSTAGRAM_ACCESS_TOKEN = 'expired';
+  delete process.env.NEXT_PUBLIC_SUPABASE_URL;
   fakeNetwork(() => ({ status: 400, body: { error: { code: 190 } } }));
   assert.deepEqual(await getInstagramPosts(8), []);
 });
@@ -223,4 +225,28 @@ test('Order status: the page keeps checking Square until the order is collected'
   assert.equal(shouldSyncFromSquare('CANCELED', 'CANCELED', placed, now), false);
   // Yesterday's abandoned order is not polled forever.
   assert.equal(shouldSyncFromSquare('PAID', 'PROPOSED', '2026-10-16T08:00:00Z', now), false);
+});
+
+// ── Instagram token: self-renewed copy wins over the Vercel seed ────────────
+
+test('Instagram: the self-renewed token in Supabase is used before the Vercel one', async () => {
+  const { getInstagramToken } = await import('@/server/social/instagramToken');
+  process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://unit.supabase.test';
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'unit-service';
+  process.env.INSTAGRAM_ACCESS_TOKEN = 'seed-token';
+  fakeNetwork((url) =>
+    url.startsWith('https://unit.supabase.test/rest/v1/feed_tokens')
+      ? { body: [{ token: 'renewed-token', expires_at: '2026-12-16T00:00:00Z', refreshed_at: '2026-10-17T00:00:00Z' }] }
+      : undefined,
+  );
+  assert.equal(await getInstagramToken(false), 'renewed-token');
+});
+
+test('Instagram: with nothing stored yet, the Vercel token is used', async () => {
+  const { getInstagramToken } = await import('@/server/social/instagramToken');
+  process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://unit.supabase.test';
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'unit-service';
+  process.env.INSTAGRAM_ACCESS_TOKEN = 'seed-token';
+  fakeNetwork((url) => (url.includes('/rest/v1/feed_tokens') ? { body: [] } : undefined));
+  assert.equal(await getInstagramToken(false), 'seed-token');
 });

@@ -186,6 +186,12 @@ export async function createCheckout(
     order: {
       locationId,
       referenceId: token.slice(0, 12),
+      // Apply each item's own catalog tax, exactly as the till does: IVA
+      // Reducido 10% on food and drink, IVA General 21% on alcohol. Both are
+      // INCLUSIVE in Square, so the customer's total is unchanged — this only
+      // records the IVA inside it. Without it online orders reported €0 tax.
+      // Discounts stay explicit (the subscriber code below), never automatic.
+      pricingOptions: { autoApplyTaxes: true, autoApplyDiscounts: false },
       lineItems: lines.map((line) => ({
         catalogObjectId: line.variationId,
         quantity: String(line.quantity),
