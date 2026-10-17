@@ -1,0 +1,23 @@
+# Every morning, check the live site is still reading its own data (Square
+# prices, Google rating/hours, Instagram). GitHub emails the repo owner when a
+# scheduled run fails — usually an expired token or a missing Vercel variable.
+name: Live feeds check
+
+on:
+  schedule:
+    - cron: '30 5 * * *' # 07:30 Madrid (summer) / 06:30 (winter), before opening
+  workflow_dispatch:
+
+jobs:
+  live-feeds:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:live

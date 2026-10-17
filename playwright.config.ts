@@ -13,6 +13,7 @@ import { E2E_BOARD_PIN } from './tests/e2e/builders/boardPin';
  * which starts a private dev server on 3210 with the stubbed env below.
  */
 const PORT = Number(process.env.PW_PORT ?? 3000);
+const MOCK_FEEDS_PORT = Number(process.env.MOCK_FEEDS_PORT ?? PORT + 89);
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -30,9 +31,23 @@ export default defineConfig({
   use: {
     baseURL: `http://localhost:${PORT}`,
     trace: 'on-first-retry',
+    // Optional: a preinstalled Chromium (e.g. in a sandbox where the matching
+    // Playwright browser can't be downloaded). Unset = Playwright's own.
+    ...(process.env.PW_CHROMIUM_PATH
+      ? { launchOptions: { executablePath: process.env.PW_CHROMIUM_PATH } }
+      : {}),
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
-  webServer: {
+  webServer: [
+  {
+    // Stand-in for Google Places and Instagram (tests/e2e/mockFeeds.mjs), so
+    // feeds.spec.ts can check the automatic data path end to end.
+    command: `node tests/e2e/mockFeeds.mjs`,
+    url: `http://localhost:${MOCK_FEEDS_PORT}/health`,
+    reuseExistingServer: !process.env.CI,
+    env: { MOCK_FEEDS_PORT: String(MOCK_FEEDS_PORT) },
+  },
+  {
     command: `npm run dev -- --port ${PORT}`,
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
@@ -64,6 +79,16 @@ export default defineConfig({
       SQUARE_ENVIRONMENT: 'sandbox',
       SQUARE_ACCESS_TOKEN: '',
       SQUARE_LOCATION_ID: '',
+      // Google Places and Instagram are configured, but every request goes to
+      // the local stand-in (src/server/feedBase.ts honours this only outside a
+      // production build). Real keys in .env.local are overridden here.
+      E2E_FEEDS_BASE: `http://localhost:${MOCK_FEEDS_PORT}`,
+      GOOGLE_PLACES_API_KEY: 'e2e-key',
+      GOOGLE_PLACE_ID: 'e2e-place',
+      INSTAGRAM_ACCESS_TOKEN: 'e2e-token',
+      TIKTOK_ACCESS_TOKEN: '',
+      GOOGLE_BUSINESS_CLIENT_ID: '',
     },
   },
+  ],
 });

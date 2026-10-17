@@ -23,6 +23,8 @@ const ROUTES = [
   '/es/order',
   '/en/order',
   '/admin',
+  // The cart asks this for the live opening hours; cold it outlasts an assertion.
+  '/api/ordering-hours',
 ];
 
 async function waitForServer(baseURL: string, timeoutMs = 180_000): Promise<void> {

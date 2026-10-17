@@ -95,6 +95,8 @@ export function SocialBoard({ posts, labels }: { posts: SocialPost[]; labels: So
               key={post.id}
               component="a"
               href={post.permalink}
+              data-testid="social-post"
+              data-live={post.remote ? 'true' : 'false'}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={post.caption ? `${labels.viewPost}: ${post.caption}` : labels.viewPost}

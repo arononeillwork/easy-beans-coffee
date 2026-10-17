@@ -2,6 +2,7 @@ import 'server-only';
 import type { DayHours } from '@/shared/lib/openingHours';
 import { FALLBACK_HOURS } from '@/features/order/lib/pickupTimes';
 import { periodsToDayHours, type ApiTime } from './googlePlaces';
+import { feedUrl } from '../feedBase';
 
 /**
  * The week online ordering follows: the café's hours as Google Maps has them
@@ -32,7 +33,8 @@ export async function getOrderingHours(): Promise<{ hours: DayHours[]; source: '
   if (!apiKey || !placeId) return { hours: FALLBACK_HOURS, source: 'fallback' };
 
   try {
-    const res = await fetch(`https://places.googleapis.com/v1/places/${encodeURIComponent(placeId)}`, {
+    const url = feedUrl('places', `https://places.googleapis.com/v1/places/${encodeURIComponent(placeId)}`);
+    const res = await fetch(url, {
       headers: {
         'X-Goog-Api-Key': apiKey,
         'X-Goog-FieldMask': 'currentOpeningHours,regularOpeningHours',

@@ -120,6 +120,7 @@ export async function ReviewsSection({ t, lang }: { t: SiteContent; lang: Lang }
                   lineHeight: 1,
                   color: rating ? brand.ink : brand.ink45,
                 }}
+                data-testid="google-rating"
               >
                 {rating ? rating.toFixed(1) : '—'}
               </Typography>
@@ -143,7 +144,7 @@ export async function ReviewsSection({ t, lang }: { t: SiteContent; lang: Lang }
               />
             </Box>
 
-            <Typography variant="body2" sx={{ mt: 1.5, color: brand.ink70 }}>
+            <Typography variant="body2" sx={{ mt: 1.5, color: brand.ink70 }} data-testid="google-review-count">
               {place?.total ? `${place.total} ${t.reviews.count}` : t.reviews.source}
             </Typography>
           </Box>

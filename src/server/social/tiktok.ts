@@ -1,4 +1,5 @@
 import 'server-only';
+import { feedUrl } from '../feedBase';
 import type { SocialPost } from './types';
 
 /**
@@ -28,7 +29,7 @@ export async function getTikTokPosts(limit: number): Promise<SocialPost[]> {
   if (!token) return [];
 
   try {
-    const res = await fetch(`${ENDPOINT}?fields=${FIELDS}`, {
+    const res = await fetch(feedUrl('tiktok', `${ENDPOINT}?fields=${FIELDS}`), {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,

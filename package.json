@@ -17,7 +17,8 @@
     "seed:todo": "tsx scripts/seed-todo-board.ts",
     "fix:todo": "tsx scripts/fix-todo-board.ts",
     "optimize:media": "tsx scripts/optimize-media.ts",
-    "media:drinks": "tsx scripts/fetch-drink-art.ts"
+    "media:drinks": "tsx scripts/fetch-drink-art.ts",
+    "test:live": "playwright test --config playwright.live.config.ts"
   },
   "dependencies": {
     "@date-fns/tz": "^1.2.0",

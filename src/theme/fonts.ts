@@ -1,19 +1,26 @@
-import { Figtree, Poppins } from 'next/font/google';
+import localFont from 'next/font/local';
 
 /**
- * Brand Edition 01 typefaces. Shared by both root layouts (site and admin) so
- * the font files are fetched and subset once at build time.
+ * Brand Edition 01 typefaces, self-hosted. The files are the Latin subsets
+ * from @fontsource (SIL Open Font License), checked in under ./fonts so a
+ * build never depends on reaching Google Fonts — and the browser fetches them
+ * from our own domain. Shared by both root layouts (site and admin).
  */
-export const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['500', '600'],
+export const poppins = localFont({
+  src: [
+    { path: './fonts/poppins-latin-500-normal.woff2', weight: '500', style: 'normal' },
+    { path: './fonts/poppins-latin-600-normal.woff2', weight: '600', style: 'normal' },
+  ],
   variable: '--font-poppins',
   display: 'swap',
 });
 
-export const figtree = Figtree({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
+export const figtree = localFont({
+  src: [
+    { path: './fonts/figtree-latin-400-normal.woff2', weight: '400', style: 'normal' },
+    { path: './fonts/figtree-latin-500-normal.woff2', weight: '500', style: 'normal' },
+    { path: './fonts/figtree-latin-600-normal.woff2', weight: '600', style: 'normal' },
+  ],
   variable: '--font-figtree',
   display: 'swap',
 });

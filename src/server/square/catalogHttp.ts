@@ -1,6 +1,7 @@
 import 'server-only';
 import type { Square } from 'square';
 import { getSquareEnv } from '../env';
+import { feedUrl } from '../feedBase';
 
 /**
  * Catalog reads over plain HTTP rather than the Square SDK.
@@ -91,7 +92,7 @@ export async function listCatalogObjects(
     url.searchParams.set('types', TYPES);
     if (cursor) url.searchParams.set('cursor', cursor);
 
-    const res = await fetch(url, {
+    const res = await fetch(feedUrl('square', url.toString()), {
       headers: {
         Authorization: `Bearer ${env.accessToken}`,
         'Square-Version': SQUARE_VERSION,

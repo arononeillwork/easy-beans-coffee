@@ -1,5 +1,6 @@
 import 'server-only';
 import type { SocialPost } from './types';
+import { feedUrl } from '../feedBase';
 
 /**
  * Latest posts from the café's Instagram account, via the Instagram Graph API
@@ -32,7 +33,10 @@ export async function getInstagramPosts(limit: number): Promise<SocialPost[]> {
   const token = process.env.INSTAGRAM_ACCESS_TOKEN?.trim();
   if (!token) return [];
 
-  const url = `${ENDPOINT}?fields=${FIELDS}&limit=${limit}&access_token=${encodeURIComponent(token)}`;
+  const url = feedUrl(
+    'instagram',
+    `${ENDPOINT}?fields=${FIELDS}&limit=${limit}&access_token=${encodeURIComponent(token)}`,
+  );
 
   try {
     const res = await fetch(url, { next: { revalidate: REVALIDATE_SECONDS } });

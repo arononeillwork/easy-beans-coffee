@@ -2,6 +2,7 @@ import 'server-only';
 import type { Lang } from '@/i18n/config';
 import type { DayHours } from '@/shared/lib/openingHours';
 import { formatReviewDate, rankLatestTopRated } from './reviewFormat';
+import { feedUrl } from '../feedBase';
 
 /**
  * Everything the site reads from the café's Google Maps listing: the rating,
@@ -140,7 +141,10 @@ function toReview(raw: ApiReview, lang: Lang, index: number): PlaceReview | null
  */
 async function resolvePhoto(raw: ApiPhoto, apiKey: string, index: number): Promise<PlacePhoto | null> {
   if (!raw.name) return null;
-  const url = `https://places.googleapis.com/v1/${raw.name}/media?maxHeightPx=${PHOTO_MAX_HEIGHT}&skipHttpRedirect=true`;
+  const url = feedUrl(
+    'places',
+    `https://places.googleapis.com/v1/${raw.name}/media?maxHeightPx=${PHOTO_MAX_HEIGHT}&skipHttpRedirect=true`,
+  );
 
   try {
     const res = await fetch(url, {
@@ -208,7 +212,10 @@ export async function getPlaceDetails(lang: Lang): Promise<PlaceDetails | null> 
   const creds = credentials();
   if (!creds) return null;
 
-  const url = `${ENDPOINT}/${encodeURIComponent(creds.placeId)}?languageCode=${languageCode(lang)}`;
+  const url = feedUrl(
+    'places',
+    `${ENDPOINT}/${encodeURIComponent(creds.placeId)}?languageCode=${languageCode(lang)}`,
+  );
 
   let place: ApiPlace;
   try {

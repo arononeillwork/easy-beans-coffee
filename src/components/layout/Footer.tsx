@@ -147,9 +147,21 @@ export async function Footer({ t, lang }: { t: SiteContent; lang: Lang }) {
           <Typography variant="h6" component="p" sx={{ color: brand.ink45, flexShrink: 0 }}>
             {t.footer.hoursTitle}
           </Typography>
-          <Stack direction="row" spacing={{ xs: 2, md: 4 }} useFlexGap flexWrap="wrap">
+          <Stack
+            direction="row"
+            spacing={{ xs: 2, md: 4 }}
+            useFlexGap
+            flexWrap="wrap"
+            data-testid="opening-hours"
+            data-source={liveHours.length > 0 ? 'google' : 'fallback'}
+          >
             {hours.map((slot) => (
-              <Typography key={slot.label} variant="body2" sx={{ color: brand.ink70 }}>
+              <Typography
+                key={slot.label}
+                variant="body2"
+                sx={{ color: brand.ink70 }}
+                data-testid="opening-hours-row"
+              >
                 <Box component="span" sx={{ fontWeight: 500, color: brand.ink }}>
                   {slot.label}
                 </Box>{' '}

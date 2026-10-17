@@ -365,6 +365,8 @@ function PickupNote({
   return (
     <Stack
       spacing={0.25}
+      data-testid="ordering-state"
+      data-open={open ? 'true' : 'false'}
       sx={{
         mt: 2.5,
         p: 1.75,
