@@ -73,6 +73,11 @@ const nextConfig: NextConfig = {
       { source: '/order', destination: '/es/order', permanent: false },
       { source: '/order/:path*', destination: '/es/order/:path*', permanent: false },
       { source: '/account', destination: '/es/account', permanent: false },
+      // Monthly €10 draw. The poster and its QR code are in English, so the
+      // short links land on the English page (the language toggle still works).
+      // Query strings (e.g. ?src=screen from the QR) pass through.
+      { source: '/competition', destination: '/en/competition', permanent: false },
+      { source: '/competition-terms', destination: '/en/competition-terms', permanent: false },
     ];
   },
 };

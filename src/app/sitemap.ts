@@ -15,6 +15,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/shop',
     ...RETAIL_COLLECTIONS.map((slug) => `/shop/${slug}`),
     '/about',
+    '/competition',
+    '/competition-terms',
   ];
 
   return LANGS.flatMap((lang) =>

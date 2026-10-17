@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { FirstVisitDialog } from './FirstVisitDialog';
 import { hasSeenOffer, markOfferSeen } from './offerSeen';
 
@@ -19,14 +20,18 @@ import { hasSeenOffer, markOfferSeen } from './offerSeen';
  */
 export function FirstVisitPopup() {
   const [show, setShow] = useState(false);
+  // The competition page has its own sign-up form; a second offer modal on
+  // top of it would only get in the way.
+  const pathname = usePathname();
+  const suppressed = /\/competition/.test(pathname ?? '');
 
   useEffect(() => {
-    if (hasSeenOffer()) return;
+    if (suppressed || hasSeenOffer()) return;
     const timer = window.setTimeout(() => setShow(true), 1600);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [suppressed]);
 
-  if (!show) return null;
+  if (!show || suppressed) return null;
 
   // No `onClose`: the dialog closes itself and stays mounted, so nothing here
   // has to track its open state.
