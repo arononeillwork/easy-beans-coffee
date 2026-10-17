@@ -7,6 +7,41 @@ export function prizeCents(): number {
   return Number.isInteger(n) && n > 0 ? n : 1000;
 }
 
+/** How long a prize card can be used for (default 6 months). */
+export function cardValidMonths(): number {
+  const n = Number(process.env.COMPETITION_CARD_VALID_MONTHS);
+  return Number.isInteger(n) && n > 0 ? n : 6;
+}
+
+/** End of the validity day, `cardValidMonths()` after `from` (Madrid evening ≈ 22:00 UTC). */
+export function cardExpiry(from: Date = new Date()): Date {
+  const d = new Date(from);
+  d.setUTCMonth(d.getUTCMonth() + cardValidMonths());
+  d.setUTCHours(21, 59, 0, 0);
+  return d;
+}
+
+/**
+ * Square gift cards have no expiry of their own, so an expired prize card is
+ * closed by clearing whatever is left on it. Returns the cents cleared.
+ */
+export async function clearPrizeCard(giftCardId: string): Promise<number> {
+  const client = getSquareClient();
+  const { giftCard } = await client.giftCards.get({ id: giftCardId });
+  const left = Number(giftCard?.balanceMoney?.amount ?? 0);
+  if (left <= 0) return 0;
+  await client.giftCards.activities.create({
+    idempotencyKey: `ebc-comp-clear-${giftCardId}`,
+    giftCardActivity: {
+      type: 'CLEAR_BALANCE',
+      locationId: getLocationId(),
+      giftCardId,
+      clearBalanceActivityDetails: { reason: 'UNKNOWN_REASON' },
+    },
+  });
+  return left;
+}
+
 export interface IssuedCard {
   id: string;
   gan: string;

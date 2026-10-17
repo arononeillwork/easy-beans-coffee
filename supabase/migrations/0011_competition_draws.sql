@@ -31,3 +31,9 @@ create unique index if not exists competition_draws_admin_token_unique on public
 create unique index if not exists competition_draws_winner_token_unique on public.competition_draws (winner_token);
 
 alter table public.competition_draws enable row level security;
+
+-- Prize cards expire after 6 months (Square has no expiry of its own); the
+-- daily job clears any balance left after this date.
+alter table public.competition_draws
+  add column if not exists gift_card_expires_at timestamptz,
+  add column if not exists gift_card_cleared_at timestamptz;

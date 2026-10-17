@@ -169,6 +169,8 @@ async function DrawCard({ draw, token }: { draw: DrawRow; token: string | null }
           <dd>{when(draw.approved_at)}</dd>
           <dt>Gift card</dt>
           <dd>{draw.gift_card_gan ? `•••• ${draw.gift_card_gan.slice(-4)} (€${euros}, in Square)` : 'Sent manually'}</dd>
+          <dt>Card valid until</dt>
+          <dd>{draw.gift_card_cleared_at ? `Expired — balance cleared ${when(draw.gift_card_cleared_at)}` : when(draw.gift_card_expires_at)}</dd>
           <dt>Winner emailed</dt>
           <dd>{when(draw.winner_emailed_at)}</dd>
           <dt>Tag on Instagram?</dt>

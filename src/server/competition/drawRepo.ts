@@ -17,6 +17,8 @@ export interface DrawRow {
   gift_card_id: string | null;
   gift_card_gan: string | null;
   gift_card_error: string | null;
+  gift_card_expires_at: string | null;
+  gift_card_cleared_at: string | null;
   winner_emailed_at: string | null;
   winner_token: string;
   ig_consent: boolean | null;
