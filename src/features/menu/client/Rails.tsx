@@ -178,13 +178,12 @@ export function DrinkRail({
                 gap: 0.5,
                 p: 0.75,
                 border: '1px solid',
-                // The rail rides on the drink's wash, so the chips are frosted
-                // glass and the chosen one lifts off it as a solid card.
-                borderColor: selected ? 'transparent' : 'rgba(255,255,255,0.55)',
+                // Plain white chips with a hairline; the chosen one lifts.
+                borderColor: selected ? 'transparent' : brand.ink06,
                 borderRadius: `${radius.lg}px`,
                 // No backdrop-filter: it would isolate the multiply-blended
                 // thumbnail from the wash and leave a white box in the chip.
-                backgroundColor: selected ? brand.white : 'rgba(255,255,255,0.38)',
+                backgroundColor: brand.white,
                 boxShadow: selected ? shadow.lift : 'none',
                 transform: selected ? 'translateY(-3px)' : 'none',
                 opacity: drink.soldOut ? 0.45 : 1,

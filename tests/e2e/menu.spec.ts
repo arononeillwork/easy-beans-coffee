@@ -85,6 +85,18 @@ test.describe('drink studio', () => {
     await expect(page.getByRole('dialog')).toContainText('Gluten Free Granola');
   });
 
+  test('shows each photo on plain white: no tint, glow or name behind it', async ({ page }) => {
+    const order = await openStudio(page);
+    await order.section('Especialidades').click();
+
+    const stage = page.locator('[aria-roledescription="carousel"]').first().locator('..');
+    // Nothing but the photo inside the stage — no oversized drink name.
+    expect((await stage.innerText()).trim()).toBe('');
+    // The band behind it is white, not the drink's colour.
+    const band = stage.locator('..');
+    expect(await band.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe('rgb(255, 255, 255)');
+  });
+
   test('the menu has no allergen table at the bottom', async ({ page }) => {
     await openStudio(page);
     await expect(page.getByRole('heading', { name: 'Alérgenos' })).toHaveCount(0);

@@ -7,7 +7,6 @@ import Typography from '@mui/material/Typography';
 import { localePath, type Lang } from '@/i18n/config';
 import type { SiteContent } from '@/i18n/content/en';
 import { drinkById } from '@/features/menu/drinks';
-import { paletteForDrink } from '@/features/menu/palette';
 import type { PriceBook } from '@/features/menu/priceBook';
 import { normalizeName } from '@/features/shop/retail';
 import { brand, radius } from '@/theme/brand';
@@ -44,7 +43,7 @@ export function MenuBoard({ t, lang, prices }: { t: SiteContent; lang: Lang; pri
     if (!drink) return [];
     const cents = fromPrice(prices, drink.square);
     const variants = new Set(prices.items.find((i) => i.key === normalizeName(drink.square))?.variations.map((v) => v.cents));
-    return [{ id, photo, name: drink.name[lang], wash: paletteForDrink(drink).wash, cents, many: variants.size > 1 }];
+    return [{ id, photo, name: drink.name[lang], cents, many: variants.size > 1 }];
   });
 
   return (
@@ -79,7 +78,8 @@ export function MenuBoard({ t, lang, prices }: { t: SiteContent; lang: Lang; pri
                   aspectRatio: '3 / 4',
                   borderRadius: `${radius.lg}px`,
                   overflow: 'hidden',
-                  backgroundColor: tile.wash,
+                  // Plain white: the photo as shot, no tint behind it.
+                  backgroundColor: brand.white,
                 }}
               >
                 <Image

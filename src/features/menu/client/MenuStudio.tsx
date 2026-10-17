@@ -284,15 +284,11 @@ export function MenuStudio({ priceBook }: { priceBook: PriceBook }) {
         />
       </Box>
 
-      {/* The washed band: title, stage and rail share the drink's own colour
-          and cross-fade as one surface. Title before image before options —
-          the reading order of a menu board — and the name changes with the
-          flavour chosen, renaming the cup as the cup changes. */}
+      {/* The drink band: title, stage and rail, on plain white so each
+          photo shows exactly as shot — no tinted panel behind it. */}
       <Box
         sx={{
-          backgroundColor: palette.wash,
-          transition: `background-color ${motion.slow} ${motion.easeOutSoft}`,
-          '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
+          backgroundColor: brand.white,
           pt: 2.5,
           pb: { xs: 7, md: 3 },
           // On a laptop the band is a rounded panel that keeps the drink in
