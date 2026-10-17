@@ -22,12 +22,13 @@ import type { FamilyPalette } from '../palette';
  *      It sits *behind* the photograph on purpose — the cups are composited
  *      with `mix-blend-mode: multiply`, so their white studio ground lets the
  *      type read through, and the drink appears to stand on its own name.
- *   3. The glow, a soft radial of the family colour under the cup.
- *   4. The strip of photographs. A real horizontal scroll container with CSS
+ *   3. The strip of photographs. A real horizontal scroll container with CSS
  *      scroll-snap — native scrolling gets momentum and rubber-banding right
  *      for free — read back with an IntersectionObserver, so which drink is
- *      "current" survives resizes and zoom without arithmetic.
- *   5. Glass arrows and the position dots, for everyone who does not think to
+ *      "current" survives resizes and zoom without arithmetic. (There used to
+ *      be a blurred colour glow under the cup; the café asked for the photo
+ *      alone.)
+ *   4. Glass arrows and the position dots, for everyone who does not think to
  *      swipe a web page.
  *
  * Two selection sources meet here and must not fight. A selection made
@@ -190,6 +191,7 @@ export function DrinkStage({
       {/* Layer 2: the watermark. Keyed so each drink's name rises in fresh. */}
       <Typography
         aria-hidden
+        translate="no"
         key={active?.id}
         sx={{
           position: 'absolute',
@@ -219,25 +221,8 @@ export function DrinkStage({
         {firstWord(active?.name)}
       </Typography>
 
-      {/* Layer 3: the glow. */}
-      <Box
-        aria-hidden
-        sx={{
-          position: 'absolute',
-          left: '50%',
-          top: '46%',
-          width: 'min(78vw, 440px)',
-          aspectRatio: '1',
-          transform: 'translate(-50%, -50%)',
-          borderRadius: '50%',
-          background: `radial-gradient(circle, ${palette?.glow ?? brand.rosePink} 0%, transparent 68%)`,
-          opacity: 0.42,
-          filter: 'blur(8px)',
-          transition: `background ${motion.slow} ${motion.easeOutSoft}`,
-        }}
-      />
-
-      {/* Layer 4: the photographs. */}
+      {/* Layer 3: the photographs — no glow behind them; the photo stands on
+          the wash alone. */}
       <Box
         ref={scroller}
         role="group"
@@ -284,7 +269,7 @@ export function DrinkStage({
         ))}
       </Box>
 
-      {/* Layer 5: arrows and dots. */}
+      {/* Layer 4: arrows and dots. */}
       {panels.length > 1 && (
         <>
           <StageArrow
@@ -495,6 +480,10 @@ function StageFrame({
               // lets the studio white behind every cup disappear into the
               // stage and the watermark show through.
               mixBlendMode: 'multiply',
+              // Lifts the studio's near-white (245–254) to pure white so the
+              // photo's edge never shows as a faint box on the wash — the
+              // blurred glow used to hide it.
+              filter: 'brightness(1.04)',
             }),
         // Fade and drift ride the same property; the drift is only for
         // cut-outs — a framed photograph should hang still (and owns its

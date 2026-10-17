@@ -33,7 +33,7 @@ export type Temp = 'hot' | 'iced';
  */
 export type Serve = 'sitIn' | 'takeaway' | 'can';
 
-export const SERVES: Serve[] = ['sitIn', 'takeaway', 'can'];
+export const SERVES: Serve[] = ['takeaway', 'sitIn', 'can'];
 export const TEMPS: Temp[] = ['hot', 'iced'];
 
 /**
@@ -106,6 +106,13 @@ export interface OptionRef {
    * if Square still carries the list.
    */
   comingSoon?: boolean;
+  /**
+   * A list with one real alternative, shown as two options side by side: the
+   * standard (nothing chosen) and the alternative (the list's first modifier).
+   * Granola is the case: Square holds only "Gluten Free Granola", and the
+   * standard granola is its absence — but customers should see both.
+   */
+  pair?: { standard: Bilingual; alternative: Bilingual };
 }
 
 /**

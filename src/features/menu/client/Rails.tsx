@@ -209,6 +209,7 @@ export function DrinkRail({
                 }}
               />
               <Typography
+                translate="no"
                 component="span"
                 sx={{
                   // Fixed two-line box: a "Cortado Doble" must not stand taller

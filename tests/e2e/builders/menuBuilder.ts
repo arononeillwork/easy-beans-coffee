@@ -227,6 +227,13 @@ export function priceBookFixture(): PriceBook {
       new MenuItemBuilder('Water').withVariation('Still', 200).withVariation('Sparkling', 200).build(),
     ])
     .withCategory('Bakery', [new MenuItemBuilder('Croissant').withVariation('Regular', 270).build()])
+    .withCategory('Food', [
+      // Square holds only the gluten-free granola; standard is its absence.
+      new MenuItemBuilder('Acai Bowl')
+        .withVariation('Regular', 850)
+        .withModifierGroup('Granola', [['Gluten Free Granola', 0]], { max: 1 })
+        .build(),
+    ])
     .build();
 
   return toPriceBook(menu, '2026-08-19');

@@ -24,6 +24,7 @@ test.describe('drink studio', () => {
 
     await expect(order.drinkName()).toHaveText('Flat White');
     // Local photography, served from our own origin — never a Square URL.
+    // (No takeaway shot of a hot flat white yet, so it falls back to the cup.)
     await expect(order.photo('flat-white')).toHaveAttribute(
       'src',
       '/media/drinks/flat-white/hot-sit-in.webp',
@@ -45,9 +46,48 @@ test.describe('drink studio', () => {
 
     await expect(order.photo('latte')).toHaveAttribute(
       'src',
-      '/media/drinks/latte/iced-sit-in.webp',
+      '/media/drinks/latte/iced-takeaway.webp',
     );
     await expect(order.price()).toContainText('€5');
+  });
+
+  test('takeaway is the first option and the default; sit in swaps the photo', async ({ page }) => {
+    const order = await openStudio(page);
+    await order.railEntry('Latte').click();
+    await order.temperature('Con hielo').click();
+
+    const serve = page.getByRole('radiogroup', { name: 'Cómo la tomas' });
+    await expect(serve.getByRole('radio').first()).toHaveAccessibleName('Para llevar');
+    await expect(serve.getByRole('radio', { name: 'Para llevar' })).toHaveAttribute('aria-checked', 'true');
+    await expect(order.photo('latte')).toHaveAttribute('src', '/media/drinks/latte/iced-takeaway.webp');
+
+    await serve.getByRole('radio', { name: 'Para aquí' }).click();
+    await expect(order.photo('latte')).toHaveAttribute('src', '/media/drinks/latte/iced-sit-in.webp');
+  });
+
+  test('shows the açaí granola as standard and gluten free, side by side', async ({ page }) => {
+    const order = await openStudio(page);
+    await order.menuGroup('Comida').click();
+    await order.section('Comida').click();
+
+    await expect(order.drinkName()).toHaveText('Bowl de Açaí');
+    const granola = page.getByRole('radiogroup', { name: 'Granola' });
+    const standard = granola.getByRole('radio', { name: 'Normal' });
+    const glutenFree = granola.getByRole('radio', { name: 'Sin gluten' });
+    await expect(standard).toHaveAttribute('aria-checked', 'true');
+    // Beside each other: same row on screen.
+    const [a, b] = [await standard.boundingBox(), await glutenFree.boundingBox()];
+    expect(a && b && Math.abs(a.y - b.y) < 4 && b.x > a.x).toBe(true);
+
+    await glutenFree.click();
+    await order.addButton().click();
+    await order.openCart();
+    await expect(page.getByRole('dialog')).toContainText('Gluten Free Granola');
+  });
+
+  test('the menu has no allergen table at the bottom', async ({ page }) => {
+    await openStudio(page);
+    await expect(page.getByRole('heading', { name: 'Alérgenos' })).toHaveCount(0);
   });
 
   test('changes the vessel without changing the price', async ({ page }) => {
@@ -76,7 +116,7 @@ test.describe('drink studio', () => {
     await expect(order.drinkName()).toHaveText('Latte de Caramelo');
     await expect(order.photo('latte')).toHaveAttribute(
       'src',
-      '/media/drinks/caramel-latte/iced-sit-in.webp',
+      '/media/drinks/caramel-latte/iced-takeaway.webp',
     );
     // 5,00 € + 0,50 € for the syrup, straight from Square's modifier price.
     await expect(order.price()).toContainText('€5,50');
@@ -125,7 +165,7 @@ test.describe('drink studio', () => {
     await expect(order.drinkName()).toHaveText('Matcha con Fresa');
     await expect(order.photo('matcha-latte')).toHaveAttribute(
       'src',
-      '/media/drinks/strawberry-matcha/iced-sit-in.webp',
+      '/media/drinks/strawberry-matcha/iced-takeaway.webp',
     );
   });
 

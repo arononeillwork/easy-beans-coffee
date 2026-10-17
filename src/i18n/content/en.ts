@@ -71,6 +71,8 @@ export const en = {
     title: 'The menu',
     all: 'See the full menu',
     from: 'from',
+    prev: 'Previous',
+    next: 'Next',
   },
   story: {
     title: 'About us',
@@ -131,7 +133,7 @@ export const en = {
     directions: 'Get directions',
     whatsapp: 'WhatsApp',
     amenities: ['Dogs welcome', 'Wifi', 'Terrace'],
-    photoAlt: 'Strawberry matcha on the Calle Pizarro terrace',
+    photoAlt: 'The terrace on Calle Pizarro',
   },
   shop: {
     eyebrow: 'The shop',
@@ -236,6 +238,7 @@ export const en = {
       events: 'Events',
       offers: 'Offers',
     },
+    allInterests: 'All',
     emailLabel: 'Your email',
     phoneLabel: 'Phone (optional)',
     cta: 'Subscribe',

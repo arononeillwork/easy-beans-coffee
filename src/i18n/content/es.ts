@@ -9,13 +9,16 @@ export const es: SiteContent = {
       'Café de especialidad, matcha y bebidas saludables en Calle Pizarro 8, San Pedro de Alcántara. Pide antes, recoge en el mostrador.',
   },
   nav: {
-    menu: 'Carta',
+    // 'Menú', not 'Carta': browser translators turn 'Carta' into 'Letter'.
+    menu: 'Menú',
     order: 'Pedir',
     shop: 'Tienda',
-    story: 'Nosotros',
+    // Unambiguous for browser translators: bare 'Nosotros' comes out as 'We',
+    // and 'Cuenta' can mean the bill as well as an account.
+    story: 'Sobre nosotros',
     findUs: 'Visítanos',
     orderCta: 'Pedir para recoger',
-    account: 'Cuenta',
+    account: 'Mi cuenta',
   },
   media: {
     play: 'Reproducir',
@@ -47,7 +50,7 @@ export const es: SiteContent = {
     lines: ['Enlatado', 'delante', 'de ti.'],
     sub: 'Café de especialidad, matcha y bebidas saludables — hecho igual todas las veces.',
     ctaOrder: 'Pide para recoger',
-    ctaMenu: 'Ver la carta',
+    ctaMenu: 'Ver el menú',
     ctaFind: 'Encuentra el café',
     filmLabel: 'Una bebida de Easy Beans preparándose, del polvo a la lata sellada',
   },
@@ -57,9 +60,11 @@ export const es: SiteContent = {
     rating: '{rating} en Google',
   },
   board: {
-    title: 'La carta',
-    all: 'Ver toda la carta',
+    title: 'El menú',
+    all: 'Ver todo el menú',
     from: 'desde',
+    prev: 'Anterior',
+    next: 'Siguiente',
   },
   story: {
     title: 'Nosotros',
@@ -118,7 +123,7 @@ export const es: SiteContent = {
     directions: 'Cómo llegar',
     whatsapp: 'WhatsApp',
     amenities: ['Perros bienvenidos', 'Wifi', 'Terraza'],
-    photoAlt: 'Matcha de fresa en la terraza de Calle Pizarro',
+    photoAlt: 'La terraza en la calle Pizarro',
   },
   shop: {
     eyebrow: 'La tienda',
@@ -222,6 +227,7 @@ export const es: SiteContent = {
       events: 'Eventos',
       offers: 'Ofertas',
     },
+    allInterests: 'Todo',
     emailLabel: 'Tu email',
     phoneLabel: 'Teléfono (opcional)',
     cta: 'Suscribirme',
@@ -314,7 +320,7 @@ export const es: SiteContent = {
     rights: '© 2026 Easy Beans Coffee',
   },
   menuPage: {
-    eyebrow: 'La carta',
+    eyebrow: 'El menú',
     headline: 'Hecho igual, todas las veces.',
     /**
      * El estudio de bebidas. Una pantalla, una bebida, todas las opciones
@@ -323,7 +329,7 @@ export const es: SiteContent = {
     studio: {
       eyebrow: '¿Qué te preparamos?',
       groupLabel: 'Bebidas o comida',
-      sectionLabel: 'Parte de la carta',
+      sectionLabel: 'Parte del menú',
       drinkLabel: 'Elige una bebida',
       swipe: 'Desliza',
       tempLabel: 'Temperatura',
@@ -402,7 +408,7 @@ export const es: SiteContent = {
   },
   errors: {
     generic: 'Algo ha ido mal. Inténtalo de nuevo.',
-    cartChanged: 'La carta cambió mientras pedías. Revisa tus artículos.',
+    cartChanged: 'El menú cambió mientras pedías. Revisa tus artículos.',
     closed: 'Esa hora está fuera de nuestro horario.',
   },
 };

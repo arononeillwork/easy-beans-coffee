@@ -11,6 +11,7 @@ import { paletteForDrink } from '@/features/menu/palette';
 import type { PriceBook } from '@/features/menu/priceBook';
 import { normalizeName } from '@/features/shop/retail';
 import { brand, radius } from '@/theme/brand';
+import { BoardRail } from './BoardRail';
 
 /**
  * A short run of the menu, as a board: each drink's own photograph on its own
@@ -18,14 +19,16 @@ import { brand, radius } from '@/theme/brand';
  * has the descriptions.
  */
 const FEATURED: Array<{ id: string; photo: string }> = [
-  { id: 'ube-latte', photo: 'ube-latte/iced-can' },
-  { id: 'flat-white', photo: 'flat-white/hot-sit-in' },
+  // Takeaway cups, like the menu's default view. The flat white has no
+  // takeaway shot yet, so the cappuccino stands in for the hot coffees.
+  { id: 'ube-latte', photo: 'ube-latte/iced-takeaway' },
+  { id: 'cappuccino', photo: 'cappuccino/hot-takeaway' },
   { id: 'matcha-latte', photo: 'matcha-latte/iced-takeaway' },
-  { id: 'pink-chai-latte', photo: 'pink-chai-latte/iced-can' },
-  { id: 'latte', photo: 'latte/iced-can' },
-  { id: 'berry-blast', photo: 'berry-blast/iced-can' },
+  { id: 'pink-chai-latte', photo: 'pink-chai-latte/iced-takeaway' },
+  { id: 'latte', photo: 'latte/iced-takeaway' },
+  { id: 'berry-blast', photo: 'berry-blast/iced-takeaway' },
   { id: 'acai-bowl', photo: 'acai-bowl/na-sit-in' },
-  { id: 'cold-brew', photo: 'cold-brew/iced-sit-in' },
+  { id: 'cold-brew', photo: 'cold-brew/iced-takeaway' },
 ];
 
 function fromPrice(book: PriceBook, squareName: string): number | null {
@@ -61,24 +64,7 @@ export function MenuBoard({ t, lang, prices }: { t: SiteContent; lang: Lang; pri
         </Stack>
       </Container>
 
-      <Box
-        component="ul"
-        sx={{
-          listStyle: 'none',
-          m: 0,
-          display: 'grid',
-          gridAutoFlow: 'column',
-          gridAutoColumns: { xs: '64%', sm: '38%', md: 'calc((min(100vw, 1200px) - 48px - 3 * 20px) / 4)' },
-          gap: { xs: 1.5, md: 2.5 },
-          overflowX: 'auto',
-          scrollSnapType: 'x mandatory',
-          scrollPaddingInline: { xs: '16px', md: 'max(24px, calc((100vw - 1200px) / 2 + 24px))' },
-          px: { xs: 2, md: 'max(24px, calc((100vw - 1200px) / 2 + 24px))' },
-          pb: 1,
-          scrollbarWidth: 'none',
-          '&::-webkit-scrollbar': { display: 'none' },
-        }}
-      >
+      <BoardRail prevLabel={t.board.prev} nextLabel={t.board.next}>
         {tiles.map((tile) => (
           <Box component="li" key={tile.id} sx={{ scrollSnapAlign: 'start' }}>
             <Box
@@ -106,7 +92,9 @@ export function MenuBoard({ t, lang, prices }: { t: SiteContent; lang: Lang; pri
                 />
               </Box>
               <Stack direction="row" justifyContent="space-between" alignItems="baseline" spacing={1} sx={{ mt: 1.5 }}>
-                <Typography sx={{ fontWeight: 500 }}>{tile.name}</Typography>
+                <Typography translate="no" sx={{ fontWeight: 500 }}>
+                  {tile.name}
+                </Typography>
                 {tile.cents !== null && (
                   <Typography data-testid="board-price" sx={{ color: brand.ink70, whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
                     {tile.many ? `${t.board.from} ` : ''}
@@ -117,7 +105,7 @@ export function MenuBoard({ t, lang, prices }: { t: SiteContent; lang: Lang; pri
             </Box>
           </Box>
         ))}
-      </Box>
+      </BoardRail>
     </Box>
   );
 }
