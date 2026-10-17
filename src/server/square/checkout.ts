@@ -210,7 +210,9 @@ export async function createCheckout(
       // DELIVERY (coming soon): when enabled, branch fulfillment type here
       // and collect the delivery address before creating the link.
     },
-    prePopulatedData: request.customer.email ? { buyerEmail: request.customer.email } : undefined,
+    // No prePopulatedData.buyerEmail: Square rejects it alongside a fulfillment
+    // ("Only one of [fulfillment, buyer_email]" — 400 CONFLICTING_PARAMETERS).
+    // The pickup recipient's email above pre-fills the payment page instead.
   });
 
   const paymentLink = response.paymentLink;
