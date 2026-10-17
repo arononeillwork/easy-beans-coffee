@@ -3,6 +3,7 @@ import { SquareError } from 'square';
 import { ZodError } from 'zod';
 import { checkoutRequestSchema } from '@/server/validation/checkoutSchema';
 import { getCatalogForCheckout } from '@/server/square/catalogCache';
+import { getOrderingHours } from '@/server/places/orderingHours';
 import {
   CheckoutError,
   createCheckout,
@@ -24,7 +25,8 @@ export async function POST(request: Request) {
     // much prep buffer the collection slot has to clear.
     const menu = await getCatalogForCheckout();
     const lines = validateLines(parsed.data, menu);
-    validatePickup(parsed.data, Date.now(), prepMinutesFor(lines));
+    const { hours } = await getOrderingHours();
+    validatePickup(parsed.data, Date.now(), prepMinutesFor(lines), hours);
     const result = await createCheckout(parsed.data, lines);
     return NextResponse.json(result);
   } catch (err) {

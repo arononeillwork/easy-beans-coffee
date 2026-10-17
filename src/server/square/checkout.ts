@@ -6,7 +6,9 @@ import type { CheckoutRequest } from '../validation/checkoutSchema';
 import { getCafeTimezone, getOfferConfig, getSiteUrl } from '../env';
 import { findRedeemableOffer } from '../leads/leadRepo';
 import { normaliseOfferCode } from '../leads/offerCode';
+import type { DayHours } from '@/shared/lib/openingHours';
 import {
+  FALLBACK_HOURS,
   isOpenForAsap,
   validatePickupTime,
   PREP_TIME_MIN,
@@ -106,15 +108,18 @@ export function validatePickup(
   request: CheckoutRequest,
   nowMs: number,
   prepMinutes: number = PREP_TIME_MIN,
+  hours: DayHours[] = FALLBACK_HOURS,
 ): void {
   const timezone = getCafeTimezone();
   if (request.pickup.type === 'ASAP') {
-    if (!isOpenForAsap(nowMs, timezone, prepMinutes)) throw new CheckoutError('pickup_invalid');
+    if (!isOpenForAsap(nowMs, timezone, prepMinutes, hours)) {
+      throw new CheckoutError('pickup_invalid');
+    }
     return;
   }
   if (
     !request.pickup.at ||
-    validatePickupTime(request.pickup.at, nowMs, timezone, prepMinutes) !== 'ok'
+    validatePickupTime(request.pickup.at, nowMs, timezone, prepMinutes, hours) !== 'ok'
   ) {
     throw new CheckoutError('pickup_invalid');
   }

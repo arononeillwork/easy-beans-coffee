@@ -18,7 +18,16 @@ import { brand, radius, shadow } from '@/theme/brand';
 import type { CartApi } from '../hooks/useCart';
 import type { CartLine, CheckoutRequestBody } from '../types';
 import { formatEuros } from '../lib/price';
-import { isOpenForAsap, PREP_TIME_MIN, RETAIL_PREP_TIME_MIN } from '../lib/pickupTimes';
+import {
+  FALLBACK_HOURS,
+  formatSlotLabel,
+  isOpenForAsap,
+  nextOrderingOpen,
+  ORDER_CUTOFF_MIN,
+  PREP_TIME_MIN,
+  RETAIL_PREP_TIME_MIN,
+} from '../lib/pickupTimes';
+import type { DayHours } from '@/shared/lib/openingHours';
 
 const CAFE_TZ = 'Europe/Madrid';
 const THUMB = 60;
@@ -61,7 +70,28 @@ export function CartPanel({ cart }: Props) {
   // Mirrors prepMinutesFor on the server; the server call stays authoritative.
   const retailOnly = cart.lines.length > 0 && cart.lines.every((l) => l.kind === 'retail');
   const prepMinutes = retailOnly ? RETAIL_PREP_TIME_MIN : PREP_TIME_MIN;
-  const open = isOpenForAsap(Date.now(), CAFE_TZ, prepMinutes);
+  // Live hours (Google Maps, via the server) drive the open/closed state; the
+  // known-good week stands in until they load. Checkout re-checks server-side.
+  const [hours, setHours] = useState<DayHours[]>(FALLBACK_HOURS);
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/ordering-hours')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((body: { hours?: DayHours[] } | null) => {
+        if (!cancelled && body?.hours?.length) setHours(body.hours);
+      })
+      .catch(() => {});
+    // Re-evaluate every minute so the cart closes itself at the cutoff even if
+    // it was opened just before.
+    const tick = window.setInterval(() => setNow(Date.now()), 60_000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(tick);
+    };
+  }, []);
+  const open = isOpenForAsap(now, CAFE_TZ, prepMinutes, hours);
+  const reopensAt = open ? null : nextOrderingOpen(now, CAFE_TZ, prepMinutes, hours);
 
   const canSubmit = cart.lines.length > 0 && open && name.trim().length >= 2 && !submitting;
 
@@ -145,7 +175,7 @@ export function CartPanel({ cart }: Props) {
           ))}
         </Stack>
 
-        <PickupNote open={open} prepMinutes={prepMinutes} />
+        <PickupNote open={open} prepMinutes={prepMinutes} reopensAt={reopensAt} now={now} />
 
         <Stack spacing={1.25} sx={{ mt: 2.5 }}>
           <Field required label={t.order.nameLabel} value={name} onChange={setName} />
@@ -314,8 +344,19 @@ function LineThumb({ line }: { line: CartLine }) {
 }
 
 /** Collection is the only fulfilment, so this states it rather than asking. */
-function PickupNote({ open, prepMinutes }: { open: boolean; prepMinutes: number }) {
-  const { t } = useLanguage();
+function PickupNote({
+  open,
+  prepMinutes,
+  reopensAt,
+  now,
+}: {
+  open: boolean;
+  prepMinutes: number;
+  reopensAt: string | null;
+  now: number;
+}) {
+  const { t, lang } = useLanguage();
+  const reopenLabel = reopensAt ? describeReopen(reopensAt, now, lang) : null;
   const timing =
     prepMinutes > 0
       ? t.order.pickupReadyIn.replace('{min}', String(prepMinutes))
@@ -335,8 +376,13 @@ function PickupNote({ open, prepMinutes }: { open: boolean; prepMinutes: number 
         {t.order.pickupTitle}
       </Typography>
       <Typography variant="body2" sx={{ fontWeight: 500 }}>
-        {open ? t.order.pickupNow : t.order.closedNow}
+        {open ? t.order.pickupNow : t.order.closedNow.replace('{min}', String(ORDER_CUTOFF_MIN))}
       </Typography>
+      {!open && reopenLabel && (
+        <Typography variant="caption" sx={{ color: brand.ink70 }}>
+          {t.order.reopensAt.replace('{when}', reopenLabel)}
+        </Typography>
+      )}
       {open && (
         <Typography variant="caption" sx={{ color: brand.ink70 }}>
           {timing}
@@ -372,4 +418,17 @@ function Field({
       slotProps={{ input: { sx: { borderRadius: `${radius.md}px`, backgroundColor: brand.white } } }}
     />
   );
+}
+
+/** "today at 8:00", "tomorrow at 8:00", "Monday at 8:00" — in café time. */
+function describeReopen(iso: string, nowMs: number, lang: string): string {
+  const time = formatSlotLabel(iso, CAFE_TZ).replace(/^0/, '');
+  const dayKey = (ms: number) =>
+    new Intl.DateTimeFormat('en-CA', { timeZone: CAFE_TZ, year: 'numeric', month: '2-digit', day: '2-digit' }).format(ms);
+  const target = Date.parse(iso);
+  const es = lang === 'es';
+  if (dayKey(target) === dayKey(nowMs)) return es ? `hoy a las ${time}` : `today at ${time}`;
+  if (dayKey(target) === dayKey(nowMs + 86_400_000)) return es ? `mañana a las ${time}` : `tomorrow at ${time}`;
+  const weekday = new Intl.DateTimeFormat(es ? 'es-ES' : 'en-GB', { timeZone: CAFE_TZ, weekday: 'long' }).format(target);
+  return es ? `el ${weekday} a las ${time}` : `${weekday} at ${time}`;
 }

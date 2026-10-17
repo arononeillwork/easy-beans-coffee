@@ -51,14 +51,24 @@ export async function syncOrderFromSquare(squareOrderId: string): Promise<Synced
 
   const squarePaymentId = tender?.paymentId ?? tender?.id ?? null;
 
-  await updateOrderBySquareOrderId(squareOrderId, {
-    payment_status: paymentStatus,
-    fulfillment_status: fulfillmentStatus,
-    square_payment_id: squarePaymentId,
-  });
+  // The status page now polls this every few seconds for live orders, so only
+  // write (and only run the paid-side bookkeeping) when something moved.
+  const stored = await getOrderBySquareOrderId(squareOrderId);
+  const changed =
+    !stored ||
+    stored.payment_status !== paymentStatus ||
+    stored.fulfillment_status !== fulfillmentStatus ||
+    stored.square_payment_id !== squarePaymentId;
 
-  if (paymentStatus === 'PAID') {
-    await burnOfferCode(squareOrderId);
+  if (changed) {
+    await updateOrderBySquareOrderId(squareOrderId, {
+      payment_status: paymentStatus,
+      fulfillment_status: fulfillmentStatus,
+      square_payment_id: squarePaymentId,
+    });
+    if (paymentStatus === 'PAID') {
+      await burnOfferCode(squareOrderId);
+    }
   }
 
   return { paymentStatus, fulfillmentStatus, squarePaymentId };

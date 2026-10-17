@@ -72,7 +72,7 @@ export type PlaceDetails = {
   hours: DayHours[] | null;
 };
 
-type ApiTime = { day?: number; hour?: number; minute?: number };
+export type ApiTime = { day?: number; hour?: number; minute?: number };
 
 type ApiAttribution = { displayName?: string; uri?: string };
 
@@ -178,7 +178,13 @@ function minutesOf(time: ApiTime | undefined): number | null {
  * what we want on a list of opening hours.
  */
 function toDayHours(place: ApiPlace): DayHours[] | null {
-  const periods = place.regularOpeningHours?.periods;
+  return periodsToDayHours(place.regularOpeningHours?.periods);
+}
+
+/** Shared with `orderingHours.ts`, which reads the same period shape. */
+export function periodsToDayHours(
+  periods: { open?: ApiTime; close?: ApiTime }[] | undefined,
+): DayHours[] | null {
   if (!periods || periods.length === 0) return null;
 
   const byDay = new Map<number, DayHours['ranges']>();
