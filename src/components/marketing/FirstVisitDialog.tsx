@@ -56,6 +56,8 @@ export function FirstVisitDialog({
     onClose?.();
   };
 
+  const allChosen = INTEREST_KEYS.every((key) => interests.includes(key));
+
   const toggleInterest = (key: InterestKey) =>
     setInterests((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]));
 
@@ -151,6 +153,26 @@ export function FirstVisitDialog({
                 {t.popup.interestsLabel}
               </Typography>
               <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" justifyContent="center">
+                {/* One tap for everything; tapping it again clears the lot. */}
+                <Chip
+                  label={t.popup.allInterests}
+                  onClick={() =>
+                    setInterests(allChosen ? [] : [...INTEREST_KEYS])
+                  }
+                  aria-pressed={allChosen}
+                  data-testid="interests-all"
+                  icon={allChosen ? <CheckIcon sx={{ fontSize: 15 }} /> : undefined}
+                  sx={{
+                    fontWeight: 600,
+                    backgroundColor: allChosen ? brand.rosePink : brand.white,
+                    border: `1px solid ${allChosen ? brand.rosePink : brand.ink45}`,
+                    color: brand.ink,
+                    '& .MuiChip-icon': { color: brand.ink },
+                    '&:hover': {
+                      backgroundColor: allChosen ? brand.rosePinkPress : brand.rosePinkTint,
+                    },
+                  }}
+                />
                 {INTEREST_KEYS.map((key) => {
                   const selected = interests.includes(key);
                   return (

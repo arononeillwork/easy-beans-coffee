@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -14,10 +15,10 @@ import { localePath } from '@/i18n/config';
 import { INSTAGRAM_URL } from '@/shared/lib/social';
 import { brand, radius } from '@/theme/brand';
 import { competitionCopy } from './copy';
+import { parseInstagramHandle } from './instagram';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_RE = /^\+?[\d\s()-]{6,20}$/;
-const IG_RE = /^[a-z0-9._]{1,30}$/;
 
 type Status = 'idle' | 'sending' | 'done' | 'already' | 'error' | 'rate';
 type FieldErrors = Partial<Record<'name' | 'email' | 'phone' | 'instagram' | 'ticks', string>>;
@@ -55,6 +56,23 @@ export function CompetitionForm({ lang, src }: { lang: Lang; src?: string }) {
   const [marketingOptin, setMarketingOptin] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [status, setStatus] = useState<Status>('idle');
+  // Only offer "Paste" where the browser can actually read the clipboard.
+  const [canPaste, setCanPaste] = useState(false);
+  useEffect(() => setCanPaste(typeof navigator !== 'undefined' && !!navigator.clipboard?.readText), []);
+
+  const handle = parseInstagramHandle(values.instagram);
+
+  const pasteInstagram = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (text) {
+        setValues((v) => ({ ...v, instagram: parseInstagramHandle(text) ?? text.trim() }));
+        setErrors((er) => ({ ...er, instagram: undefined }));
+      }
+    } catch {
+      /* permission refused: they can still long-press and paste */
+    }
+  };
 
   const set = (key: keyof typeof values) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setValues((v) => ({ ...v, [key]: e.target.value }));
@@ -63,11 +81,10 @@ export function CompetitionForm({ lang, src }: { lang: Lang; src?: string }) {
 
   const validate = (): FieldErrors => {
     const er: FieldErrors = {};
-    const ig = values.instagram.trim().replace(/^@+/, '').toLowerCase();
     if (values.name.trim().length < 2) er.name = c.errName;
     if (!EMAIL_RE.test(values.email.trim())) er.email = c.errEmail;
     if (values.phone.trim() && !PHONE_RE.test(values.phone.trim())) er.phone = c.errPhone;
-    if (!IG_RE.test(ig)) er.instagram = c.errInstagram;
+    if (!handle) er.instagram = c.errInstagram;
     if (!acceptTerms || !marketingOptin) er.ticks = c.errTicks;
     return er;
   };
@@ -87,7 +104,7 @@ export function CompetitionForm({ lang, src }: { lang: Lang; src?: string }) {
           name: values.name.trim(),
           email: values.email.trim(),
           phone: values.phone.trim(),
-          instagram: values.instagram.trim(),
+          instagram: handle,
           acceptTerms,
           marketingOptin,
           lang,
@@ -133,20 +150,67 @@ export function CompetitionForm({ lang, src }: { lang: Lang; src?: string }) {
       <Typography sx={{ mt: 1, color: brand.ink70 }}>{c.formIntro}</Typography>
 
       <Stack spacing={2} sx={{ mt: 3 }}>
-        <Stack direction="row" alignItems="center" useFlexGap flexWrap="wrap" sx={{ gap: 2, p: 2, borderRadius: `${radius.lg}px`, backgroundColor: brand.rosePinkTint }}>
-          <StepBadge n={1} colour={brand.rosePinkTint} />
-          <Typography sx={{ fontWeight: 600, flex: '1 1 140px' }}>{c.stepFollow}</Typography>
+        <Box sx={{ p: 2, borderRadius: `${radius.lg}px`, backgroundColor: brand.rosePinkTint }}>
+          <Stack direction="row" spacing={2} alignItems="center">
+            <StepBadge n={1} colour={brand.rosePinkTint} />
+            <Typography sx={{ fontWeight: 600 }}>{c.stepFollow}</Typography>
+          </Stack>
+
           <Button
             href={INSTAGRAM_URL}
             target="_blank"
             rel="noopener"
-            variant="outlined"
-            size="small"
-            sx={{ borderRadius: 999, borderColor: '#3B2A20', color: '#3B2A20', whiteSpace: 'nowrap' }}
+            variant="contained"
+            fullWidth
+            sx={{ mt: 2, height: 48, borderRadius: 999, backgroundColor: '#3B2A20', color: brand.cream, '&:hover': { backgroundColor: '#24180f' } }}
           >
-            @easy.beans.coffee
+            {c.igFollowBtn} ↗
           </Button>
-        </Stack>
+
+          <TextField
+            label={c.instagram}
+            value={values.instagram}
+            onChange={set('instagram')}
+            // A pasted profile link tidies itself down to the bare username.
+            onBlur={() => handle && handle !== values.instagram && setValues((v) => ({ ...v, instagram: handle }))}
+            error={!!errors.instagram}
+            helperText={errors.instagram ?? c.instagramHelp}
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
+            placeholder="yourname"
+            required
+            fullWidth
+            sx={{ ...fieldSx, mt: 2 }}
+            slotProps={{
+              input: {
+                startAdornment: <InputAdornment position="start">@</InputAdornment>,
+                endAdornment: canPaste ? (
+                  <InputAdornment position="end">
+                    <Button size="small" onClick={pasteInstagram} sx={{ borderRadius: 999, color: '#3B2A20', fontWeight: 600, minWidth: 0 }}>
+                      {c.igPaste}
+                    </Button>
+                  </InputAdornment>
+                ) : undefined,
+              },
+            }}
+          />
+
+          <Stack direction="row" useFlexGap flexWrap="wrap" sx={{ mt: 1, gap: 2, alignItems: 'center' }}>
+            {handle ? (
+              <Typography variant="body2" sx={{ color: brand.ink70 }}>
+                {c.igCheck}{' '}
+                <a href={`https://www.instagram.com/${handle}/`} target="_blank" rel="noopener" style={{ color: '#3B2A20', fontWeight: 600 }}>
+                  instagram.com/{handle} ↗
+                </a>
+              </Typography>
+            ) : (
+              <a href="https://www.instagram.com/" target="_blank" rel="noopener" style={{ color: '#3B2A20', fontWeight: 600, fontSize: '0.875rem' }}>
+                {c.igOpen} ↗
+              </a>
+            )}
+          </Stack>
+        </Box>
 
         <Box sx={{ p: 2, borderRadius: `${radius.lg}px`, backgroundColor: brand.lilacTint }}>
           <Stack direction="row" spacing={2} alignItems="center">
@@ -157,19 +221,7 @@ export function CompetitionForm({ lang, src }: { lang: Lang; src?: string }) {
           <Box sx={{ mt: 2, display: 'grid', gap: 1.5, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' } }}>
             <TextField label={c.name} value={values.name} onChange={set('name')} error={!!errors.name} helperText={errors.name} autoComplete="name" required sx={fieldSx} />
             <TextField label={c.email} type="email" value={values.email} onChange={set('email')} error={!!errors.email} helperText={errors.email} autoComplete="email" inputMode="email" required sx={fieldSx} />
-            <TextField
-              label={c.instagram}
-              value={values.instagram}
-              onChange={set('instagram')}
-              error={!!errors.instagram}
-              helperText={errors.instagram ?? c.instagramHelp}
-              autoCapitalize="none"
-              autoCorrect="off"
-              placeholder="@yourname"
-              required
-              sx={fieldSx}
-            />
-            <TextField label={c.phone} type="tel" value={values.phone} onChange={set('phone')} error={!!errors.phone} helperText={errors.phone} autoComplete="tel" inputMode="tel" sx={fieldSx} />
+            <TextField label={c.phone} type="tel" value={values.phone} onChange={set('phone')} error={!!errors.phone} helperText={errors.phone} autoComplete="tel" inputMode="tel" sx={{ ...fieldSx, gridColumn: { sm: '1 / -1' } }} />
           </Box>
 
           <Stack sx={{ mt: 1.5 }}>

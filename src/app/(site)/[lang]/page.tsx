@@ -31,7 +31,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       <CafeFilm t={t} />
       <CanBand t={t} />
       <InstagramGrid t={t} />
-      <VisitSection t={t} place={place} />
+      <VisitSection t={t} lang={lang} place={place} />
       <NewsletterStrip />
     </>
   );

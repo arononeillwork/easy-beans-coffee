@@ -102,7 +102,7 @@ export async function Footer({ t, lang }: { t: SiteContent; lang: Lang }) {
           </Box>
         </Box>
 
-        <Typography variant="caption" component="p" sx={{ mt: { xs: 6, md: 8 }, color: brand.ink45 }}>
+        <Typography variant="caption" component="p" translate="no" sx={{ mt: { xs: 6, md: 8 }, color: brand.ink45 }}>
           {t.footer.rights}
         </Typography>
       </Container>

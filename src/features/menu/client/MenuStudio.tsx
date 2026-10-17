@@ -37,7 +37,7 @@ import { indexPriceBook, lowestCents, type PriceBook } from '../priceBook';
 import { paletteForDrink } from '../palette';
 import type { DrinkChoice, MenuGroup, Section, Serve, Temp } from '../types';
 import { DrinkStage, type StagePanel } from './DrinkStage';
-import { ComingSoonRail, OptionRail } from './OptionRail';
+import { ComingSoonRail, OptionRail, PairRail } from './OptionRail';
 import { DrinkRail, SectionRail, type RailDrink } from './Rails';
 import { RailArrow, useRailOverflow } from './ScrollArrows';
 import { SegmentedChoice, type SegmentOption } from './SegmentedChoice';
@@ -141,7 +141,7 @@ export function MenuStudio({ priceBook }: { priceBook: PriceBook }) {
           name: (entryChoice ? displayNameFor(entry, entryChoice) : entry.name)[lang],
           alt: labels.photoAlt
             .replace('{drink}', entry.name[lang])
-            .replace('{serve}', labels[entryChoice?.serve ?? 'sitIn']),
+            .replace('{serve}', labels[entryChoice?.serve ?? 'takeaway']),
           palette: paletteForDrink(entry),
         };
       }),
@@ -157,7 +157,9 @@ export function MenuStudio({ priceBook }: { priceBook: PriceBook }) {
         return {
           id: entry.id,
           name: entry.name[lang],
-          thumb: resolveArt(folder, entryChoice?.temp ?? null, 'sitIn'),
+          // The thumbnail follows the vessel chosen for that drink, so the
+          // rail matches the stage: takeaway cups unless Sit in is picked.
+          thumb: resolveArt(folder, entryChoice?.temp ?? null, entryChoice?.serve ?? 'takeaway'),
           fromCents: lowestCents(entryItem),
           soldOut: entryItem?.soldOut ?? false,
         };
@@ -282,15 +284,11 @@ export function MenuStudio({ priceBook }: { priceBook: PriceBook }) {
         />
       </Box>
 
-      {/* The washed band: title, stage and rail share the drink's own colour
-          and cross-fade as one surface. Title before image before options —
-          the reading order of a menu board — and the name changes with the
-          flavour chosen, renaming the cup as the cup changes. */}
+      {/* The drink band: title, stage and rail, on plain white so each
+          photo shows exactly as shot — no tinted panel behind it. */}
       <Box
         sx={{
-          backgroundColor: palette.wash,
-          transition: `background-color ${motion.slow} ${motion.easeOutSoft}`,
-          '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
+          backgroundColor: brand.white,
           pt: 2.5,
           pb: { xs: 7, md: 3 },
           // On a laptop the band is a rounded panel that keeps the drink in
@@ -299,12 +297,14 @@ export function MenuStudio({ priceBook }: { priceBook: PriceBook }) {
           borderRadius: { md: '32px' },
           overflow: { md: 'hidden' },
           position: { md: 'sticky' },
-          top: { md: 88 },
+          // Clear of the pinned banner + header.
+          top: { md: 136 },
         }}
       >
         <Container maxWidth="sm" sx={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
           <Typography
             variant="h2"
+            translate="no"
             sx={{ fontSize: 'clamp(2.1rem, 7.5vw, 3.2rem)', lineHeight: 1.02, mb: 0.75 }}
           >
             {name}
@@ -483,6 +483,21 @@ export function MenuStudio({ priceBook }: { priceBook: PriceBook }) {
           }
           const resolved = optionByName.get(optionRef.square);
           if (!resolved) return null;
+          if (optionRef.pair) {
+            return (
+              <PairRail
+                key={`${drink.id}:${resolved.group.id}`}
+                option={{ ...optionRef, pair: optionRef.pair }}
+                group={resolved.group}
+                chosen={choice.options[optionRef.square] ?? []}
+                onChange={(next) =>
+                  update({ ...choice, options: { ...choice.options, [optionRef.square]: next } })
+                }
+                lang={lang}
+                accent={palette.accent}
+              />
+            );
+          }
           return (
             <OptionRail
               key={`${drink.id}:${resolved.group.id}`}

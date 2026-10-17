@@ -24,8 +24,8 @@ const en = {
     name: 'Full name',
     email: 'Email',
     phone: 'Phone (optional)',
-    instagram: 'Your Instagram handle',
-    instagramHelp: 'So we can check you follow us if you win.',
+    instagram: 'Your Instagram username',
+    instagramHelp: 'Type it, or paste your profile link: in Instagram open your profile → Share profile → Copy link.',
     marketing:
       'Sign me up for Easy Beans news & offers by email. This is how you enter, and you can unsubscribe anytime.',
     termsBefore: 'I’m 18 or over and accept the ',
@@ -40,10 +40,14 @@ const en = {
     errName: 'Please enter your name.',
     errEmail: 'Please enter a valid email.',
     errPhone: 'That doesn’t look like a phone number.',
-    errInstagram: 'Please enter your Instagram handle (letters, numbers, dots, underscores).',
+    errInstagram: 'Enter your Instagram username, or paste your profile link.',
     errTicks: 'Please tick both boxes to enter.',
     errGeneric: 'Something went wrong. Please try again in a moment.',
     errRate: 'Too many attempts from this connection. Please try again later.',
+    igFollowBtn: 'Follow @easy.beans.coffee',
+    igPaste: 'Paste',
+    igCheck: 'Is this you?',
+    igOpen: 'Open Instagram to find my username',
 };
 
 const es: Record<keyof typeof en, string> = {
@@ -70,7 +74,7 @@ const es: Record<keyof typeof en, string> = {
     email: 'Email',
     phone: 'Teléfono (opcional)',
     instagram: 'Tu usuario de Instagram',
-    instagramHelp: 'Para comprobar que nos sigues si ganas.',
+    instagramHelp: 'Escríbelo o pega el enlace de tu perfil: en Instagram abre tu perfil → Compartir perfil → Copiar enlace.',
     marketing:
       'Quiero recibir por email novedades y ofertas de Easy Beans. Así participas, y puedes darte de baja cuando quieras.',
     termsBefore: 'Tengo 18 años o más y acepto las ',
@@ -85,10 +89,14 @@ const es: Record<keyof typeof en, string> = {
     errName: 'Escribe tu nombre.',
     errEmail: 'Escribe un email válido.',
     errPhone: 'Ese teléfono no parece válido.',
-    errInstagram: 'Escribe tu usuario de Instagram (letras, números, puntos y guiones bajos).',
+    errInstagram: 'Escribe tu usuario de Instagram o pega el enlace de tu perfil.',
     errTicks: 'Marca las dos casillas para participar.',
     errGeneric: 'Algo ha fallado. Inténtalo de nuevo en un momento.',
     errRate: 'Demasiados intentos desde esta conexión. Inténtalo más tarde.',
+    igFollowBtn: 'Seguir a @easy.beans.coffee',
+    igPaste: 'Pegar',
+    igCheck: '¿Eres tú?',
+    igOpen: 'Abrir Instagram para ver mi usuario',
 };
 
 export type CompetitionCopy = Record<keyof typeof en, string>;

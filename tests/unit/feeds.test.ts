@@ -7,6 +7,7 @@ import { toPriceBook } from '@/features/menu/priceBook';
 import { getPlaceDetails } from '@/server/places/googlePlaces';
 import { getOrderingHours } from '@/server/places/orderingHours';
 import { getInstagramPosts } from '@/server/social/instagram';
+import { getSocialFeed } from '@/server/social/feed';
 import { FALLBACK_HOURS } from '@/features/order/lib/pickupTimes';
 import { derivePublicStatus, shouldSyncFromSquare } from '@/server/orders/statusMapping';
 
@@ -202,6 +203,17 @@ test('Instagram: an expired token yields no posts (the grid shows our own photos
   delete process.env.NEXT_PUBLIC_SUPABASE_URL;
   fakeNetwork(() => ({ status: 400, body: { error: { code: 190 } } }));
   assert.deepEqual(await getInstagramPosts(8), []);
+});
+
+test('Social grid: with Instagram down, our own photos all link to Instagram — never TikTok', async () => {
+  process.env.INSTAGRAM_ACCESS_TOKEN = 'expired';
+  delete process.env.TIKTOK_ACCESS_TOKEN;
+  delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+  fakeNetwork(() => ({ status: 400, body: { error: { code: 190 } } }));
+  const feed = await getSocialFeed(['a', 'b', 'c', 'd']);
+  assert.equal(feed.live, false);
+  assert.equal(feed.posts.length, 4);
+  assert.ok(feed.posts.every((p) => p.permalink.includes('instagram.com')), 'every tile opens Instagram');
 });
 
 // ── Square → live order status ──────────────────────────────────────────────

@@ -6,6 +6,8 @@ import { instagramHealth } from '@/server/social/instagram';
 import { readStoredToken } from '@/server/social/instagramToken';
 import { isWebhookConfigured } from '@/server/square/webhookVerify';
 import { getSupabaseAdmin } from '@/server/supabaseAdmin';
+import { isEmailConfigured } from '@/server/env';
+import { drawMonthFor } from '@/server/competition/drawMonth';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,8 +37,24 @@ export async function GET() {
     // reported as null
   }
 
+  // Competition: entries in the open month and the latest draw's state.
+  let competition: Record<string, unknown> = {};
+  try {
+    const db = getSupabaseAdmin();
+    const open = drawMonthFor();
+    const [{ count }, { data: last }] = await Promise.all([
+      db.from('competition_entries').select('id', { count: 'exact', head: true }).eq('draw_month', open),
+      db.from('competition_draws').select('draw_month,status,ig_posted_at').order('draw_month', { ascending: false }).limit(1),
+    ]);
+    competition = { openMonth: open, entries: count ?? 0, lastDraw: last?.[0] ?? null };
+  } catch {
+    competition = { error: true };
+  }
+
   return NextResponse.json(
     {
+      email: { configured: isEmailConfigured() },
+      competition,
       squarePrices: { items: prices.items.length, stale: prices.stale, fetchedAt: prices.fetchedAt },
       googleHours: { source: hours.source },
       googleRating: { rating: place?.rating ?? null, reviews: place?.total ?? null },
