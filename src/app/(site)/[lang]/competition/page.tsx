@@ -19,7 +19,6 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       canonical: `/${lang}/competition`,
       languages: { es: '/es/competition', en: '/en/competition' },
     },
-    openGraph: { images: [{ url: '/media/competition/competition-landscape.webp', width: 2688, height: 1520 }] },
   };
 }
 
@@ -33,15 +32,10 @@ export default async function CompetitionPage({
   const { lang } = await params;
   if (!isLang(lang)) notFound();
   const { src } = await searchParams;
-  const c = competitionCopy(lang);
 
   return (
     <Box sx={{ backgroundColor: brand.cream }}>
-      <Container maxWidth="lg" disableGutters sx={{ px: { xs: 0, md: 3 }, pt: { xs: 0, md: 4 } }}>
-        <Box sx={{ overflow: 'hidden', borderRadius: { xs: 0, md: `${radius.xl}px` } }}>
-          <CompetitionPoster alt={c.posterAlt} />
-        </Box>
-      </Container>
+      <CompetitionPoster lang={lang} />
 
       <Container maxWidth="sm" sx={{ py: { xs: 4, md: 6 } }}>
         <Box

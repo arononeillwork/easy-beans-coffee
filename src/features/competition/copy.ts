@@ -2,6 +2,15 @@ import type { Lang } from '@/i18n/config';
 
 /** Competition copy lives with the feature: it is temporary and self-contained. */
 const en = {
+    posterHeadline: 'WIN €10',
+    posterSub: 'on us, every month',
+    posterStep1: 'Follow @easy.beans.coffee',
+    posterStep2: 'Sign up for news & offers',
+    enterNow: 'Enter now',
+    scanToEnter: 'Scan to enter',
+    qrAlt: 'QR code to enter the competition at easybeanscoffee.com/competition',
+    monthlyDraw: 'Monthly draw',
+    termsShort: 'T&Cs at easybeanscoffee.com/competition-terms',
     metaTitle: 'Win €10 every month',
     metaDescription:
       'Follow @easy.beans.coffee and sign up for news & offers to enter our monthly €10 gift card draw.',
@@ -38,6 +47,15 @@ const en = {
 };
 
 const es: Record<keyof typeof en, string> = {
+    posterHeadline: 'GANA 10 €',
+    posterSub: 'cada mes, invitamos nosotros',
+    posterStep1: 'Sigue a @easy.beans.coffee',
+    posterStep2: 'Apúntate a novedades y ofertas',
+    enterNow: 'Participa ya',
+    scanToEnter: 'Escanea para participar',
+    qrAlt: 'Código QR para participar en easybeanscoffee.com/competition',
+    monthlyDraw: 'Sorteo mensual',
+    termsShort: 'Bases en easybeanscoffee.com/competition-terms',
     metaTitle: 'Gana 10 € cada mes',
     metaDescription:
       'Sigue a @easy.beans.coffee y apúntate a novedades y ofertas para entrar en el sorteo mensual de una tarjeta regalo de 10 €.',

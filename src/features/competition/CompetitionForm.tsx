@@ -133,11 +133,9 @@ export function CompetitionForm({ lang, src }: { lang: Lang; src?: string }) {
       <Typography sx={{ mt: 1, color: brand.ink70 }}>{c.formIntro}</Typography>
 
       <Stack spacing={2} sx={{ mt: 3 }}>
-        <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 2, borderRadius: `${radius.lg}px`, backgroundColor: brand.rosePinkTint }}>
+        <Stack direction="row" alignItems="center" useFlexGap flexWrap="wrap" sx={{ gap: 2, p: 2, borderRadius: `${radius.lg}px`, backgroundColor: brand.rosePinkTint }}>
           <StepBadge n={1} colour={brand.rosePinkTint} />
-          <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Typography sx={{ fontWeight: 600 }}>{c.stepFollow}</Typography>
-          </Box>
+          <Typography sx={{ fontWeight: 600, flex: '1 1 140px' }}>{c.stepFollow}</Typography>
           <Button
             href={INSTAGRAM_URL}
             target="_blank"
