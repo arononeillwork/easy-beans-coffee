@@ -29,11 +29,20 @@ const SCENE_MASK = {
   md: 'linear-gradient(to right, transparent 0%, #000 14%), linear-gradient(to bottom, transparent 0%, #000 12%)',
 };
 
-function StepPill({ n, text, bg }: { n: number; text: string; bg: string }) {
+function StepPill({ n, text, bg, href }: { n: number; text: string; bg: string; href?: string }) {
   return (
     <Box
+      {...(href ? { component: 'a' as const, href } : {})}
       sx={{
         display: 'inline-flex',
+        textDecoration: 'none',
+        ...(href && {
+          cursor: 'pointer',
+          boxShadow: '0 4px 14px rgba(59,42,32,0.10)',
+          transition: 'transform 150ms ease, box-shadow 150ms ease, filter 150ms ease',
+          '&:hover': { transform: 'translateY(-1px)', boxShadow: '0 8px 20px rgba(59,42,32,0.16)', filter: 'brightness(0.97)' },
+          '&:focus-visible': { outline: `3px solid ${ESPRESSO}`, outlineOffset: 3 },
+        }),
         alignItems: 'center',
         gap: { xs: 1.5, md: 2 },
         backgroundColor: bg,
@@ -67,6 +76,11 @@ function StepPill({ n, text, bg }: { n: number; text: string; bg: string }) {
       >
         {text}
       </Box>
+      {href && (
+        <Box component="span" aria-hidden sx={{ color: ESPRESSO, fontWeight: 600, fontSize: { xs: '1.05rem', md: 'clamp(1rem, 1.45vw, 1.8rem)' }, ml: -0.5 }}>
+          →
+        </Box>
+      )}
     </Box>
   );
 }
@@ -198,14 +212,18 @@ export function CompetitionPoster({
         }}
       >
         <StepPill n={1} text={c.posterStep1} bg={brand.rosePinkTint} />
-        <StepPill n={2} text={c.posterStep2} bg={brand.lilacTint} />
+        {/* On the web page step 2 is a button straight to the form; on the
+            in-café display it stays a label beside the QR code. */}
+        <StepPill n={2} text={c.posterStep2} bg={brand.lilacTint} href={isScreen ? undefined : '#enter'} />
 
-        {/* Phones: they are already here, so a button instead of a QR. */}
+        {/* Web page (phone + desktop): visitors are already here, so a button
+            to the form instead of a QR code. */}
         <Box
           component="a"
           href="#enter"
           sx={{
-            display: isScreen ? 'none' : { xs: 'inline-flex', md: 'none' },
+            display: isScreen ? 'none' : 'inline-flex',
+            '&:hover': { backgroundColor: '#24180f' },
             mt: 1.5,
             px: 4,
             py: 1.6,
@@ -213,7 +231,7 @@ export function CompetitionPoster({
             backgroundColor: ESPRESSO,
             color: brand.cream,
             fontWeight: 600,
-            fontSize: '1.05rem',
+            fontSize: { xs: '1.05rem', md: 'clamp(1.05rem, 1.3vw, 1.5rem)' },
             textDecoration: 'none',
           }}
         >
@@ -221,7 +239,7 @@ export function CompetitionPoster({
         </Box>
       </Box>
 
-      {/* Footer: QR (big screens) + small print */}
+      {/* Footer: QR (in-café display only) + small print */}
       <Box
         sx={{
           gridArea: 'foot',
@@ -232,7 +250,7 @@ export function CompetitionPoster({
           zIndex: 5,
         }}
       >
-        <Box sx={{ display: isScreen ? 'flex' : { xs: 'none', md: 'flex' }, justifyContent: { xs: 'center', md: 'flex-start' }, alignItems: 'center', gap: { xs: 2, md: '1.6vw' }, mb: { xs: 2, md: '2.2vw' } }}>
+        <Box sx={{ display: isScreen ? 'flex' : 'none', justifyContent: { xs: 'center', md: 'flex-start' }, alignItems: 'center', gap: { xs: 2, md: '1.6vw' }, mb: { xs: 2, md: '2.2vw' } }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/media/competition/qr.svg"
