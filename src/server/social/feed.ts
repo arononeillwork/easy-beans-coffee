@@ -1,5 +1,5 @@
 import 'server-only';
-import { INSTAGRAM_URL, TIKTOK_URL } from '@/shared/lib/social';
+import { INSTAGRAM_URL } from '@/shared/lib/social';
 import { getInstagramPosts } from './instagram';
 import { getTikTokPosts } from './tiktok';
 import type { SocialPost } from './types';
@@ -40,13 +40,15 @@ const CURATED: Omit<SocialPost, 'caption'>[] = [
     isVideo: false,
     remote: false,
   },
+  // Instagram, like the rest: the section is Instagram's, and the café asked
+  // for no TikTok link beside it.
   {
     id: 'curated-dog',
-    platform: 'tiktok',
-    permalink: TIKTOK_URL,
+    platform: 'instagram',
+    permalink: INSTAGRAM_URL,
     imageUrl: '/media/dog-story.webp',
     postedAt: null,
-    isVideo: true,
+    isVideo: false,
     remote: false,
   },
 ];
