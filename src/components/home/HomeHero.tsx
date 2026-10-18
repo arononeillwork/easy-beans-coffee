@@ -9,7 +9,7 @@ import type { SiteContent } from '@/i18n/content/en';
 import { brand, radius } from '@/theme/brand';
 import { FilmFrame } from './FilmFrame';
 
-/** Place, headline, one line and three ways in — beside the film it describes. */
+/** Headline, one line and three ways in — beside the film it describes. */
 export function HomeHero({ t, lang }: { t: SiteContent; lang: Lang }) {
   return (
     <Container maxWidth="lg" sx={{ pt: { xs: 4, md: 7 }, pb: { xs: 6, md: 9 } }}>
@@ -22,9 +22,6 @@ export function HomeHero({ t, lang }: { t: SiteContent; lang: Lang }) {
         }}
       >
         <Stack spacing={{ xs: 3, md: 3.5 }} sx={{ pb: { md: 2 } }}>
-          <Typography component="p" sx={{ fontWeight: 600, color: brand.rosePinkDeep }}>
-            {t.hero.eyebrow}
-          </Typography>
           <Typography
             variant="h1"
             sx={{
@@ -78,8 +75,6 @@ export function HomeHero({ t, lang }: { t: SiteContent; lang: Lang }) {
             src="/media/hero-film.mp4"
             poster="/media/hero-poster.webp"
             label={t.hero.filmLabel}
-            playLabel={t.media.play}
-            pauseLabel={t.media.pause}
           />
         </Box>
       </Box>

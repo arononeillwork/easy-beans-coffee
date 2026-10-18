@@ -23,8 +23,8 @@ import { OpenNowPill } from './OpenNowPill';
 const AMENITY_ICONS = [PetsOutlinedIcon, WifiIcon, DeckOutlinedIcon];
 
 /**
- * "Come and see us": the terrace itself, with the live Google rating pinned to
- * the photo, whether we are open right now, and the two ways to get here.
+ * "Come and see us": the terrace itself, with the live Google rating (and a
+ * link to leave one) pinned to the photo, whether we are open right now, and the two ways to get here.
  * Rating, review count and hours are all live from Google Maps.
  */
 export function VisitSection({
@@ -44,7 +44,7 @@ export function VisitSection({
       id="visit"
       component="section"
       aria-labelledby="visit-title"
-      sx={{ scrollMarginTop: { xs: 124, md: 136 }, backgroundColor: brand.matchaTint, overflow: 'hidden' }}
+      sx={{ scrollMarginTop: { xs: 124, md: 136 }, backgroundColor: brand.rosePinkTint, overflow: 'hidden' }}
     >
       <Container maxWidth="lg" sx={{ py: { xs: 8, md: 13 } }}>
         <Box
@@ -74,7 +74,7 @@ export function VisitSection({
                 {t.location.title}
               </Typography>
               <Stack direction="row" alignItems="center" spacing={0.75} sx={{ mt: 1.5, color: brand.ink70 }}>
-                <PlaceOutlinedIcon aria-hidden sx={{ fontSize: 20, color: brand.matchaGreenDeep }} />
+                <PlaceOutlinedIcon aria-hidden sx={{ fontSize: 20, color: brand.rosePinkDeep }} />
                 <Typography sx={{ fontSize: '1.0625rem' }} translate="no">
                   {t.location.town}
                 </Typography>
@@ -119,8 +119,8 @@ export function VisitSection({
                         width: 30,
                         height: 30,
                         borderRadius: '50%',
-                        backgroundColor: brand.matchaTint,
-                        color: brand.matchaGreenDeep,
+                        backgroundColor: brand.rosePinkTint,
+                        color: brand.rosePinkDeep,
                       }}
                     >
                       <Icon sx={{ fontSize: 18 }} />
@@ -163,8 +163,8 @@ export function VisitSection({
             </Stack>
           </Stack>
 
-          {/* ── Pictures: the terrace, a drink on it, and the rating ──── */}
-          <Box sx={{ position: 'relative', pb: { xs: 5, md: 6 }, pl: { xs: 3, md: 6 } }}>
+          {/* ── Picture: the terrace, with the rating on it ──────────── */}
+          <Box sx={{ position: 'relative' }}>
             <Box
               sx={{
                 position: 'relative',
@@ -183,91 +183,75 @@ export function VisitSection({
               />
             </Box>
 
-            {/* A drink on the same terrace, tucked over the corner. */}
-            <Box
-              aria-hidden
-              sx={{
-                position: 'absolute',
-                left: 0,
-                bottom: 0,
-                width: { xs: '42%', md: '38%' },
-                aspectRatio: '3 / 4',
-                borderRadius: `${radius.lg}px`,
-                overflow: 'hidden',
-                border: `6px solid ${brand.white}`,
-                boxShadow: shadow.lift,
-                transform: 'rotate(-3deg)',
-              }}
-            >
-              <Image
-                src="/media/iced-can-hand.webp"
-                alt=""
-                fill
-                sizes="(max-width: 900px) 40vw, 20vw"
-                style={{ objectFit: 'cover' }}
-              />
-            </Box>
-
-            {/* The live Google rating, pinned to the photo. */}
-            {rating !== null && (
+            {/* The live Google rating, pinned to the photo, with the way to add one. */}
+            {(rating !== null || place?.writeReviewUrl) && (
               <Box
-                component="a"
-                href={place?.reviewsUrl ?? mapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                data-testid="rating-card"
                 sx={{
                   position: 'absolute',
                   top: { xs: 16, md: 24 },
                   right: { xs: 12, md: 24 },
-                  display: 'block',
                   px: { xs: 2, md: 2.5 },
                   py: { xs: 1.5, md: 2 },
                   borderRadius: `${radius.lg}px`,
-                  backgroundColor: 'rgba(255,255,255,0.94)',
-                  backdropFilter: 'blur(8px)',
+                  backgroundColor: brand.white,
                   boxShadow: shadow.lift,
                   color: brand.ink,
-                  textDecoration: 'none',
-                  transition: 'transform 200ms ease',
-                  '&:hover': { transform: 'translateY(-2px)' },
                 }}
               >
-                <Stack direction="row" alignItems="center" spacing={1.25}>
-                  <Typography
-                    data-testid="google-rating"
+                {rating !== null && (
+                  <Box
+                    component="a"
+                    href={place?.reviewsUrl ?? mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{ display: 'block', color: 'inherit', textDecoration: 'none' }}
+                  >
+                    <Stack direction="row" alignItems="center" spacing={1.25}>
+                      <Typography
+                        data-testid="google-rating"
+                        sx={{
+                          fontFamily: 'var(--font-poppins)',
+                          fontWeight: 600,
+                          fontSize: { xs: '2rem', md: '2.5rem' },
+                          lineHeight: 1,
+                          letterSpacing: '-0.03em',
+                        }}
+                      >
+                        {rating.toFixed(1)}
+                      </Typography>
+                      <Stars value={rating} size={16} label={`${rating.toFixed(1)} / 5`} />
+                    </Stack>
+                    <Typography data-testid="google-review-count" sx={{ mt: 0.75, fontSize: '0.8125rem', color: brand.ink70 }}>
+                      {place?.total ? `${place.total} ${t.reviews.count}` : t.reviews.read}
+                    </Typography>
+                  </Box>
+                )}
+                {place?.writeReviewUrl && (
+                  <Box
+                    component="a"
+                    href={place.writeReviewUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     sx={{
-                      fontFamily: 'var(--font-poppins)',
-                      fontWeight: 600,
-                      fontSize: { xs: '2rem', md: '2.5rem' },
-                      lineHeight: 1,
-                      letterSpacing: '-0.03em',
+                      display: 'block',
+                      mt: rating !== null ? 1.25 : 0,
+                      pt: rating !== null ? 1.25 : 0,
+                      borderTop: rating !== null ? `1px solid ${brand.ink12}` : 'none',
+                      color: brand.rosePinkDeep,
+                      fontWeight: 500,
+                      fontSize: '0.875rem',
+                      textUnderlineOffset: 4,
+                      '&:hover': { color: brand.ink },
                     }}
                   >
-                    {rating.toFixed(1)}
-                  </Typography>
-                  <Stars value={rating} size={16} label={`${rating.toFixed(1)} / 5`} />
-                </Stack>
-                <Typography data-testid="google-review-count" sx={{ mt: 0.75, fontSize: '0.8125rem', color: brand.ink70 }}>
-                  {place?.total ? `${place.total} ${t.reviews.count}` : t.reviews.read}
-                </Typography>
+                    {t.reviews.write}
+                  </Box>
+                )}
               </Box>
             )}
           </Box>
         </Box>
-
-        {place?.writeReviewUrl && (
-          <Typography sx={{ mt: { xs: 3, md: 2 }, textAlign: { xs: 'left', md: 'right' } }}>
-            <Box
-              component="a"
-              href={place.writeReviewUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              sx={{ color: brand.rosePinkDeep, fontWeight: 500, textUnderlineOffset: 4 }}
-            >
-              {t.reviews.write}
-            </Box>
-          </Typography>
-        )}
       </Container>
     </Box>
   );

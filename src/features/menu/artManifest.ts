@@ -17,6 +17,9 @@ export const ART_MANIFEST: Record<string, string[]> = {
   "acai-bowl": [
     "na-sit-in"
   ],
+  "almond-croissant": [
+    "na-sit-in"
+  ],
   "americano": [
     "hot-sit-in",
     "hot-takeaway",
@@ -54,6 +57,15 @@ export const ART_MANIFEST: Record<string, string[]> = {
     "iced-sit-in",
     "iced-takeaway"
   ],
+  "chia-mango": [
+    "na-sit-in"
+  ],
+  "chia-strawberry": [
+    "na-sit-in"
+  ],
+  "cinnamon-swirl": [
+    "na-sit-in"
+  ],
   "coca-cola": [
     "na-takeaway"
   ],
@@ -76,6 +88,9 @@ export const ART_MANIFEST: Record<string, string[]> = {
     "hot-takeaway",
     "iced-sit-in"
   ],
+  "croissant": [
+    "na-sit-in"
+  ],
   "espresso": [
     "hot-sit-in",
     "hot-takeaway"
@@ -97,10 +112,16 @@ export const ART_MANIFEST: Record<string, string[]> = {
     "iced-sit-in",
     "iced-takeaway"
   ],
+  "gluten-free-brownie": [
+    "na-sit-in"
+  ],
   "gym-nut": [
     "iced-can",
     "iced-sit-in",
     "iced-takeaway"
+  ],
+  "ham-cheese-croissant": [
+    "na-sit-in"
   ],
   "hot-chocolate": [
     "hot-sit-in",
@@ -129,6 +150,9 @@ export const ART_MANIFEST: Record<string, string[]> = {
     "hot-sit-in",
     "hot-takeaway"
   ],
+  "pain-au-chocolat": [
+    "na-sit-in"
+  ],
   "pink-chai-latte": [
     "hot-sit-in",
     "hot-takeaway",
@@ -138,6 +162,9 @@ export const ART_MANIFEST: Record<string, string[]> = {
   ],
   "powerade": [
     "na-takeaway"
+  ],
+  "raisin-butter-swirl": [
+    "na-sit-in"
   ],
   "sparkling-water": [
     "na-takeaway"
@@ -212,7 +239,11 @@ export const SYRUP_ART: Record<string, string> = {
  * rather than a cup floating on colour. See ./drinkArt's `isSceneFrame`.
  */
 export const SCENE_FRAMES: string[] = [
+  "almond-croissant/na-sit-in",
   "americano/iced-can",
+  "gluten-free-brownie/na-sit-in",
   "matcha-latte/iced-sit-in",
+  "pain-au-chocolat/na-sit-in",
+  "raisin-butter-swirl/na-sit-in",
   "ube-matcha-latte/iced-can"
 ];
