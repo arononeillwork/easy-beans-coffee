@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Box from '@mui/material/Box';
 import logo from '@/assets/logo.png';
 import { cafeDay, type PriceBook } from '@/features/menu/priceBook';
-import { formatMenuPrice } from '@/features/order/lib/price';
 import type { DayHours } from '@/shared/lib/openingHours';
 import { clockLabel } from '@/shared/lib/openNow';
 import { brand } from '@/theme/brand';
@@ -36,8 +35,10 @@ const POPPINS = 'var(--font-poppins), sans-serif';
 
 const INSTAGRAM_HANDLE = '@easy.beans.coffee';
 
-/** The printed menus' dark roast brown — outlines, names and prices. */
+/** The printed menus' dark roast brown — names and prices. */
 const ESPRESSO = '#3B2A20';
+/** Card outline: the same brown, light enough to frame without shouting. */
+const CARD_BORDER = 'rgba(59, 42, 32, 0.30)';
 const ESPRESSO_SOFT = 'rgba(59, 42, 32, 0.62)';
 
 /**
@@ -58,7 +59,7 @@ const CARD_STYLE: Record<Section, {
   smoothies: { title: 'Smoothies', color: brand.rosePinkDeep, desc: 'tagline' },
   cold: { title: 'Bebidas Frías', color: ESPRESSO, desc: 'options' },
   bakery: { title: 'Bollería', color: ESPRESSO },
-  food: { title: 'Comida', color: brand.rosePinkDeep, fill: brand.rosePinkTint, outline: brand.rosePink, desc: 'both' },
+  food: { title: 'Comida', color: brand.rosePinkDeep, fill: brand.rosePinkTint, outline: 'rgba(247, 155, 164, 0.75)', desc: 'both' },
 };
 
 /** The hand-tuned column split that keeps the whole list above the fold. */
@@ -164,11 +165,14 @@ export function DisplayBoard({
       sx={{
         position: 'fixed',
         inset: 0,
-        display: 'grid',
-        gridTemplateRows: 'auto minmax(0, 1fr) auto auto',
         backgroundColor: brand.cream,
         color: ESPRESSO,
-        overflow: 'hidden',
+        overflowX: 'hidden',
+        overflowY: 'auto',
+        scrollbarWidth: 'none',
+        '&::-webkit-scrollbar': { display: 'none' },
+        display: 'flex',
+        justifyContent: 'center',
         '@keyframes board-in': {
           from: { opacity: 0, transform: 'translateY(2vh)' },
           to: { opacity: 1, transform: 'translateY(0)' },
@@ -182,20 +186,36 @@ export function DisplayBoard({
         },
       }}
     >
+      {/* The board holds the printed page's portrait proportion on every
+          screen: never wider than 0.58 of the viewport height, centered with
+          auto margins, one even breath of padding top and bottom. Every
+          internal size is vh-derived, so the capped width keeps the layout
+          identical from a phone to the shop TV — and on a landscape monitor
+          it stands as a centered portrait column on cream. */}
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: 'calc(100svh * 0.58)',
+          marginInline: 'auto',
+          minHeight: '100%',
+          minWidth: 0,
+          display: 'grid',
+          gridTemplateRows: 'auto 1fr auto auto',
+          py: 'clamp(10px, 1.4vh, 26px)',
+        }}
+      >
       <Header nowMs={nowMs} timezone={timezone} />
 
       {/* Two hand-balanced columns of cards: the split is chosen so the whole
           list fits one screen with nothing under the fold. */}
       <Box
         sx={{
-          minHeight: 0,
           minWidth: 0,
-          overflow: 'hidden',
           display: 'grid',
           gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
-          columnGap: 'clamp(14px, 2.6vw, 40px)',
+          columnGap: 'clamp(12px, 1.5vh, 32px)',
           alignItems: 'start',
-          px: 'clamp(16px, 3.5vw, 56px)',
+          px: 'clamp(14px, 2vh, 40px)',
           animation: 'board-in 700ms cubic-bezier(.16,1,.3,1) both',
         }}
       >
@@ -210,6 +230,7 @@ export function DisplayBoard({
 
       <StickerStrip />
       <Footer />
+      </Box>
     </Box>
   );
 }
@@ -222,7 +243,7 @@ function StickerStrip() {
         display: 'flex',
         alignItems: 'flex-end',
         justifyContent: 'space-evenly',
-        px: 'clamp(16px, 6vw, 90px)',
+        px: 'clamp(16px, 3.5vh, 70px)',
         pt: 'clamp(2px, 0.4vh, 8px)',
       }}
     >
@@ -266,12 +287,12 @@ function Header({ nowMs, timezone }: { nowMs: number | null; timezone: string })
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: 2,
-        px: 'clamp(16px, 3.5vw, 56px)',
-        pt: 'clamp(6px, 1vh, 16px)',
+        px: 'clamp(14px, 2vh, 40px)',
+        pt: 0,
         pb: 'clamp(5px, 0.8vh, 12px)',
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 'clamp(10px, 1.2vw, 20px)' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 'clamp(8px, 0.7vh, 16px)' }}>
         <Image src={logo} alt="Easy Beans Coffee" style={{ width: 'clamp(44px, 6.2vh, 88px)', height: 'auto' }} priority />
         <Box
           sx={{
@@ -314,7 +335,7 @@ function SectionCard({ section }: { section: DisplaySection }) {
           textTransform: 'uppercase',
           fontSize: 'clamp(0.74rem, 1.7vh, 1.2rem)',
           mb: 'clamp(2px, 0.4vh, 7px)',
-          pl: 'clamp(2px, 0.3vw, 6px)',
+          pl: 'clamp(2px, 0.2vh, 5px)',
         }}
       >
         {style.title}
@@ -322,10 +343,10 @@ function SectionCard({ section }: { section: DisplaySection }) {
 
       <Box
         sx={{
-          border: `2px solid ${style.outline ?? ESPRESSO}`,
+          border: `1px solid ${style.outline ?? CARD_BORDER}`,
           borderRadius: 'clamp(12px, 1.8vh, 22px)',
           backgroundColor: style.fill ?? 'transparent',
-          px: 'clamp(10px, 1.6vw, 26px)',
+          px: 'clamp(10px, 1vh, 22px)',
           py: 'clamp(4px, 0.7vh, 12px)',
         }}
       >
@@ -344,9 +365,20 @@ function SectionCard({ section }: { section: DisplaySection }) {
 }
 
 /** Both price columns share this width so the numbers rule up vertically. */
-const PRICE_COL_WIDTH = 'clamp(42px, 4.4vw, 76px)';
+const PRICE_COL_WIDTH = 'clamp(32px, 2vh, 56px)';
+
 /** Daylight between caliente and frío, so €3,80 €4,80 never reads as one number. */
-const PRICE_COL_GAP = 'clamp(5px, 0.7vw, 12px)';
+const PRICE_COL_GAP = 'clamp(5px, 0.4vh, 10px)';
+
+
+/**
+ * Menu-wall numbers, as the eye wants them: whole euros bare ("4"), the rest
+ * with both cents ("4.50"). The sign would repeat forty times on one screen,
+ * so it is left to the board's context — exactly like a chalkboard.
+ */
+function displayPrice(cents: number): string {
+  return cents % 100 === 0 ? String(cents / 100) : (cents / 100).toFixed(2);
+}
 
 function ColLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -375,7 +407,7 @@ function Row({ row, tempCols, desc }: { row: DisplayRow; tempCols: boolean; desc
         opacity: row.soldOut ? 0.45 : 1,
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 'clamp(6px, 0.8vw, 14px)' }}>
+      <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 'clamp(5px, 0.5vh, 12px)' }}>
         {/* Long names wrap, exactly as the printed card does — "Tostada,
             mantequilla y mermelada" takes two lines there too. */}
         <Box
@@ -394,7 +426,7 @@ function Row({ row, tempCols, desc }: { row: DisplayRow; tempCols: boolean; desc
         <RowPriceCells price={row.price} soldOut={row.soldOut} tempCols={tempCols} />
       </Box>
       {description && (
-        <Box sx={{ color: ESPRESSO_SOFT, fontSize: 'clamp(0.55rem, 1.2vh, 0.85rem)', lineHeight: 1.28, pr: 'clamp(6px, 0.8vw, 14px)' }}>
+        <Box sx={{ color: ESPRESSO_SOFT, fontSize: 'clamp(0.55rem, 1.2vh, 0.85rem)', lineHeight: 1.28, pr: 'clamp(5px, 0.5vh, 12px)' }}>
           {description}
         </Box>
       )}
@@ -412,7 +444,7 @@ function RowPriceCells({ price, soldOut, tempCols }: { price: RowPrice; soldOut:
     );
   }
 
-  const cell = (cents: number | undefined) => (cents === undefined ? '—' : formatMenuPrice(cents));
+  const cell = (cents: number | undefined) => (cents === undefined ? '—' : displayPrice(cents));
 
   if (tempCols) {
     // A single-priced drink in a column card (espresso, tea) sits under
@@ -455,8 +487,9 @@ function Footer() {
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: 2,
-        px: 'clamp(16px, 3.5vw, 56px)',
-        py: 'clamp(5px, 0.8vh, 13px)',
+        px: 'clamp(14px, 2vh, 40px)',
+        pt: 'clamp(4px, 0.6vh, 10px)',
+        pb: 0,
       }}
     >
       <Box sx={{ color: brand.rosePinkDeep, fontWeight: 600, fontSize: 'clamp(0.75rem, 1.8vh, 1.2rem)' }}>
