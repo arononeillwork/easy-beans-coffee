@@ -29,7 +29,25 @@ const SCENE_MASK = {
   md: 'linear-gradient(to right, transparent 0%, #000 14%), linear-gradient(to bottom, transparent 0%, #000 12%)',
 };
 
-function StepPill({ n, text, bg, href }: { n: number; text: string; bg: string; href?: string }) {
+/**
+ * A TV mounted on its side. The side-by-side layout leaves most of a tall
+ * screen empty, so the in-café display stacks everything in one centred
+ * column instead, sized off the screen width so it reads from across the room.
+ */
+const PORTRAIT = '@media (orientation: portrait) and (min-width: 600px)';
+
+/**
+ * Squarer portrait screens (3:4 tablets) leave too little height for a
+ * full-width photo, so there the whole scene is shown, centred, with its
+ * sides faded into the cream instead of cropping the tops off the cans.
+ */
+const PORTRAIT_SQUAT = '@media (orientation: portrait) and (min-width: 600px) and (min-aspect-ratio: 2/3)';
+const SIDE_FADE = 'linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%)';
+
+/** Top and bottom fade for the drinks when they span the full width. */
+const PORTRAIT_MASK = 'linear-gradient(to bottom, transparent 0%, #000 14%, #000 90%, transparent 100%)';
+
+function StepPill({ n, text, bg, href, portrait }: { n: number; text: string; bg: string; href?: string; portrait?: boolean }) {
   return (
     <Box
       {...(href ? { component: 'a' as const, href } : {})}
@@ -51,6 +69,7 @@ function StepPill({ n, text, bg, href }: { n: number; text: string; bg: string; 
         pl: { xs: 1, md: 1.25 },
         pr: { xs: 2.5, md: 3.5 },
         maxWidth: '100%',
+        ...(portrait && { [PORTRAIT]: { gap: '2.2vw', py: '1.3vw', pl: '1.3vw', pr: '4vw' } }),
       }}
     >
       <Box
@@ -66,13 +85,21 @@ function StepPill({ n, text, bg, href }: { n: number; text: string; bg: string; 
           placeItems: 'center',
           fontWeight: 600,
           fontSize: { xs: '1rem', md: 'clamp(1rem, 1.5vw, 1.6rem)' },
+          ...(portrait && { [PORTRAIT]: { width: '7vw', height: '7vw', fontSize: '3.4vw' } }),
         }}
       >
         {n}
       </Box>
       <Box
         component="span"
-        sx={{ color: ESPRESSO, fontWeight: 600, fontSize: { xs: '1.05rem', md: 'clamp(1rem, 1.45vw, 1.8rem)' }, lineHeight: 1.2, whiteSpace: 'nowrap' }}
+        sx={{
+          color: ESPRESSO,
+          fontWeight: 600,
+          fontSize: { xs: '1.05rem', md: 'clamp(1rem, 1.45vw, 1.8rem)' },
+          lineHeight: 1.2,
+          whiteSpace: 'nowrap',
+          ...(portrait && { [PORTRAIT]: { fontSize: '3.9vw' } }),
+        }}
       >
         {text}
       </Box>
@@ -122,11 +149,25 @@ export function CompetitionPoster({
         px: { xs: 2.5, sm: 4, md: '4vw' },
         pt: { xs: 4, md: 'clamp(24px, 4.5vh, 64px)' },
         pb: { xs: 4, md: 'clamp(20px, 3.5vh, 48px)' },
+        ...(isScreen && {
+          [PORTRAIT]: {
+            height: '100svh',
+            minHeight: 0,
+            gridTemplateColumns: '1fr',
+            gridTemplateAreas: '"head" "stage" "steps" "foot"',
+            gridTemplateRows: 'auto minmax(0, 1fr) auto auto',
+            columnGap: 0,
+            paddingLeft: '6vw',
+            paddingRight: '6vw',
+            paddingTop: '5vh',
+            paddingBottom: '3.5vh',
+          },
+        }),
       }}
     >
 
       {/* Headline */}
-      <Box sx={{ gridArea: 'head', textAlign: { xs: 'center', md: 'left' }, position: 'relative', zIndex: 5 }}>
+      <Box sx={{ gridArea: 'head', textAlign: { xs: 'center', md: 'left' }, position: 'relative', zIndex: 5, ...(isScreen && { [PORTRAIT]: { textAlign: 'center' } }) }}>
         <Box
           component="h1"
           id="competition-headline"
@@ -139,6 +180,7 @@ export function CompetitionPoster({
             lineHeight: 0.95,
             fontSize: { xs: 'clamp(3.6rem, 19vw, 6rem)', md: 'clamp(3.6rem, 7vw, 10rem)' },
             whiteSpace: 'nowrap',
+            ...(isScreen && { [PORTRAIT]: { fontSize: '15vw' } }),
           }}
         >
           {c.posterHeadline}
@@ -154,6 +196,7 @@ export function CompetitionPoster({
             letterSpacing: '-0.02em',
             fontSize: { xs: 'clamp(1.5rem, 7.4vw, 2.4rem)', md: 'clamp(1.5rem, 2.8vw, 4rem)' },
             lineHeight: 1.1,
+            ...(isScreen && { [PORTRAIT]: { fontSize: '6.2vw', marginTop: '0.6vh' } }),
           }}
         >
           {c.posterSub}
@@ -188,12 +231,59 @@ export function CompetitionPoster({
           mr: { md: '-4vw' },
           mb: { md: 'calc(-1 * clamp(20px, 3.5vh, 48px))' },
           maxWidth: { md: 'calc(100% + 4vw)' },
+          // Portrait display: the drinks take all the height left between the
+          // headline and the steps, edge to edge.
+          ...(isScreen && {
+            [PORTRAIT]: {
+              alignSelf: 'stretch',
+              justifySelf: 'stretch',
+              width: 'auto',
+              maxWidth: 'none',
+              aspectRatio: 'auto',
+              marginLeft: '-6vw',
+              marginRight: '-6vw',
+              marginTop: '1.5vh',
+              marginBottom: 0,
+              WebkitMaskImage: PORTRAIT_MASK,
+              maskImage: PORTRAIT_MASK,
+              '& img': { objectPosition: 'center 78%' },
+            },
+          }),
         }}
       >
-        <Box sx={{ position: 'absolute', inset: 0, display: { xs: 'block', md: 'none' } }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            display: { xs: 'block', md: 'none' },
+            ...(isScreen && {
+              [PORTRAIT]: { display: 'none' },
+              [PORTRAIT_SQUAT]: {
+                display: 'block',
+                inset: 'auto',
+                top: 0,
+                bottom: 0,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                height: '100%',
+                aspectRatio: '1828 / 1190',
+                maxWidth: '100%',
+                WebkitMaskImage: SIDE_FADE,
+                maskImage: SIDE_FADE,
+              },
+            }),
+          }}
+        >
           <Image src="/media/competition/drinks-scene.png" alt={SCENE_ALT} fill priority sizes="100vw" style={{ objectFit: 'cover' }} />
         </Box>
-        <Box sx={{ position: 'absolute', inset: 0, display: { xs: 'none', md: 'block' } }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            display: { xs: 'none', md: 'block' },
+            ...(isScreen && { [PORTRAIT]: { display: 'block' }, [PORTRAIT_SQUAT]: { display: 'none' } }),
+          }}
+        >
           <Image src="/media/competition/drinks-scene-tall.png" alt={SCENE_ALT} fill priority sizes="62vw" style={{ objectFit: 'cover' }} />
         </Box>
       </Box>
@@ -209,12 +299,13 @@ export function CompetitionPoster({
           mt: { xs: 3, md: '2.6vw' },
           position: 'relative',
           zIndex: 5,
+          ...(isScreen && { [PORTRAIT]: { alignItems: 'center', gap: '1.4vh', marginTop: '2.5vh' } }),
         }}
       >
-        <StepPill n={1} text={c.posterStep1} bg={brand.rosePinkTint} />
+        <StepPill n={1} text={c.posterStep1} bg={brand.rosePinkTint} portrait={isScreen} />
         {/* On the web page step 2 is a button straight to the form; on the
             in-café display it stays a label beside the QR code. */}
-        <StepPill n={2} text={c.posterStep2} bg={brand.lilacTint} href={isScreen ? undefined : '#enter'} />
+        <StepPill n={2} text={c.posterStep2} bg={brand.lilacTint} href={isScreen ? undefined : '#enter'} portrait={isScreen} />
 
         {/* Web page (phone + desktop): visitors are already here, so a button
             to the form instead of a QR code. */}
@@ -248,14 +339,24 @@ export function CompetitionPoster({
           textAlign: { xs: 'center', md: 'left' },
           position: 'relative',
           zIndex: 5,
+          ...(isScreen && { [PORTRAIT]: { textAlign: 'center', marginTop: '3vh' } }),
         }}
       >
-        <Box sx={{ display: isScreen ? 'flex' : 'none', justifyContent: { xs: 'center', md: 'flex-start' }, alignItems: 'center', gap: { xs: 2, md: '1.6vw' }, mb: { xs: 2, md: '2.2vw' } }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+        <Box
+          sx={{
+            display: isScreen ? 'flex' : 'none',
+            justifyContent: { xs: 'center', md: 'flex-start' },
+            alignItems: 'center',
+            gap: { xs: 2, md: '1.6vw' },
+            mb: { xs: 2, md: '2.2vw' },
+            [PORTRAIT]: { justifyContent: 'center', gap: '3.5vw', marginBottom: '2.5vh' },
+          }}
+        >
+          <Box
+            component="img"
             src="/media/competition/qr.svg"
             alt={c.qrAlt}
-            style={{
+            sx={{
               width: 'clamp(120px, 11vw, 280px)',
               height: 'auto',
               aspectRatio: '1',
@@ -265,14 +366,17 @@ export function CompetitionPoster({
               background: '#FFFFFF',
               borderRadius: 'clamp(16px, 1.6vw, 36px)',
               boxShadow: '0 8px 24px rgba(59,42,32,0.10)',
+              [PORTRAIT]: { width: '22vw', padding: '2vw', borderRadius: '2.8vw' },
             }}
           />
-          <Box sx={{ color: ESPRESSO, fontWeight: 600, fontSize: 'clamp(1.1rem, 1.7vw, 2rem)' }}>{c.scanToEnter}</Box>
+          <Box sx={{ color: ESPRESSO, fontWeight: 600, fontSize: 'clamp(1.1rem, 1.7vw, 2rem)', ...(isScreen && { [PORTRAIT]: { fontSize: '4.6vw' } }) }}>
+            {c.scanToEnter}
+          </Box>
         </Box>
-        <Box sx={{ color: ESPRESSO, fontWeight: 600, fontSize: { xs: '0.95rem', md: 'clamp(0.95rem, 1.15vw, 1.4rem)' } }}>
+        <Box sx={{ color: ESPRESSO, fontWeight: 600, fontSize: { xs: '0.95rem', md: 'clamp(0.95rem, 1.15vw, 1.4rem)' }, ...(isScreen && { [PORTRAIT]: { fontSize: '2.5vw' } }) }}>
           Easy Beans Coffee · San Pedro
         </Box>
-        <Box sx={{ mt: 0.5, color: ESPRESSO, opacity: 0.85, fontSize: { xs: '0.85rem', md: 'clamp(0.85rem, 0.95vw, 1.15rem)' } }}>
+        <Box sx={{ mt: 0.5, color: ESPRESSO, opacity: 0.85, fontSize: { xs: '0.85rem', md: 'clamp(0.85rem, 0.95vw, 1.15rem)' }, ...(isScreen && { [PORTRAIT]: { fontSize: '1.9vw' } }) }}>
           {c.monthlyDraw} ·{' '}
           <Box component="a" href={termsHref} sx={{ color: 'inherit', textUnderlineOffset: '3px' }}>
             {c.termsShort}

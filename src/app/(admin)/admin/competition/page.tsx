@@ -7,6 +7,7 @@ import { drawMonthFor } from '@/server/competition/drawMonth';
 import { monthLabel } from '@/server/email/competitionEmails';
 import { prizeCents } from '@/server/competition/giftCard';
 import { CopyButton } from './CopyButton';
+import { SubmitButton } from './SubmitButton';
 import { dmText } from '@/server/competition/dmText';
 
 export const dynamic = 'force-dynamic';
@@ -40,8 +41,10 @@ async function act(formData: FormData) {
   if (!/^\d{4}-\d{2}-01$/.test(month) || !(await canManage(month, token))) back(token, 'Not allowed.');
 
   if (action === 'approve' || action === 'approve-manual') {
+    const current = await getDraw(month);
+    if (current?.status === 'approved') back(token, '✓ Already approved — the winner has been emailed. Nothing more to do.');
     const r = await approve(month, { manualCard: action === 'approve-manual' });
-    back(token, r.ok ? (r.error ?? 'Approved. The winner has been emailed their gift card.') : (r.error ?? 'Could not approve.'));
+    back(token, r.ok ? (r.error ?? '✓ Approved. The €10 gift card was created in Square and emailed to the winner.') : (r.error ?? 'Could not approve.'));
   }
   if (action === 'redraw') {
     const d = await redraw(month);
@@ -86,7 +89,7 @@ const STYLES = `
   form.inline { display:inline; }
   button { border:0; border-radius:999px; padding:12px 18px; font-weight:600; font-size:15px; cursor:pointer; margin:6px 8px 0 0; }
   .primary { background:#3B2A20; color:#F7ECE4; } .light { background:#F3DED3; color:#3B2A20; } .link { background:none; color:#A85A68; padding:8px 0; font-size:13px; }
-  .msg { background:#3B2A20; color:#F7ECE4; border-radius:12px; padding:12px 16px; margin:0 0 16px; font-size:14px; }
+  .msg { background:#4F6C39; color:#fff; border-radius:12px; padding:14px 16px; margin:0 0 16px; font-size:15px; font-weight:600; }
   .err { color:#B3261E; font-size:13px; margin-top:8px; }
   table { width:100%; border-collapse:collapse; font-size:13px; } td, th { text-align:left; padding:8px 6px; border-bottom:1px solid #F3DED3; } th { color:rgba(26,26,26,.5); font-weight:500; }
   dl { display:grid; grid-template-columns:auto 1fr; gap:6px 14px; font-size:14px; margin:12px 0 0; } dt { color:rgba(26,26,26,.55); }
@@ -103,15 +106,20 @@ function Shell({ children }: { children: React.ReactNode }) {
   );
 }
 
+const BUSY: Record<string, string> = {
+  approve: 'Creating gift card & emailing winner…',
+  'approve-manual': 'Emailing winner…',
+  redraw: 'Drawing again…',
+  instagram: 'Posting…',
+};
+
 function Btn({ month, token, action, label, kind = 'primary' }: { month: string; token: string | null; action: string; label: string; kind?: string }) {
   return (
     <form className="inline" action={act}>
       <input type="hidden" name="month" value={month} />
       {token && <input type="hidden" name="t" value={token} />}
       <input type="hidden" name="action" value={action} />
-      <button className={kind} type="submit">
-        {label}
-      </button>
+      <SubmitButton kind={kind} label={label} busy={BUSY[action] ?? 'Working…'} />
     </form>
   );
 }
