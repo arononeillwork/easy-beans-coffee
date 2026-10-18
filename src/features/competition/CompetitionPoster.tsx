@@ -169,9 +169,24 @@ export function CompetitionPoster({
       sx={{
         position: 'relative',
         overflow: 'hidden',
+        // In-café display: pinned to the edges of the screen, so it fills it in
+        // every browser. Sizing by viewport units (svh) left a pale band along
+        // the bottom wherever a browser reports them smaller than the screen —
+        // TV and older browsers, or tablets whose toolbars hide.
+        ...(isScreen && {
+          position: 'fixed',
+          inset: 0,
+          overflowX: 'hidden',
+          // Small windows stack the poster taller than the screen: let it scroll.
+          overflowY: { xs: 'auto', md: 'hidden' },
+          // Stacked (small window) layout keeps its rows packed at the top as
+          // before; the fixed box only adds background below, rather than
+          // stretching the drinks photo to fill the height.
+          alignContent: { xs: 'start', md: 'normal' },
+        }),
         // Warm cream with a soft light pool, like the poster's morning light.
         background: 'radial-gradient(120% 90% at 70% 15%, #FCF5EC 0%, #FAF0E5 55%, #F4E6D7 100%)',
-        height: { md: `calc(100svh - ${above})` },
+        height: isScreen ? 'auto' : { md: `calc(100svh - ${above})` },
         minHeight: isScreen ? { md: 600 } : phoneFit('svh'),
         // Browsers without svh (pre-2022) get the same fit from vh.
         ...(!isScreen && { '@supports not (height: 1svh)': { minHeight: phoneFit('vh') } }),
@@ -185,7 +200,7 @@ export function CompetitionPoster({
         pb: { xs: 4, md: 'clamp(20px, 3.5vh, 48px)' },
         ...(isScreen && {
           [PORTRAIT]: {
-            height: '100svh',
+            height: 'auto',
             minHeight: 0,
             gridTemplateColumns: '1fr',
             gridTemplateAreas: '"head" "stage" "steps" "foot"',
@@ -249,7 +264,7 @@ export function CompetitionPoster({
           width: {
             xs: 'calc(100% + 40px)',
             sm: 'calc(100% + 64px)',
-            md: `min(calc(100% + 4vw), calc((100svh - ${above} - 5vh) * 1.2026))`,
+            md: `min(calc(100% + 4vw), calc((100${isScreen ? 'vh' : 'svh'} - ${above} - 5vh) * 1.2026))`,
           },
           // Phones use the tighter crop; big screens the tall one with the
           // palm-leaf shadow above the drinks.
