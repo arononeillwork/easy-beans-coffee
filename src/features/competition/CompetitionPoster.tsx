@@ -4,6 +4,7 @@ import type { Lang } from '@/i18n/config';
 import { localePath } from '@/i18n/config';
 import { brand } from '@/theme/brand';
 import { competitionCopy } from './copy';
+import { SmoothEnterLinks } from './SmoothEnterLinks';
 
 /**
  * The competition poster, built as a real page section rather than a flat
@@ -46,6 +47,37 @@ const SIDE_FADE = 'linear-gradient(to right, transparent 0%, #000 14%, #000 86%,
 
 /** Top and bottom fade for the drinks when they span the full width. */
 const PORTRAIT_MASK = 'linear-gradient(to bottom, transparent 0%, #000 14%, #000 90%, transparent 100%)';
+
+/**
+ * Phones (web page only). People arrive here from the QR code on the café
+ * screen, so the whole poster — headline, drinks, both steps and "Enter now" —
+ * has to fit on their screen without scrolling. The drinks photo takes
+ * whatever height is left and scales down (never cropped) on short screens.
+ *
+ * The site header and offer bar sit above the poster on phones; the footer
+ * lines are allowed to fall just below the fold.
+ */
+const PHONE_ABOVE = '110px';
+/**
+ * How far the poster may run past the fold: the footer lines and bottom
+ * padding, less a 20px gap under "Enter now". The small print wraps onto two
+ * lines on phones and fits on one from tablet width.
+ */
+const PHONE_FOOT = { xs: '108px', sm: '86px' };
+const phoneFit = (unit: 'svh' | 'vh') => ({
+  xs: `calc(100${unit} - ${PHONE_ABOVE} + ${PHONE_FOOT.xs})`,
+  sm: `calc(100${unit} - ${PHONE_ABOVE} + ${PHONE_FOOT.sm})`,
+  md: 600,
+});
+/** Natural height of the phone crop at full screen width (1828 × 1190). */
+const PHONE_SCENE_MAX_HEIGHT = 'calc(100vw / 1.5361)';
+/**
+ * When the photo has to shrink it no longer reaches the screen edges, so its
+ * sides fade into the cream. At full width the fade is zero (sized off the
+ * stage with container units), so tall phones look exactly as before.
+ */
+const PHONE_SIDE_FADE_W = 'clamp(0px, calc((100cqw - 100cqh * 1.5361) * 0.6), 40px)';
+const PHONE_SIDE_FADE = `linear-gradient(to right, transparent 0, #000 ${PHONE_SIDE_FADE_W}, #000 calc(100% - ${PHONE_SIDE_FADE_W}), transparent 100%)`;
 
 function StepPill({ n, text, bg, href, portrait }: { n: number; text: string; bg: string; href?: string; portrait?: boolean }) {
   return (
@@ -140,14 +172,16 @@ export function CompetitionPoster({
         // Warm cream with a soft light pool, like the poster's morning light.
         background: 'radial-gradient(120% 90% at 70% 15%, #FCF5EC 0%, #FAF0E5 55%, #F4E6D7 100%)',
         height: { md: `calc(100svh - ${above})` },
-        minHeight: { md: 600 },
+        minHeight: isScreen ? { md: 600 } : phoneFit('svh'),
+        // Browsers without svh (pre-2022) get the same fit from vh.
+        ...(!isScreen && { '@supports not (height: 1svh)': { minHeight: phoneFit('vh') } }),
         display: 'grid',
         gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 40fr) minmax(0, 60fr)' },
         gridTemplateAreas: { xs: '"head" "stage" "steps" "foot"', md: '"head stage" "steps stage" "foot stage"' },
-        gridTemplateRows: { md: 'auto auto minmax(0, 1fr)' },
+        gridTemplateRows: isScreen ? { md: 'auto auto minmax(0, 1fr)' } : { xs: 'auto minmax(72px, 1fr) auto auto', md: 'auto auto minmax(0, 1fr)' },
         columnGap: { md: 2 },
         px: { xs: 2.5, sm: 4, md: '4vw' },
-        pt: { xs: 4, md: 'clamp(24px, 4.5vh, 64px)' },
+        pt: { xs: isScreen ? 4 : 'clamp(12px, 4.8svh, 32px)', md: 'clamp(24px, 4.5vh, 64px)' },
         pb: { xs: 4, md: 'clamp(20px, 3.5vh, 48px)' },
         ...(isScreen && {
           [PORTRAIT]: {
@@ -178,7 +212,7 @@ export function CompetitionPoster({
             fontWeight: 600,
             letterSpacing: '-0.03em',
             lineHeight: 0.95,
-            fontSize: { xs: 'clamp(3.6rem, 19vw, 6rem)', md: 'clamp(3.6rem, 7vw, 10rem)' },
+            fontSize: { xs: isScreen ? 'clamp(3.6rem, 19vw, 6rem)' : 'clamp(3.2rem, min(19vw, 12.5svh), 6rem)', md: 'clamp(3.6rem, 7vw, 10rem)' },
             whiteSpace: 'nowrap',
             ...(isScreen && { [PORTRAIT]: { fontSize: '15vw' } }),
           }}
@@ -194,7 +228,7 @@ export function CompetitionPoster({
             fontFamily: 'var(--font-poppins), sans-serif',
             fontWeight: 600,
             letterSpacing: '-0.02em',
-            fontSize: { xs: 'clamp(1.5rem, 7.4vw, 2.4rem)', md: 'clamp(1.5rem, 2.8vw, 4rem)' },
+            fontSize: { xs: isScreen ? 'clamp(1.5rem, 7.4vw, 2.4rem)' : 'clamp(1.25rem, min(7.4vw, 4.6svh), 2.4rem)', md: 'clamp(1.5rem, 2.8vw, 4rem)' },
             lineHeight: 1.1,
             ...(isScreen && { [PORTRAIT]: { fontSize: '6.2vw', marginTop: '0.6vh' } }),
           }}
@@ -220,11 +254,20 @@ export function CompetitionPoster({
           // Phones use the tighter crop; big screens the tall one with the
           // palm-leaf shadow above the drinks.
           aspectRatio: { xs: '1828 / 1190', md: '1828 / 1520' },
+          // Phones (web page): fill the row left over, up to the photo's
+          // natural height, centred in it.
+          ...(!isScreen && {
+            aspectRatio: { xs: 'auto', md: '1828 / 1520' },
+            height: { xs: '100%', md: 'auto' },
+            maxHeight: { xs: PHONE_SCENE_MAX_HEIGHT, md: 'none' },
+            alignSelf: { xs: 'center', md: 'end' },
+            containerType: { xs: 'size', md: 'normal' },
+          }),
           WebkitMaskImage: SCENE_MASK,
           maskImage: SCENE_MASK,
           WebkitMaskComposite: 'source-in',
           maskComposite: 'intersect',
-          mt: { xs: 2, md: 0 },
+          mt: { xs: isScreen ? 2 : 'clamp(6px, 2svh, 16px)', md: 0 },
           // Bleed to the screen edges: both sides on phones, right and bottom
           // on big screens (undoing the section's padding).
           mx: { xs: -2.5, sm: -4, md: 0 },
@@ -256,6 +299,19 @@ export function CompetitionPoster({
             position: 'absolute',
             inset: 0,
             display: { xs: 'block', md: 'none' },
+            // Phones (web page): the whole scene, scaled to the height it gets.
+            ...(!isScreen && {
+              inset: 'auto',
+              top: 0,
+              bottom: 0,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              height: '100%',
+              aspectRatio: '1828 / 1190',
+              maxWidth: '100%',
+              WebkitMaskImage: PHONE_SIDE_FADE,
+              maskImage: PHONE_SIDE_FADE,
+            }),
             ...(isScreen && {
               [PORTRAIT]: { display: 'none' },
               [PORTRAIT_SQUAT]: {
@@ -295,8 +351,8 @@ export function CompetitionPoster({
           display: 'flex',
           flexDirection: 'column',
           alignItems: { xs: 'center', md: 'flex-start' },
-          gap: { xs: 1.25, md: '1.1vw' },
-          mt: { xs: 3, md: '2.6vw' },
+          gap: { xs: isScreen ? 1.25 : 'clamp(8px, 1.6svh, 10px)', md: '1.1vw' },
+          mt: { xs: isScreen ? 3 : 'clamp(10px, 3.6svh, 24px)', md: '2.6vw' },
           position: 'relative',
           zIndex: 5,
           ...(isScreen && { [PORTRAIT]: { alignItems: 'center', gap: '1.4vh', marginTop: '2.5vh' } }),
@@ -315,7 +371,7 @@ export function CompetitionPoster({
           sx={{
             display: isScreen ? 'none' : 'inline-flex',
             '&:hover': { backgroundColor: '#24180f' },
-            mt: 1.5,
+            mt: { xs: 'clamp(4px, 1.6svh, 12px)', md: 1.5 },
             px: 4,
             py: 1.6,
             borderRadius: 999,
@@ -329,6 +385,8 @@ export function CompetitionPoster({
           {c.enterNow} ↓
         </Box>
       </Box>
+
+      {!isScreen && <SmoothEnterLinks />}
 
       {/* Footer: QR (in-café display only) + small print */}
       <Box

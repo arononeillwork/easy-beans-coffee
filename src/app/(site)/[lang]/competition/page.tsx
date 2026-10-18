@@ -41,8 +41,9 @@ export default async function CompetitionPage({
         <Box
           id="enter"
           sx={{
-            // Clear the sticky header when jumped to from the poster buttons.
-            scrollMarginTop: { xs: 80, md: 100 },
+            // Clear the sticky offer bar + header (110px phone, 120px desktop)
+            // when jumped to from the poster buttons, with a little air.
+            scrollMarginTop: { xs: 126, md: 140 },
             backgroundColor: brand.white,
             borderRadius: `${radius.xl}px`,
             p: { xs: 2.5, sm: 4 },
