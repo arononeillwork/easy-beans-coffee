@@ -192,14 +192,28 @@ test.describe('drink studio', () => {
     await expect(order.price()).toContainText('€6,50');
   });
 
-  test('stands in for anything not photographed yet', async ({ page }) => {
+  test('shows the bakery photographed, and stands in for anything not yet', async ({ page }) => {
     const order = await openStudio(page);
     await order.menuGroup('Comida').click();
     await order.section('Bollería').click();
 
     await expect(order.drinkName()).toHaveText('Croissant');
-    await expect(order.photo('croissant')).toHaveCount(0);
+    await expect(order.photo('croissant')).toHaveAttribute('src', '/media/drinks/croissant/na-sit-in.webp');
+
+    // The cheesecake has no shot yet.
+    await order.railEntry('Tarta de Pistacho').click();
+    await expect(order.drinkName()).toHaveText('Tarta de Pistacho');
+    await expect(order.photo('pistachio-cheesecake')).toHaveCount(0);
     await expect(page.getByText('Foto muy pronto').first()).toBeVisible();
+  });
+
+  test('photographs the chia parfait per flavour', async ({ page }) => {
+    const order = await openStudio(page);
+    await order.menuGroup('Comida').click();
+    await order.section('Comida').click();
+    await order.railEntry('Parfait de Chía').click();
+
+    await expect(order.photo('chia-fruit-parfait')).toHaveAttribute('src', '/media/drinks/chia-strawberry/na-sit-in.webp');
   });
 
   test('withholds the price rather than guessing when Square has none', async ({ page }) => {

@@ -23,11 +23,6 @@ export const en = {
     orderCta: 'Order for collection',
     account: 'Account',
   },
-  /** Shared controls for the autoplaying films, used by every video slot. */
-  media: {
-    play: 'Play',
-    pause: 'Pause',
-  },
   /** The launch bar above the header. Opens the same subscribe modal as the popup. */
   banner: {
     text: 'Subscribe: 10% off your online orders.',
@@ -43,16 +38,15 @@ export const en = {
     'Order ahead, skip the queue',
   ],
   video: {
-    headline: 'One small room, all day long.',
-    body: 'Counter, grinder, terrace. Filmed on a normal Tuesday.',
+    headline: 'Small café, big days.',
+    body: 'From the first grind of the morning to the last coffee on the terrace — this is a day at Easy Beans.',
     cta: 'More on Instagram',
     label: 'A normal day at Easy Beans: counter, grinder and terrace',
   },
   hero: {
-    eyebrow: 'San Pedro de Alcántara',
-    headline: 'Canned in front of you.',
+    headline: 'Fresh. Sealed. Yours.',
     /** The headline as it is set: one phrase per line. */
-    lines: ['Canned', 'in front', 'of you.'],
+    lines: ['Fresh.', 'Sealed.', 'Yours.'],
     sub: 'Specialty coffee, matcha and healthy drinks — made exactly the same way every time.',
     ctaOrder: 'Order for collection',
     ctaMenu: 'See the menu',
@@ -76,16 +70,16 @@ export const en = {
   },
   story: {
     title: 'About us',
-    headline: 'Two Irish lads, one small room on Calle Pizarro.',
+    headline: 'An idea born in Ireland, brought to life in Spain.',
     body: 'Irish-owned specialty café in San Pedro de Alcántara.',
     paragraphs: [
-      'We opened in April 2026 with one fixed idea: every coffee, matcha and ube comes out the same, every time.',
-      'The espresso is dialled in every morning, the matcha is whisked to order and the ube is cooked here.',
+      'We opened our doors in April 2026 with one promise: your coffee, matcha or ube should taste just as good on your tenth visit as on your first.',
+      'So our espresso is dialled in fresh every morning, every matcha is whisked to order, and our ube is made from scratch, right here behind the counter.',
     ],
     photoAlt: 'The Easy Beans terrace on Calle Pizarro',
   },
   can: {
-    line: 'Any cold drink, sealed in a can at the counter.',
+    line: 'Any iced drink, sealed fresh in a can while you watch.',
     alt: 'An iced latte in an Easy Beans can, held on the terrace',
   },
   /** Names for the allergen table on the menu page. */
@@ -218,8 +212,8 @@ export const en = {
     ],
   },
   newsletter: {
-    headline: 'Events and tastings',
-    body: 'One email when something is on.',
+    headline: 'Be first to the next tasting',
+    body: 'Coffee tastings, new drinks and café events — one email when something is coming up. No spam, ever.',
     emailLabel: 'Email',
     placeholder: 'you@example.com',
     cta: 'Sign up',

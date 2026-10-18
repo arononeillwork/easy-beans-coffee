@@ -20,10 +20,6 @@ export const es: SiteContent = {
     orderCta: 'Pedir para recoger',
     account: 'Mi cuenta',
   },
-  media: {
-    play: 'Reproducir',
-    pause: 'Pausar',
-  },
   banner: {
     text: 'Suscríbete: 10% en tus pedidos online.',
     cta: 'Suscribirme',
@@ -38,16 +34,15 @@ export const es: SiteContent = {
     'Pide antes, recoge sin cola',
   ],
   video: {
-    headline: 'Un local pequeño, todo el día.',
-    body: 'Mostrador, molinillo, terraza. Grabado un martes cualquiera.',
+    headline: 'Café pequeño, días grandes.',
+    body: 'Del primer molido de la mañana al último café en la terraza: así es un día en Easy Beans.',
     cta: 'Más en Instagram',
     label: 'Un día normal en Easy Beans: mostrador, molinillo y terraza',
   },
   hero: {
-    eyebrow: 'San Pedro de Alcántara',
-    headline: 'Enlatado delante de ti.',
+    headline: 'Fresco. Sellado. Tuyo.',
     /** The headline as it is set: one phrase per line. */
-    lines: ['Enlatado', 'delante', 'de ti.'],
+    lines: ['Fresco.', 'Sellado.', 'Tuyo.'],
     sub: 'Café de especialidad, matcha y bebidas saludables — hecho igual todas las veces.',
     ctaOrder: 'Pide para recoger',
     ctaMenu: 'Ver el menú',
@@ -68,16 +63,16 @@ export const es: SiteContent = {
   },
   story: {
     title: 'Nosotros',
-    headline: 'Dos irlandeses, un local pequeño en Calle Pizarro.',
+    headline: 'Una idea nacida en Irlanda, hecha realidad en España.',
     body: 'Cafetería de especialidad de dueños irlandeses en San Pedro de Alcántara.',
     paragraphs: [
-      'Abrimos en abril de 2026 con una idea fija: cada café, matcha y ube sale igual, todas las veces.',
-      'El espresso se calibra cada mañana, el matcha se bate al momento y el ube se cocina aquí.',
+      'Abrimos en abril de 2026 con una promesa: tu café, matcha o ube debe saber igual de bien en tu décima visita que en la primera.',
+      'Por eso calibramos el espresso cada mañana, batimos cada matcha al momento y preparamos el ube desde cero, aquí mismo, detrás de la barra.',
     ],
     photoAlt: 'La terraza de Easy Beans en Calle Pizarro',
   },
   can: {
-    line: 'Cualquier bebida fría, sellada en lata en el mostrador.',
+    line: 'Cualquier bebida fría, sellada al momento en lata delante de ti.',
     alt: 'Un latte con hielo en una lata de Easy Beans, en la terraza',
   },
   education: {
@@ -208,8 +203,8 @@ export const es: SiteContent = {
     ],
   },
   newsletter: {
-    headline: 'Eventos y catas',
-    body: 'Un email cuando organizamos algo.',
+    headline: 'Sé el primero en la próxima cata',
+    body: 'Catas de café, bebidas nuevas y eventos en el café: un email cuando se acerque algo. Nunca spam.',
     emailLabel: 'Email',
     placeholder: 'tu@ejemplo.com',
     cta: 'Apuntarme',

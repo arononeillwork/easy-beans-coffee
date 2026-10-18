@@ -687,6 +687,8 @@ const KITCHEN: Drink[] = [
   {
     id: 'chia-fruit-parfait',
     hue: 'ube',
+    // Shot per flavour; strawberry stands for the parfait before one is picked.
+    art: 'chia-strawberry',
     square: 'Chia Fruit Parfait',
     section: 'food',
     family: 'fruit',
@@ -700,8 +702,8 @@ const KITCHEN: Drink[] = [
       by: 'pick',
       label: { en: 'Pick one', es: 'Elige uno' },
       picks: [
-        { id: 'strawberry', square: 'Strawberry', name: { en: 'Strawberry', es: 'Fresa' } },
-        { id: 'mango', square: 'Mango', name: { en: 'Mango', es: 'Mango' } },
+        { id: 'strawberry', square: 'Strawberry', name: { en: 'Strawberry', es: 'Fresa' }, art: 'chia-strawberry' },
+        { id: 'mango', square: 'Mango', name: { en: 'Mango', es: 'Mango' }, art: 'chia-mango' },
       ],
     },
     serves: ['sitIn'],

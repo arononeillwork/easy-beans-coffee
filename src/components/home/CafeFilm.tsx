@@ -29,8 +29,6 @@ export function CafeFilm({ t }: { t: SiteContent }) {
               src="/media/cafe-tuesday.mp4"
               poster="/media/terrace.webp"
               label={t.video.label}
-              playLabel={t.media.play}
-              pauseLabel={t.media.pause}
               maxWidth={360}
             />
           </Box>

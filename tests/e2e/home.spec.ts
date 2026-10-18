@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { HomePage } from './builders/pages';
 
 test.describe('home page', () => {
-  test('hero film autoplays and can be paused', async ({ page }) => {
+  test('hero film autoplays with no player controls', async ({ page }) => {
     const home = new HomePage(page);
     await home.withPopupDismissed();
     await home.open();
@@ -14,10 +14,8 @@ test.describe('home page', () => {
       .poll(() => video.evaluate((el: HTMLVideoElement) => el.currentTime), { timeout: 10_000 })
       .toBeGreaterThan(0.5);
 
-    // An autoplaying loop must be stoppable (and reduced-motion users start
-    // paused via the same control path).
-    await page.getByRole('button', { name: /pausa|pause/i }).click();
-    expect(await video.evaluate((el: HTMLVideoElement) => el.paused)).toBe(true);
+    // The film is part of the picture: no pause/play overlay on top of it.
+    await expect(page.getByRole('button', { name: /pausa|pause/i })).toHaveCount(0);
   });
 
 
@@ -26,7 +24,7 @@ test.describe('home page', () => {
     await home.withPopupDismissed();
     await home.open();
 
-    await expect(home.heroHeadline()).toContainText('Enlatado delante de ti.');
+    await expect(home.heroHeadline()).toContainText('Fresco. Sellado. Tuyo.');
   });
 
   // The toggle is a link now, not a state change: locale lives in the URL so
@@ -38,10 +36,10 @@ test.describe('home page', () => {
 
     await page.getByRole('link', { name: 'English' }).first().click();
     await expect(page).toHaveURL(/\/en$/);
-    await expect(home.heroHeadline()).toContainText('Canned in front of you.');
+    await expect(home.heroHeadline()).toContainText('Fresh. Sealed. Yours.');
 
     await page.reload();
-    await expect(home.heroHeadline()).toContainText('Canned in front of you.');
+    await expect(home.heroHeadline()).toContainText('Fresh. Sealed. Yours.');
   });
 
   test('first-visit popup shows once and stores the flag when dismissed', async ({ page }) => {
