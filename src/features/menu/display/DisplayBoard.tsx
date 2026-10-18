@@ -76,10 +76,10 @@ const COLUMNS: Section[][] = [
  * lays out before the images arrive.
  */
 const STICKERS: Array<{ src: string; alt: string; ratio: string; height: string; tilt: number }> = [
-  { src: '/media/display/croissant.webp', alt: 'Croissant', ratio: '266 / 230', height: 'clamp(30px, 5.4vh, 96px)', tilt: -4 },
-  { src: '/media/display/acai-bowl.webp', alt: 'Açaí bowl', ratio: '269 / 291', height: 'clamp(36px, 6.6vh, 116px)', tilt: 3 },
-  { src: '/media/display/coffee-can.webp', alt: 'Iced latte in a can glass', ratio: '262 / 560', height: 'clamp(46px, 8.6vh, 150px)', tilt: -3 },
-  { src: '/media/display/chia-jar.webp', alt: 'Chia pudding jar', ratio: '204 / 282', height: 'clamp(36px, 6.6vh, 116px)', tilt: 4 },
+  { src: '/media/display/croissant.webp', alt: 'Croissant', ratio: '266 / 230', height: 'clamp(28px, 4.9vh, 88px)', tilt: -4 },
+  { src: '/media/display/acai-bowl.webp', alt: 'Açaí bowl', ratio: '269 / 291', height: 'clamp(33px, 6vh, 106px)', tilt: 3 },
+  { src: '/media/display/coffee-can.webp', alt: 'Iced latte in a can glass', ratio: '262 / 560', height: 'clamp(42px, 7.8vh, 136px)', tilt: -3 },
+  { src: '/media/display/chia-jar.webp', alt: 'Chia pudding jar', ratio: '204 / 282', height: 'clamp(33px, 6vh, 106px)', tilt: 4 },
 ];
 
 export function DisplayBoard({
@@ -201,7 +201,7 @@ export function DisplayBoard({
           minWidth: 0,
           display: 'grid',
           gridTemplateRows: 'auto 1fr auto auto',
-          py: 'clamp(10px, 1.4vh, 26px)',
+          py: 'clamp(8px, 1.1vh, 22px)',
         }}
       >
       <Header nowMs={nowMs} timezone={timezone} />
