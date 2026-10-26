@@ -150,3 +150,60 @@ export function isAccountAuthConfigured(): boolean {
       optionalEnv('SUPABASE_SERVICE_ROLE_KEY'),
   );
 }
+
+/**
+ * The domain the /admin/website DNS editor manages. DNS for it lives at
+ * Cloudflare; WEBSITE_DOMAIN overrides the default, which is the apex of
+ * NEXT_PUBLIC_SITE_URL (www.easybeanscoffee.com → easybeanscoffee.com).
+ */
+export function getWebsiteDomain(): string {
+  const explicit = optionalEnv('WEBSITE_DOMAIN');
+  if (explicit) return explicit.toLowerCase();
+  try {
+    return new URL(getSiteUrl()).hostname.replace(/^www\./, '').toLowerCase();
+  } catch {
+    return 'localhost';
+  }
+}
+
+/** Cloudflare API token with Zone → DNS → Edit on the site's zone. */
+export function getCloudflareEnv(): { apiToken: string; zoneId?: string } | null {
+  const apiToken = optionalEnv('CLOUDFLARE_API_TOKEN');
+  return apiToken ? { apiToken, zoneId: optionalEnv('CLOUDFLARE_ZONE_ID') } : null;
+}
+
+/** Vercel token that can manage the site's project domains. */
+export function getVercelEnv(): { token: string; project: string; teamId?: string } | null {
+  const token = optionalEnv('VERCEL_TOKEN');
+  if (!token) return null;
+  return {
+    token,
+    project: optionalEnv('VERCEL_PROJECT_ID') ?? 'easy-beans-coffee',
+    teamId: optionalEnv('VERCEL_TEAM_ID'),
+  };
+}
+
+/** The website studio needs a Claude API key; without one it only shows setup help. */
+export function isWebsiteStudioConfigured(): boolean {
+  return Boolean(optionalEnv('ANTHROPIC_API_KEY'));
+}
+
+export interface WebsiteServicePricing {
+  newSiteCents: number;
+  redesignCents: number;
+  currency: 'EUR';
+}
+
+function centsEnv(name: string, fallback: number): number {
+  const value = Number(optionalEnv(name));
+  return Number.isInteger(value) && value > 0 ? value : fallback;
+}
+
+/** What the build-out of a generated site costs, sold apart from anything else. */
+export function getWebsiteServicePricing(): WebsiteServicePricing {
+  return {
+    newSiteCents: centsEnv('WEBSITE_PRICE_NEW_CENTS', 49_900),
+    redesignCents: centsEnv('WEBSITE_PRICE_REDESIGN_CENTS', 39_900),
+    currency: 'EUR',
+  };
+}

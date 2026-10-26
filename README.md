@@ -34,6 +34,7 @@ npm run media:drinks         # pull the drink photography from Drive and encode 
 | `/order` | The drink studio: build a drink, then cart → Square hosted checkout |
 | `/order/status/[token]` | Live order status (polls; webhook-fed) |
 | `/admin` | Internal todo board (Supabase `ToDo`) |
+| `/admin/website` | Owner's website desk: domains + Cloudflare DNS editor, and the website studio (redesign / generate a site, regenerate, buy the build-out) |
 | `/display-menu` | In-café portrait menu board: the whole menu on one screen; items & prices re-read from Square daily, an hour after opening |
 | `/api/menu·prices·checkout·orders/[token]/status·webhooks/square·signup` | Server endpoints |
 
@@ -58,6 +59,7 @@ prices, never the board. Checkout still re-validates every cent against the live
 - `docs/social-feed-setup.md` — Instagram/TikTok tokens for the live post grid
 - `docs/square-sandbox-setup.md` — end-to-end sandbox walkthrough
 - `docs/production-deploy.md` — Vercel env + go-live steps
+- `docs/website-admin.md` — `/admin/website`: domain & DNS editing and the website studio
 - `docs/printer-profile-setup.md` — automatic kitchen tickets
 - `docs/troubleshooting.md`, `docs/launch-checklist.md`
 

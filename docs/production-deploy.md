@@ -30,6 +30,8 @@ Set for **Production** only — never reuse sandbox values:
 | `EMAIL_REPLY_TO` | *(optional)* Where replies should land |
 | `ADMIN_LEADS_TOKEN` | Shared secret gating `/admin/leads`. **Unset = the page stays shut.** |
 | `OFFER_REDEMPTION_ENABLED` | `true` only once the shop is open. Unset means codes are issued but not yet spendable. |
+| `CLOUDFLARE_API_TOKEN` · `VERCEL_TOKEN` · `VERCEL_TEAM_ID` | *(optional)* Domain & DNS editing at `/admin/website` — see `docs/website-admin.md` |
+| `ANTHROPIC_API_KEY` | *(optional)* Website studio at `/admin/website`. Prices: `WEBSITE_PRICE_NEW_CENTS` / `WEBSITE_PRICE_REDESIGN_CENTS` |
 | `OFFER_VALID_DAYS` | *(optional)* Code lifetime in days. Unset means codes never expire. |
 
 ## Steps
