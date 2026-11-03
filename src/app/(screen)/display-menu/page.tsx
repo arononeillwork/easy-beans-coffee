@@ -1,21 +1,22 @@
-import { DisplayBoard } from '@/features/menu/display/DisplayBoard';
-import { getOrderingHours } from '@/server/places/orderingHours';
-import { getDisplayPriceBook } from '@/server/square/displayPrices';
-import { getCafeTimezone } from '@/server/env';
+import Image from 'next/image';
 
 /**
- * The in-café menu board (portrait TV / monitor). Open
- * easybeanscoffee.com/display-menu on the display's browser and leave it:
- * one screen carrying the whole board, keeping its own prices and opening
- * hours current — see DisplayBoard for the cadence.
+ * The in-café TV (easybeanscoffee.com/display-menu). For now it shows one
+ * picture and nothing else: the coffee + Chia Seed Parfait offer poster,
+ * whole, over a blurred copy of itself so a TV of any shape is filled.
  *
- * Rendered per request, not prerendered: a screen switched on in the morning
- * must start from today's prices, and this page is asked for roughly once per
- * screen per day. The catalog cache keeps Square to a handful of reads.
+ * The menu board (features/menu/display/DisplayBoard) is unchanged and goes
+ * back here when the offer comes off.
  */
-export const dynamic = 'force-dynamic';
+const POSTER = '/media/display/chia-parfait-offer-en.jpg';
 
-export default async function DisplayMenuPage() {
-  const [book, { hours }] = await Promise.all([getDisplayPriceBook(), getOrderingHours()]);
-  return <DisplayBoard initialBook={book} initialHours={hours} timezone={getCafeTimezone()} />;
+export default function DisplayMenuPage() {
+  return (
+    <main style={{ position: 'fixed', inset: 0, background: '#000', overflow: 'hidden' }}>
+      <Image src={POSTER} alt="" aria-hidden fill sizes="100vw" priority
+        style={{ objectFit: 'cover', filter: 'blur(40px) brightness(0.7)', transform: 'scale(1.15)' }} />
+      <Image src={POSTER} alt="Special offer: buy any coffee and get a Chia Seed Parfait for only €3 extra" fill sizes="100vw" priority
+        style={{ objectFit: 'contain' }} />
+    </main>
+  );
 }
