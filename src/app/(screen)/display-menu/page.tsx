@@ -7,6 +7,8 @@
  * TV goes back to landscape, and the menu board (features/menu/display/
  * DisplayBoard) is unchanged for when the offer comes off.
  */
+import { ReloadOnChange } from './ReloadOnChange';
+
 const POSTER = '/media/display/chia-parfait-offer-en-tall.jpg';
 
 export default function DisplayMenuPage() {
@@ -15,6 +17,7 @@ export default function DisplayMenuPage() {
       {/* eslint-disable-next-line @next/next/no-img-element -- one full-screen picture, shown as it is */}
       <img src={POSTER} alt="Special offer: buy any coffee and get a Chia Seed Parfait for only €3 extra"
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+      <ReloadOnChange poster={POSTER} />
     </main>
   );
 }
