@@ -8,12 +8,13 @@ import { useEffect, useState } from 'react';
  * it stands upright on the turned screen. If it comes out upside down, a press
  * of OK (or a click) turns it the other way, and the TV remembers.
  */
-const FLIP = 'eb-display-flip';
+// The café TV turns clockwise (seen from the front), so the poster turns the other way by default.
+const FLIP = 'eb-display-flip-2';
 const CSS = `
 .eb-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 @media (orientation: landscape){
-  .eb-poster{inset:auto;top:50%;left:50%;width:100vh;height:100vw;transform:translate(-50%,-50%) rotate(-90deg)}
-  .eb-poster.eb-flip{transform:translate(-50%,-50%) rotate(90deg)}
+  .eb-poster{inset:auto;top:50%;left:50%;width:100vh;height:100vw;transform:translate(-50%,-50%) rotate(90deg)}
+  .eb-poster.eb-flip{transform:translate(-50%,-50%) rotate(-90deg)}
 }`;
 
 export function Poster({ src, alt }: { src: string; alt: string }) {

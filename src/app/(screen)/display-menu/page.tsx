@@ -12,7 +12,7 @@
 import { Poster } from './Poster';
 import { ReloadOnChange } from './ReloadOnChange';
 
-const POSTER = '/media/display/chia-parfait-offer-en-vertical.jpg';
+const POSTER = '/media/display/chia-parfait-offer-en-upright.jpg';
 
 export default function DisplayMenuPage() {
   return (
