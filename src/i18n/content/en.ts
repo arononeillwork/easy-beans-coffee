@@ -74,7 +74,6 @@ export const en = {
     body: 'Irish-owned specialty café in San Pedro de Alcántara.',
     paragraphs: [
       'We opened our doors in April 2026 with one promise: your coffee, matcha or ube should taste just as good on your tenth visit as on your first.',
-      'So our espresso is dialled in fresh every morning, every matcha is whisked to order, and our ube is made from scratch, right here behind the counter.',
     ],
     photoAlt: 'The Easy Beans terrace on Calle Pizarro',
   },
@@ -211,13 +210,10 @@ export const en = {
       },
     ],
   },
+  /** The email field's own words, wherever an email signup appears (the shop's coming-soon form). */
   newsletter: {
-    headline: 'Be first to the next tasting',
-    body: 'Coffee tastings, new drinks and café events — one email when something is coming up. No spam, ever.',
     emailLabel: 'Email',
     placeholder: 'you@example.com',
-    cta: 'Sign up',
-    done: 'You are on the list.',
   },
   popup: {
     headline: '10% off your online orders',

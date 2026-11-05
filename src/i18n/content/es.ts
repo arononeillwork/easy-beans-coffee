@@ -67,7 +67,6 @@ export const es: SiteContent = {
     body: 'Cafetería de especialidad de dueños irlandeses en San Pedro de Alcántara.',
     paragraphs: [
       'Abrimos en abril de 2026 con una promesa: tu café, matcha o ube debe saber igual de bien en tu décima visita que en la primera.',
-      'Por eso calibramos el espresso cada mañana, batimos cada matcha al momento y preparamos el ube desde cero, aquí mismo, detrás de la barra.',
     ],
     photoAlt: 'La terraza de Easy Beans en Calle Pizarro',
   },
@@ -203,12 +202,8 @@ export const es: SiteContent = {
     ],
   },
   newsletter: {
-    headline: 'Sé el primero en la próxima cata',
-    body: 'Catas de café, bebidas nuevas y eventos en el café: un email cuando se acerque algo. Nunca spam.',
     emailLabel: 'Email',
     placeholder: 'tu@ejemplo.com',
-    cta: 'Apuntarme',
-    done: 'Ya estás en la lista.',
   },
   popup: {
     headline: '10% en tus pedidos online',
