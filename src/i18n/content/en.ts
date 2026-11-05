@@ -38,8 +38,8 @@ export const en = {
     'Order ahead, skip the queue',
   ],
   video: {
-    headline: 'Small café, big days.',
-    body: 'From the first grind of the morning to the last coffee on the terrace — this is a day at Easy Beans.',
+    headline: 'From first grind to last sip.',
+    body: 'Mornings at the counter, afternoons on the terrace. This is a day at Easy Beans.',
     cta: 'More on Instagram',
     label: 'A normal day at Easy Beans: counter, grinder and terrace',
   },
@@ -70,7 +70,7 @@ export const en = {
   },
   story: {
     title: 'About us',
-    headline: 'An idea born in Ireland, brought to life in Spain.',
+    headline: 'An idea born in Ireland and served on the Costa del Sol.',
     body: 'Irish-owned specialty café in San Pedro de Alcántara.',
     paragraphs: [
       'We opened our doors in April 2026 with one promise: your coffee, matcha or ube should taste just as good on your tenth visit as on your first.',
@@ -78,7 +78,7 @@ export const en = {
     photoAlt: 'The Easy Beans terrace on Calle Pizarro',
   },
   can: {
-    line: 'Any iced drink, sealed fresh in a can while you watch.',
+    line: 'Fresh. Sealed. Yours. Any cold drink, canned at the counter.',
     alt: 'An iced latte in an Easy Beans can, held on the terrace',
   },
   /** Names for the allergen table on the menu page. */
