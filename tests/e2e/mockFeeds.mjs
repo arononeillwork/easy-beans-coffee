@@ -40,19 +40,27 @@ function place() {
   };
 }
 
-function instagram() {
+function media(post, i) {
   return {
-    data: FIXTURE.posts.map((post, i) => ({
-      id: post.id,
-      caption: `${post.caption}\n#easybeans`,
-      media_type: i === 2 ? 'VIDEO' : 'IMAGE',
-      // Same-origin photography, so next/image needs no remote host for it.
-      media_url: '/media/acai-bowl.webp',
-      thumbnail_url: '/media/ube-latte.webp',
-      permalink: post.permalink,
-      timestamp: `2026-10-1${i}T10:00:00+0000`,
-    })),
+    id: post.id,
+    caption: `${post.caption}\n#easybeans`,
+    media_type: i === 2 ? 'VIDEO' : 'IMAGE',
+    // Same-origin photography, so next/image needs no remote host for it.
+    media_url: '/media/acai-bowl.webp',
+    thumbnail_url: '/media/ube-latte.webp',
+    permalink: post.permalink,
+    timestamp: `2026-10-1${i}T10:00:00+0000`,
   };
+}
+
+function instagram() {
+  return { data: FIXTURE.posts.map(media) };
+}
+
+/** One post by its id, as the café TV's picture route asks for it. */
+function instagramPost(id) {
+  const i = FIXTURE.posts.findIndex((post) => post.id === id);
+  return i === -1 ? undefined : media(FIXTURE.posts[i], i);
 }
 
 const json = (res, status, body) => {
@@ -65,6 +73,11 @@ createServer((req, res) => {
   if (pathname === '/health') return json(res, 200, { ok: true });
   if (pathname.startsWith('/places/v1/places/') && !pathname.includes('/photos/')) {
     return json(res, 200, place());
+  }
+  const postId = /^\/instagram\/v[\d.]+\/(\d+)$/.exec(pathname)?.[1];
+  if (postId) {
+    const post = instagramPost(postId);
+    return post ? json(res, 200, post) : json(res, 400, { error: { code: 100 } });
   }
   if (pathname.startsWith('/instagram/')) return json(res, 200, instagram());
   // TikTok, Square and anything else: answer like an unconfigured service.

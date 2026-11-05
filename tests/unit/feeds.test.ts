@@ -6,7 +6,7 @@ import { fetchAndNormalizeCatalog } from '@/server/square/catalog';
 import { toPriceBook } from '@/features/menu/priceBook';
 import { getPlaceDetails } from '@/server/places/googlePlaces';
 import { getOrderingHours } from '@/server/places/orderingHours';
-import { getInstagramPosts } from '@/server/social/instagram';
+import { getInstagramPostImageUrl, getInstagramPosts, getLatestInstagramPost } from '@/server/social/instagram';
 import { getSocialFeed } from '@/server/social/feed';
 import { FALLBACK_HOURS } from '@/features/order/lib/pickupTimes';
 import { derivePublicStatus, shouldSyncFromSquare } from '@/server/orders/statusMapping';
@@ -203,6 +203,57 @@ test('Instagram: an expired token yields no posts (the grid shows our own photos
   delete process.env.NEXT_PUBLIC_SUPABASE_URL;
   fakeNetwork(() => ({ status: 400, body: { error: { code: 190 } } }));
   assert.deepEqual(await getInstagramPosts(8), []);
+});
+
+// ── Instagram → the café TV (/display-menu) ────────────────────────────────
+
+test('Café TV: shows the newest post that has a picture', async () => {
+  process.env.INSTAGRAM_ACCESS_TOKEN = 'unit-token';
+  delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+  fakeNetwork((url) =>
+    url.startsWith('https://graph.instagram.com/v21.0/me/media?')
+      ? {
+          body: {
+            data: [
+              { id: '30', media_type: 'IMAGE', permalink: 'https://www.instagram.com/p/NOPIC/' }, // no picture: skipped
+              { id: '20', media_type: 'IMAGE', media_url: 'https://scontent.cdninstagram.com/cake.jpg', permalink: 'https://www.instagram.com/p/CAKE/', caption: 'Cake + coffee €7\n#cake' },
+              { id: '10', media_type: 'IMAGE', media_url: 'https://scontent.cdninstagram.com/old.jpg', permalink: 'https://www.instagram.com/p/OLD/' },
+            ],
+          },
+        }
+      : undefined,
+  );
+  assert.deepEqual(await getLatestInstagramPost(120), { mediaId: '20', caption: 'Cake + coffee €7' });
+});
+
+test('Café TV: with Instagram not answering, the read fails (so the screen keeps its last post)', async () => {
+  process.env.INSTAGRAM_ACCESS_TOKEN = 'expired';
+  delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+  fakeNetwork(() => ({ status: 400, body: { error: { code: 190 } } }));
+  await assert.rejects(getLatestInstagramPost(120));
+});
+
+test('Café TV: with no Instagram token there is no post (the screen shows its poster)', async () => {
+  delete process.env.INSTAGRAM_ACCESS_TOKEN;
+  delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+  fakeNetwork(() => undefined);
+  assert.equal(await getLatestInstagramPost(120), null);
+  assert.equal(calls.length, 0, 'Instagram is not asked');
+});
+
+test("Café TV: a post's picture is asked for afresh by its id; a video gives its still", async () => {
+  process.env.INSTAGRAM_ACCESS_TOKEN = 'unit-token';
+  delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+  fakeNetwork((url) =>
+    url.startsWith('https://graph.instagram.com/v21.0/20?')
+      ? { body: { id: '20', media_type: 'IMAGE', media_url: 'https://scontent.cdninstagram.com/cake.jpg' } }
+      : url.startsWith('https://graph.instagram.com/v21.0/21?')
+        ? { body: { id: '21', media_type: 'VIDEO', media_url: 'https://x/reel.mp4', thumbnail_url: 'https://scontent.cdninstagram.com/still.jpg' } }
+        : { status: 400, body: { error: { code: 100 } } },
+  );
+  assert.equal(await getInstagramPostImageUrl('20'), 'https://scontent.cdninstagram.com/cake.jpg');
+  assert.equal(await getInstagramPostImageUrl('21'), 'https://scontent.cdninstagram.com/still.jpg');
+  assert.equal(await getInstagramPostImageUrl('99'), null, 'not one of ours');
 });
 
 test('Social grid: with Instagram down, our own photos all link to Instagram — never TikTok', async () => {
