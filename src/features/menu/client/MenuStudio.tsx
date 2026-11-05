@@ -32,7 +32,8 @@ import {
   toCartLine,
 } from '../compose';
 import { artFolderFor, displayNameFor, framesToPreload, resolveArt } from '../drinkArt';
-import { DRINKS, GROUPS, SECTIONS, drinksInSection, groupOf } from '../drinks';
+import { boardDrinks } from '../agentMenu';
+import { GROUPS, SECTIONS, groupOf } from '../drinks';
 import { indexPriceBook, lowestCents, type PriceBook } from '../priceBook';
 import { paletteForDrink } from '../palette';
 import type { DrinkChoice, MenuGroup, Section, Serve, Temp } from '../types';
@@ -51,10 +52,11 @@ import { SegmentedChoice, type SegmentOption } from './SegmentedChoice';
  * you rather than a line of text in a modal. Choosing caramel does not tick a
  * box; it turns the cup into a caramel latte, because the café shot one.
  *
- * Two sources feed it and they are deliberately separate. What the menu *is*
- * ships with the site (features/menu/drinks, and the photography under
- * public/media/drinks). What it *costs* comes from Square, once a day, through
- * a price book the page is handed already resolved — see server/square/
+ * Three sources feed it and they are deliberately separate. Which items are on
+ * the menu is the Business Agent's to say (features/menu/agentMenu). How they
+ * look and read ships with the site (features/menu/drinks, and the photography
+ * under public/media/drinks). What they *cost* comes from Square, through a
+ * price book the page is handed already resolved — see server/square/
  * priceCache. Nothing here fetches on mount, and nothing renders a Square CDN
  * URL.
  */
@@ -69,7 +71,15 @@ export function MenuStudio({ priceBook }: { priceBook: PriceBook }) {
     [prices],
   );
 
-  const [section, setSection] = useState<Section>('coffee');
+  /** Every entry on the board: what the Business Agent lists, dressed by drinks.ts where it can be. */
+  const board = useMemo(() => boardDrinks(priceBook), [priceBook]);
+  /** Sections with something in them; one the agent has emptied leaves the crumb trail. */
+  const filled = useMemo(() => new Set(board.map((entry) => entry.section)), [board]);
+
+  const [chosenSection, setSection] = useState<Section>('coffee');
+  const section: Section = filled.has(chosenSection)
+    ? chosenSection
+    : (SECTIONS.find((entry) => filled.has(entry.id))?.id ?? chosenSection);
   const [index, setIndex] = useState(0);
   /**
    * Every drink keeps the build you gave it. Coming back to the latte you were
@@ -79,17 +89,17 @@ export function MenuStudio({ priceBook }: { priceBook: PriceBook }) {
   const [choices, setChoices] = useState<Record<string, DrinkChoice>>({});
   const [justAdded, setJustAdded] = useState(false);
 
-  const sectionDrinks = useMemo(() => drinksInSection(section), [section]);
+  const sectionDrinks = useMemo(() => board.filter((entry) => entry.section === section), [board, section]);
   const drink = sectionDrinks[Math.min(index, sectionDrinks.length - 1)];
   const item = drink ? itemFor(drink.square) : undefined;
 
   const choiceFor = useCallback(
     (drinkId: string) => {
-      const found = DRINKS.find((entry) => entry.id === drinkId);
+      const found = board.find((entry) => entry.id === drinkId);
       if (!found) return null;
       return choices[drinkId] ?? initialChoice(found, itemFor(found.square));
     },
-    [choices, itemFor],
+    [board, choices, itemFor],
   );
 
   const choice = drink ? (choices[drink.id] ?? initialChoice(drink, item)) : null;
@@ -180,10 +190,10 @@ export function MenuStudio({ priceBook }: { priceBook: PriceBook }) {
   const group = groupOf(section);
   const changeGroup = useCallback(
     (next: MenuGroup) => {
-      const first = GROUPS.find((entry) => entry.id === next)?.sections[0];
+      const first = GROUPS.find((entry) => entry.id === next)?.sections.find((id) => filled.has(id));
       if (first) changeSection(first);
     },
-    [changeSection],
+    [changeSection, filled],
   );
 
   const selectDrink = useCallback((next: number) => {
@@ -229,7 +239,9 @@ export function MenuStudio({ priceBook }: { priceBook: PriceBook }) {
     icon: SERVE_ICONS[serve],
   }));
 
-  const groupOptions: SegmentOption<MenuGroup>[] = GROUPS.map((entry) => ({
+  const groupOptions: SegmentOption<MenuGroup>[] = GROUPS.filter((entry) =>
+    entry.sections.some((id) => filled.has(id)),
+  ).map((entry) => ({
     value: entry.id,
     label: entry.label[lang],
     icon: entry.id === 'drinks' ? <LocalCafeOutlinedIcon /> : <BakeryDiningOutlinedIcon />,
@@ -238,7 +250,7 @@ export function MenuStudio({ priceBook }: { priceBook: PriceBook }) {
   const groupSections =
     GROUPS.find((entry) => entry.id === group)?.sections.flatMap((id) => {
       const found = SECTIONS.find((entry) => entry.id === id);
-      return found ? [{ id: found.id, label: found.label[lang] }] : [];
+      return found && filled.has(found.id) ? [{ id: found.id, label: found.label[lang] }] : [];
     }) ?? [];
 
   return (

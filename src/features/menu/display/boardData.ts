@@ -1,4 +1,5 @@
-import { DRINKS, SECTIONS, baseArt } from '../drinks';
+import { boardDrinks } from '../agentMenu';
+import { SECTIONS, baseArt } from '../drinks';
 import { resolveArt } from '../drinkArt';
 import {
   findVariation,
@@ -141,9 +142,11 @@ function toRow(drink: Drink, item: PricedItem | undefined): DisplayRow {
 /** The whole board, one section per entry, in the order the café reads it. */
 export function buildDisplayBoard(book: PriceBook): DisplaySection[] {
   const byKey = indexPriceBook(book);
+  // What the Business Agent lists, when the site follows it; the site's own board otherwise.
+  const drinks = boardDrinks(book);
 
   return SECTIONS.map((section) => {
-    const rows = DRINKS.filter((drink) => drink.section === section.id).map((drink) =>
+    const rows = drinks.filter((drink) => drink.section === section.id).map((drink) =>
       toRow(drink, byKey.get(normalizeName(drink.square))),
     );
     return {

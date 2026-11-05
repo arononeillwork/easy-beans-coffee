@@ -51,6 +51,13 @@ café's Drive library by `npm run media:drinks`. **Square is asked only what thi
 once per café day, through `src/server/square/priceCache.ts`. An unreachable Square costs the
 prices, never the board. Checkout still re-validates every cent against the live catalog.
 
+### What's on the menu comes from the Business Agent
+
+The café's back office, the Business Agent, keeps the menu once and sends it everywhere: Google Maps,
+the screens, the printed menus and this site. The site follows its list — an item taken off the menu
+there leaves `/order`, and one added there appears (with a "photo soon" plate until it gets an entry
+in `drinks.ts`). Square still prices and takes every order. See `docs/menu.md`.
+
 ## Docs
 
 - `docs/menu.md` — the drink studio, the photography pipeline and the price book

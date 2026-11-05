@@ -43,6 +43,17 @@ export interface PricedGroup {
   modifiers: PricedModifier[];
 }
 
+/** Where the Business Agent lists an item (see ../agentMenu). */
+export interface Listing {
+  /** Its place on the agent's menu, across sections. */
+  order: number;
+  /** The agent's section for it, e.g. "Classics". */
+  section: string | null;
+  name: string;
+  description: string | null;
+  featured: boolean;
+}
+
 export interface PricedItem {
   id: string;
   name: string;
@@ -53,6 +64,8 @@ export interface PricedItem {
   soldOut: boolean;
   variations: PricedVariation[];
   groups: PricedGroup[];
+  /** Set when the Business Agent lists it; absent when the site is not following the agent. */
+  listing?: Listing;
 }
 
 export interface PriceBook {
@@ -68,6 +81,12 @@ export interface PriceBook {
    * today's.
    */
   stale: boolean;
+  /**
+   * The normalized names the Business Agent lists, when the site follows it:
+   * the board shows only these (see ../agentMenu). Absent: the board is the
+   * site's own, as shipped.
+   */
+  listed?: string[];
 }
 
 /** An empty book renders the menu with prices withheld rather than wrong. */

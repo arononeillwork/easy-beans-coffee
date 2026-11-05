@@ -6,11 +6,12 @@ import { getPriceBookOrEmpty } from '@/server/square/priceCache';
 import { MenuView } from '@/features/menu/client/MenuView';
 
 /**
- * The board itself is local, so nothing here waits on Square to draw a menu.
- * What is regenerated is the price column: hourly at the edge, over a snapshot
- * the server only re-reads once a café day. See server/square/priceCache.
+ * The board's look is local, so nothing here waits on Square to draw a menu.
+ * What is regenerated is what the Business Agent lists and the price column:
+ * every five minutes at the edge, so an item added or taken off in the agent
+ * is here within a few. See server/square/priceCache.
  */
-export const revalidate = 3600;
+export const revalidate = 300;
 
 /** Both locales prerender — the catalog is the only request-shaped input. */
 export function generateStaticParams() {

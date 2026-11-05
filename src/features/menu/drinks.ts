@@ -34,6 +34,9 @@ const FOAM: OptionRef = {
 };
 const SHOT: OptionRef = { square: 'Extra Shot', label: { en: 'Extra shot', es: 'Café extra' } };
 
+/** The shared rails, for items the Business Agent adds that this file has no entry for. */
+export const KNOWN_OPTIONS: OptionRef[] = [MILK, SYRUP, PUREE, SHOT, FOAM];
+
 /** A milk drink: everything, in build order — and the not-yet last. */
 const FULL: OptionRef[] = [MILK, SYRUP, PUREE, SHOT, FOAM];
 /** A black coffee: no milk list in Square, so no milk rail. */

@@ -1,33 +1,31 @@
 import 'server-only';
+import { applyAgentMenu } from '@/features/menu/agentMenu';
 import { cafeDay, toPriceBook, EMPTY_PRICE_BOOK, type PriceBook } from '@/features/menu/priceBook';
+import { getAgentMenu } from '../businessAgent/menuFeed';
 import { getCafeTimezone } from '../env';
 import { fetchAndNormalizeCatalog } from './catalog';
 
 /**
- * The menu's daily price snapshot.
+ * The menu's price snapshot, and what the Business Agent lists.
  *
- * The drinks board is now local — names, photography, option copy and layout
- * all ship with the site — so the only reason to call Square when someone opens
- * the menu is to find out what things cost. Prices at a café change on the
- * order of a few times a year, so re-reading them per visit, or even every five
- * minutes as the old catalog cache did, buys nothing and puts a third-party
- * round trip in front of the page.
+ * Two reads, kept apart. The Business Agent says which items are on the menu
+ * (server/businessAgent/menuFeed, kept five minutes); Square says what each
+ * one costs and gives the ids an order is placed with. The agent reads its own
+ * prices from Square, so the two agree; see features/menu/agentMenu for what
+ * happens when they briefly don't.
  *
- * So: one read per café day. The snapshot turns over when Madrid does, not on a
- * rolling 24h timer, because that is when a price change would actually be made
- * — and it means every customer on a given day is quoted the same number.
+ * Square is read at most every fifteen minutes. It used to be once a café day,
+ * when the board was fixed and only a price could change; now an item added or
+ * taken off in the agent should reach the site within minutes, and an item the
+ * agent lists can only be ordered once Square's snapshot has it.
  *
  * This is a browse-time cache only. {@link getCatalogForCheckout} still reads
- * near-live prices when money changes hands, so a mid-day price change is
- * honoured at the till even while the board shows the morning's snapshot.
+ * near-live prices when money changes hands, so a price changed since the last
+ * snapshot is honoured at the till.
  */
 
-/**
- * Hard ceiling under the day rule, for the long-running instance that would
- * otherwise sit on one snapshot through a deploy-free week. Belt and braces:
- * the day check below is the one that normally fires.
- */
-const MAX_AGE_MS = 24 * 60 * 60 * 1000;
+/** How long one Square snapshot serves; a new café day also turns it over. */
+const MAX_AGE_MS = 15 * 60 * 1000;
 
 /**
  * Next's data cache window for the underlying Square fetch. An uncached fetch
@@ -35,7 +33,7 @@ const MAX_AGE_MS = 24 * 60 * 60 * 1000;
  * is load-bearing for prerendering as well as for the cache itself — see the
  * same note in ./catalogCache.
  */
-const REVALIDATE_SECONDS = 60 * 60;
+const REVALIDATE_SECONDS = 15 * 60;
 
 let cached: { book: PriceBook; fetchedAtMs: number } | null = null;
 let inflight: Promise<PriceBook> | null = null;
@@ -46,15 +44,42 @@ function isFresh(entry: { book: PriceBook; fetchedAtMs: number }, nowMs: number,
 }
 
 /**
- * Today's prices, read from Square at most once per café day.
+ * Today's prices from Square, cut to what the Business Agent lists.
  *
- * On failure the last good snapshot is served with `stale: true` rather than an
- * error — a menu with yesterday's prices is a working menu, and the checkout
- * path re-validates against live Square anyway. Only a cold instance that has
- * never reached Square returns an empty book, and the studio renders that with
- * the prices withheld.
+ * Neither read failing fails the page. Without the agent the board is the
+ * site's own; without Square the board follows the agent with the prices
+ * withheld.
  */
 export async function getPriceBook(): Promise<PriceBook> {
+  const [book, menu] = await Promise.all([getSquarePriceBook(), getAgentMenu()]);
+  const { book: listed, disagreements } = applyAgentMenu(book, menu);
+  reportDisagreements(disagreements);
+  return listed;
+}
+
+const reportedDisagreements = new Set<string>();
+
+/** Once per difference per instance: the agent reads Square hourly, so most heal by themselves. */
+function reportDisagreements(lines: string[]) {
+  const fresh = lines.filter((line) => !reportedDisagreements.has(line));
+  if (!fresh.length) return;
+  for (const line of fresh) reportedDisagreements.add(line);
+  console.warn(
+    `Business Agent and Square disagree on ${fresh.length} price(s); the site shows Square's, which is what is charged:`,
+    fresh.join('; '),
+  );
+}
+
+/**
+ * Square's prices, read at most every fifteen minutes.
+ *
+ * On failure the last good snapshot is served with `stale: true` rather than an
+ * error — a menu with older prices is a working menu, and the checkout path
+ * re-validates against live Square anyway. Only a cold instance that has never
+ * reached Square returns an empty book, and the studio renders that with the
+ * prices withheld.
+ */
+async function getSquarePriceBook(): Promise<PriceBook> {
   const nowMs = Date.now();
   const day = cafeDay(nowMs, getCafeTimezone());
 
