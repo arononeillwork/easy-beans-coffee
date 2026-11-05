@@ -8,10 +8,11 @@ export const FIXTURE = {
   weekdayClose: { hour: 16, minute: 15 },
   saturdayOpen: { hour: 10, minute: 0 },
   saturdayClose: { hour: 14, minute: 0 },
+  // Numeric ids, like Instagram's own: the café TV asks for a post's picture by its id.
   posts: [
-    { id: 'e2e1', permalink: 'https://www.instagram.com/p/E2E-POST-1/', caption: 'Feed post one' },
-    { id: 'e2e2', permalink: 'https://www.instagram.com/p/E2E-POST-2/', caption: 'Feed post two' },
-    { id: 'e2e3', permalink: 'https://www.instagram.com/reel/E2E-REEL-3/', caption: 'Feed reel three' },
+    { id: '9000000000000001', permalink: 'https://www.instagram.com/p/E2E-POST-1/', caption: 'Feed post one' },
+    { id: '9000000000000002', permalink: 'https://www.instagram.com/p/E2E-POST-2/', caption: 'Feed post two' },
+    { id: '9000000000000003', permalink: 'https://www.instagram.com/reel/E2E-REEL-3/', caption: 'Feed reel three' },
   ],
 };
 

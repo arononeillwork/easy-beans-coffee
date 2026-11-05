@@ -11,11 +11,13 @@ import { getInstagramToken } from './instagramToken';
  * The old Basic Display API this used to be built on was switched off in
  * December 2024; there is no token-free way to read a feed any more.
  *
- * Never throws: a missing or expired token returns an empty list and the grid
- * falls back to our own photography.
+ * The grid's read never throws: a missing or expired token returns an empty
+ * list and the grid falls back to our own photography. The café TV's read
+ * (getLatestInstagramPost) is the one that does, on purpose.
  */
 
-const ENDPOINT = 'https://graph.instagram.com/v21.0/me/media';
+const GRAPH = 'https://graph.instagram.com/v21.0';
+const ENDPOINT = `${GRAPH}/me/media`;
 const FIELDS = 'id,caption,media_type,media_url,permalink,thumbnail_url,timestamp';
 /** An hour: the CDN URLs Instagram hands out are signed and time-limited. */
 const REVALIDATE_SECONDS = 3_600;
@@ -31,34 +33,85 @@ type ApiMedia = {
 };
 
 export async function getInstagramPosts(limit: number): Promise<SocialPost[]> {
-  // Under the e2e stand-in the env token is the whole story; never read the
-  // real token store from a test run.
-  const token = process.env.E2E_FEEDS_BASE ? process.env.INSTAGRAM_ACCESS_TOKEN?.trim() : await getInstagramToken();
+  const token = await instagramToken();
   if (!token) return [];
-
-  const url = feedUrl(
-    'instagram',
-    `${ENDPOINT}?fields=${FIELDS}&limit=${limit}&access_token=${encodeURIComponent(token)}`,
-  );
-
   try {
-    const res = await fetch(url, { next: { revalidate: REVALIDATE_SECONDS } });
-    if (!res.ok) {
-      // 190 = token expired or revoked, which is the failure worth spotting.
-      console.warn(`[social] Instagram responded ${res.status}`);
-      return [];
-    }
-    const body = (await res.json()) as { data?: ApiMedia[] };
-    return (body.data ?? []).flatMap(toPost);
+    return (await requestMedia(token, limit, REVALIDATE_SECONDS)).flatMap(toPost);
   } catch (error) {
+    // 190 = token expired or revoked, which is the failure worth spotting.
     console.warn('[social] Instagram request failed', error);
     return [];
   }
 }
 
+/**
+ * The newest post with a picture, for the café TV (/display-menu), asked for
+ * every `revalidateSeconds` so a new post reaches the screen within minutes.
+ *
+ * Unlike the grid it does not swallow failures. null means there is nothing to
+ * show (no token, no posts); an Instagram that does not answer throws, so the
+ * TV keeps the post it already has instead of dropping to its fallback poster
+ * until the next check.
+ */
+export async function getLatestInstagramPost(revalidateSeconds: number): Promise<LatestPost | null> {
+  const token = await instagramToken();
+  if (!token) return null;
+  // A few, in case the newest one has no picture to show.
+  const newest = (await requestMedia(token, 3, revalidateSeconds)).find((media) => media.id && imageOf(media));
+  return newest?.id ? { mediaId: newest.id, caption: firstLine(newest.caption ?? '') } : null;
+}
+
+export type LatestPost = {
+  /** Instagram's id for the post; its picture is asked for by this (getInstagramPostImageUrl). */
+  mediaId: string;
+  /** The caption's first line, hashtags dropped. */
+  caption: string;
+};
+
+/**
+ * The picture of one of the café's own posts (a video's still, a carousel's
+ * first picture), asked for afresh: the addresses Instagram hands out are
+ * signed and expire. null when there is no token, or Instagram does not know
+ * the post — it only answers for the account's own media.
+ */
+export async function getInstagramPostImageUrl(mediaId: string): Promise<string | null> {
+  const token = await instagramToken();
+  if (!token) return null;
+  const url = feedUrl('instagram', `${GRAPH}/${mediaId}?fields=media_type,media_url,thumbnail_url&access_token=${encodeURIComponent(token)}`);
+  try {
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) return null;
+    return imageOf((await res.json()) as ApiMedia) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function instagramToken(): Promise<string | null> {
+  // Under the e2e stand-in the env token is the whole story; never read the
+  // real token store from a test run.
+  return process.env.E2E_FEEDS_BASE ? process.env.INSTAGRAM_ACCESS_TOKEN?.trim() || null : getInstagramToken();
+}
+
+/** The account's newest media, newest first. Throws when Instagram does not answer. */
+async function requestMedia(token: string, limit: number, revalidateSeconds: number): Promise<ApiMedia[]> {
+  const url = feedUrl(
+    'instagram',
+    `${ENDPOINT}?fields=${FIELDS}&limit=${limit}&access_token=${encodeURIComponent(token)}`,
+  );
+  const res = await fetch(url, { next: { revalidate: revalidateSeconds } });
+  if (!res.ok) throw new Error(`Instagram responded ${res.status}`);
+  const body = (await res.json()) as { data?: ApiMedia[] };
+  return body.data ?? [];
+}
+
+/** A video's media_url is the file itself; thumbnail_url is the still we want. */
+function imageOf(media: ApiMedia): string | undefined {
+  return media.media_type === 'VIDEO' ? media.thumbnail_url : media.media_url;
+}
+
 function toPost(media: ApiMedia): SocialPost[] {
-  // A video's media_url is the file itself; thumbnail_url is the still we want.
-  const image = media.media_type === 'VIDEO' ? media.thumbnail_url : media.media_url;
+  const image = imageOf(media);
   if (!media.id || !media.permalink || !image) return [];
   return [
     {

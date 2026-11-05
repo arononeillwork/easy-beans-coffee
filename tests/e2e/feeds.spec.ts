@@ -48,6 +48,29 @@ test.describe('automatic data feeds', () => {
     }
   });
 
+  test('the café TV shows the newest Instagram post, through the site\'s own picture address', async ({ page, request }) => {
+    const newest = FIXTURE.posts[0];
+    const picture = `/media/display/instagram-${newest.id}.jpg`;
+
+    await page.goto('/display-menu');
+    const shown = page.getByTestId('screen-picture');
+    await expect(shown).toHaveAttribute('src', picture);
+    await expect(shown).toHaveAttribute('alt', newest.caption);
+    await expect(page.getByText('@easy.beans.coffee')).toBeVisible();
+    // The picture actually arrives, not just its address.
+    await expect.poll(() => shown.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0);
+
+    const res = await request.get(picture);
+    expect(res.ok()).toBe(true);
+    expect(res.headers()['content-type']).toMatch(/^image\//);
+    expect(res.headers()['cache-control']).toContain('immutable');
+    // Only the café's own posts, and only by their id.
+    expect((await request.get('/media/display/instagram-123.jpg')).status()).toBe(404);
+    expect((await request.get('/media/display/instagram-abc.jpg')).status()).toBe(404);
+    // The posters beside it are still plain files.
+    expect((await request.get('/media/display/chia-parfait-offer-en-upright.jpg')).ok()).toBe(true);
+  });
+
   test('the ordering-hours endpoint serves the Google schedule with a 30-minute cutoff', async ({
     request,
   }) => {
