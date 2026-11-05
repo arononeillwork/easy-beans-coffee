@@ -26,13 +26,44 @@ The join between the two halves is the **item name**, normalized. `square: 'Flat
 renders with its price withheld and cannot be ordered — a visible, harmless failure rather than
 a silently wrong number.
 
+## What the Business Agent decides
+
+The café keeps its menu once, in the Business Agent (its back office: `businesssagent.com`), which
+sends it to Google Maps, the screens, the printed menus — and here. So **which items are on the
+menu is the agent's to say** (`src/features/menu/agentMenu.ts`):
+
+- An item taken **off the menu** in the agent leaves `/order`, the home page run and the in-café
+  board, the same way it leaves Google Maps.
+- An item the agent lists that `drinks.ts` has no entry for still appears, in the section its
+  category maps to (Classics → Coffee, Cold Drinks → Cold Drinks, anything unknown → Food), with the
+  agent's name and description, the "photo soon" plate, Square's variations and modifier lists — and
+  it can be ordered. Give it an entry in `drinks.ts` and photography to make it look like the rest.
+- Items `drinks.ts` knows keep their bilingual copy, photography and option rails.
+- `SQUARE_EXCLUDE_RULES` still applies on top: counter-only items (`PROMO…`, `Cafe con Leche`) stay
+  off the site whatever the agent lists.
+
+The feed is `GET https://businesssagent.com/api/site/1/menu` (Easy Beans is business 1), public and
+switched on in the agent under Website & SEO → *The menu on your website*; its contract is
+`docs/WEBSITE.md` in the business-agent repo. It is read every five minutes
+(`src/server/businessAgent/menuFeed.ts`), and `/order` regenerates every five minutes, so a change
+in the agent is here within a few. If the agent can't be reached the last menu read is kept; with
+none, the board is `drinks.ts` as shipped. `BUSINESS_AGENT_MENU_URL` points it elsewhere or turns it
+`off`; a laptop or the e2e suite reads nothing unless it's set.
+
+**Prices.** The agent reads its prices from Square, so they are Square's. Square is still the one
+that charges, so the price shown is always Square's: if the two ever differ (the hour before the
+agent next reads Square) the site shows what the customer will pay and logs the difference. To
+change a price, change it in Square; the agent, Google Maps, the screens and this site follow.
+
 ## Prices
 
 Prices change at a café a few times a year, so re-reading them per visit buys nothing. The
 snapshot turns over when Madrid does, not on a rolling timer, so everyone on a given day is
 quoted the same number.
 
-- Browsing: `getPriceBook()` — one Square read per café day, served stale on failure.
+- Browsing: `getPriceBook()` — Square read at most every fifteen minutes (it was once per café day,
+  before the agent could add an item mid-day), served stale on failure, then cut to what the agent
+  lists.
 - Prerender: the page is regenerated hourly at the edge with the snapshot already in the HTML.
 - Client fallback: `GET /api/prices`, reached only when the page was built while Square was
   unreachable. That is also what the e2e specs mock.

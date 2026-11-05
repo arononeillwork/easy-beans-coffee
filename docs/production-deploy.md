@@ -20,6 +20,7 @@ Set for **Production** only — never reuse sandbox values:
 | `SQUARE_WEBHOOK_SIGNATURE_KEY` | From the production webhook subscription |
 | `SQUARE_WEBHOOK_NOTIFICATION_URL` | `https://www.easybeanscoffee.com/api/webhooks/square` |
 | `SQUARE_EXCLUDE_RULES` | *(optional)* Catalog names to hide, e.g. `starts:test, contains:do not use`. Unset means `starts:test, starts:promo`; empty means filter nothing. |
+| `BUSINESS_AGENT_MENU_URL` | *(optional)* Where the menu's listing is read from: the Business Agent's feed. Unset, a Vercel deployment reads `https://businesssagent.com/api/site/1/menu` (Easy Beans) and a laptop reads nothing; `off` switches it off. See `docs/menu.md`. |
 | `NEXT_PUBLIC_SITE_URL` | `https://www.easybeanscoffee.com` |
 | `CAFE_TIMEZONE` | `Europe/Madrid` |
 | `SMTP_HOST` | Mail provider host — offer emails do not send without it |

@@ -6,7 +6,6 @@ import { CafeFilm } from '@/components/home/CafeFilm';
 import { CanBand } from '@/components/home/CanBand';
 import { InstagramGrid } from '@/components/home/InstagramGrid';
 import { VisitSection } from '@/components/home/VisitSection';
-import { NewsletterStrip } from '@/components/home/NewsletterStrip';
 import { isLang } from '@/i18n/config';
 import { getDictionary } from '@/i18n/dictionary';
 import { getPlaceDetails } from '@/server/places/googlePlaces';
@@ -32,7 +31,6 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       <CanBand t={t} />
       <InstagramGrid t={t} />
       <VisitSection t={t} lang={lang} place={place} />
-      <NewsletterStrip />
     </>
   );
 }

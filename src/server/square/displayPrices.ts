@@ -1,5 +1,7 @@
 import 'server-only';
+import { applyAgentMenu } from '@/features/menu/agentMenu';
 import { cafeDay, toPriceBook, EMPTY_PRICE_BOOK, type PriceBook } from '@/features/menu/priceBook';
+import { getAgentMenu } from '../businessAgent/menuFeed';
 import { getCafeTimezone } from '../env';
 import { getCatalog } from './catalogCache';
 
@@ -22,10 +24,14 @@ const REVALIDATE_SECONDS = 5 * 60;
 
 export async function getDisplayPriceBook(): Promise<PriceBook> {
   const day = cafeDay(Date.now(), getCafeTimezone());
+  // What's on the board is the Business Agent's to say, as on /order.
+  const agent = getAgentMenu();
+  let book: PriceBook;
   try {
     const menu = await getCatalog({ revalidateSeconds: REVALIDATE_SECONDS });
-    return toPriceBook(menu, day);
+    book = toPriceBook(menu, day);
   } catch {
-    return EMPTY_PRICE_BOOK;
+    book = EMPTY_PRICE_BOOK;
   }
+  return applyAgentMenu(book, await agent).book;
 }

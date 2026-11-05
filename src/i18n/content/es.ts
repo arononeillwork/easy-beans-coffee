@@ -34,8 +34,8 @@ export const es: SiteContent = {
     'Pide antes, recoge sin cola',
   ],
   video: {
-    headline: 'Café pequeño, días grandes.',
-    body: 'Del primer molido de la mañana al último café en la terraza: así es un día en Easy Beans.',
+    headline: 'Del primer molido al último sorbo.',
+    body: 'Mañanas en la barra, tardes en la terraza. Así es un día en Easy Beans.',
     cta: 'Más en Instagram',
     label: 'Un día normal en Easy Beans: mostrador, molinillo y terraza',
   },
@@ -63,16 +63,15 @@ export const es: SiteContent = {
   },
   story: {
     title: 'Nosotros',
-    headline: 'Una idea nacida en Irlanda, hecha realidad en España.',
+    headline: 'Una idea nacida en Irlanda y servida en la Costa del Sol.',
     body: 'Cafetería de especialidad de dueños irlandeses en San Pedro de Alcántara.',
     paragraphs: [
       'Abrimos en abril de 2026 con una promesa: tu café, matcha o ube debe saber igual de bien en tu décima visita que en la primera.',
-      'Por eso calibramos el espresso cada mañana, batimos cada matcha al momento y preparamos el ube desde cero, aquí mismo, detrás de la barra.',
     ],
     photoAlt: 'La terraza de Easy Beans en Calle Pizarro',
   },
   can: {
-    line: 'Cualquier bebida fría, sellada al momento en lata delante de ti.',
+    line: 'Fresca. Sellada. Tuya. Cualquier bebida fría, enlatada en la barra.',
     alt: 'Un latte con hielo en una lata de Easy Beans, en la terraza',
   },
   education: {
@@ -203,12 +202,8 @@ export const es: SiteContent = {
     ],
   },
   newsletter: {
-    headline: 'Sé el primero en la próxima cata',
-    body: 'Catas de café, bebidas nuevas y eventos en el café: un email cuando se acerque algo. Nunca spam.',
     emailLabel: 'Email',
     placeholder: 'tu@ejemplo.com',
-    cta: 'Apuntarme',
-    done: 'Ya estás en la lista.',
   },
   popup: {
     headline: '10% en tus pedidos online',

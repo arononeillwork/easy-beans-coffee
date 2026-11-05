@@ -38,8 +38,8 @@ export const en = {
     'Order ahead, skip the queue',
   ],
   video: {
-    headline: 'Small café, big days.',
-    body: 'From the first grind of the morning to the last coffee on the terrace — this is a day at Easy Beans.',
+    headline: 'From first grind to last sip.',
+    body: 'Mornings at the counter, afternoons on the terrace. This is a day at Easy Beans.',
     cta: 'More on Instagram',
     label: 'A normal day at Easy Beans: counter, grinder and terrace',
   },
@@ -70,16 +70,15 @@ export const en = {
   },
   story: {
     title: 'About us',
-    headline: 'An idea born in Ireland, brought to life in Spain.',
+    headline: 'An idea born in Ireland and served on the Costa del Sol.',
     body: 'Irish-owned specialty café in San Pedro de Alcántara.',
     paragraphs: [
       'We opened our doors in April 2026 with one promise: your coffee, matcha or ube should taste just as good on your tenth visit as on your first.',
-      'So our espresso is dialled in fresh every morning, every matcha is whisked to order, and our ube is made from scratch, right here behind the counter.',
     ],
     photoAlt: 'The Easy Beans terrace on Calle Pizarro',
   },
   can: {
-    line: 'Any iced drink, sealed fresh in a can while you watch.',
+    line: 'Fresh. Sealed. Yours. Any cold drink, canned at the counter.',
     alt: 'An iced latte in an Easy Beans can, held on the terrace',
   },
   /** Names for the allergen table on the menu page. */
@@ -211,13 +210,10 @@ export const en = {
       },
     ],
   },
+  /** The email field's own words, wherever an email signup appears (the shop's coming-soon form). */
   newsletter: {
-    headline: 'Be first to the next tasting',
-    body: 'Coffee tastings, new drinks and café events — one email when something is coming up. No spam, ever.',
     emailLabel: 'Email',
     placeholder: 'you@example.com',
-    cta: 'Sign up',
-    done: 'You are on the list.',
   },
   popup: {
     headline: '10% off your online orders',
