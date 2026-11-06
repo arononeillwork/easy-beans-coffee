@@ -144,8 +144,12 @@ export async function markOfferRedeemed(code: string, orderId: string): Promise<
   return (data?.length ?? 0) > 0;
 }
 
-/** One-click unsubscribe from the link in every email. Drops both consents. */
-export async function unsubscribeByToken(token: string): Promise<boolean> {
+/**
+ * One-click unsubscribe from the link in every email. Drops both consents.
+ * Returns the address it unsubscribed (so the Business Agent can be told too),
+ * or null when the token matched no one.
+ */
+export async function unsubscribeByToken(token: string): Promise<string | null> {
   const { data, error } = await getSupabaseAdmin()
     .from('email_signups')
     .update({
@@ -154,13 +158,13 @@ export async function unsubscribeByToken(token: string): Promise<boolean> {
       events_optin: false,
     })
     .eq('unsubscribe_token', token)
-    .select('id');
+    .select('id, email');
 
   if (error) {
     console.error('unsubscribe failed', { code: error.code, message: error.message });
-    return false;
+    return null;
   }
-  return (data?.length ?? 0) > 0;
+  return data?.[0]?.email ?? null;
 }
 
 /**

@@ -58,6 +58,15 @@ the screens, the printed menus and this site. The site follows its list — an i
 there leaves `/order`, and one added there appears (with a "photo soon" plate until it gets an entry
 in `drinks.ts`). Square still prices and takes every order. See `docs/menu.md`.
 
+### Newsletter sign-ups go to the Business Agent too
+
+Every sign-up (the subscribe popup, the newsletter section, the shop page and competition entries)
+is kept here in `email_signups` and sent on to the Business Agent, where the person is on the café's
+Customers with a yes to marketing and the ticked topics as tags (Learning English, Offers…), so its
+campaigns can pick them. Unsubscribes and deleted accounts take that yes back there. It needs the
+website key in `BUSINESS_AGENT_NEWSLETTER_KEY` (`docs/production-deploy.md`); without it, or when the
+agent is down, sign-ups here carry on as before. `src/server/businessAgent/newsletter.ts`.
+
 ## Docs
 
 - `docs/menu.md` — the drink studio, the photography pipeline and the price book
