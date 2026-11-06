@@ -1,4 +1,6 @@
+import { after } from 'next/server';
 import { unsubscribeByToken } from '@/server/leads/leadRepo';
+import { sendUnsubscribeToAgent } from '@/server/businessAgent/newsletter';
 
 export const dynamic = 'force-dynamic';
 
@@ -60,7 +62,9 @@ export async function POST(request: Request) {
     return page('<p style="margin:0;font-size:15px;">Enlace no válido. / Invalid link.</p>');
   }
 
-  const done = await unsubscribeByToken(token);
+  const email = await unsubscribeByToken(token);
+  // The Business Agent keeps them on its customers but stops its marketing.
+  if (email) after(() => sendUnsubscribeToAgent(email));
 
   // Same wording either way: an unknown token must not confirm or deny that an
   // address is on the list.
@@ -68,5 +72,5 @@ export async function POST(request: Request) {
     <p style="margin:0;font-size:15px;line-height:1.55;">
       Listo. No recibirás más emails.<br />
       <span style="color:rgba(26,26,26,0.45);">Done. You will not receive further emails.</span>
-    </p>${done ? '' : '<!-- token not found -->'}`);
+    </p>${email ? '' : '<!-- token not found -->'}`);
 }

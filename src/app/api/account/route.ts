@@ -4,6 +4,7 @@ import { isAccountAuthConfigured } from '@/server/env';
 import { getAccountIdentity, deleteAuthUser } from '@/server/account/identity';
 import { getSupabaseAuthServer } from '@/server/auth/supabaseSession';
 import { deleteLeadByEmail } from '@/server/leads/leadRepo';
+import { sendUnsubscribeToAgent } from '@/server/businessAgent/newsletter';
 import { deleteCustomer, updateCustomer, type CustomerProfileInput } from '@/server/square/customers';
 
 /**
@@ -111,6 +112,10 @@ export async function DELETE() {
     // the Supabase Auth user. Paid orders stay — accounting, not marketing.
     await deleteCustomer(identity.customer.id);
     await deleteLeadByEmail(identity.email);
+    // The Business Agent keeps the café's customer record but takes back the
+    // yes to marketing; erasing them there is the café's to do (Customers →
+    // delete), as the agent's API can't delete anyone.
+    await sendUnsubscribeToAgent(identity.email);
     await deleteAuthUser(identity.userId);
 
     // The cookies still hold tokens for a user that no longer exists; clear

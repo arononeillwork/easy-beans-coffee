@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { captureLead, getUnsubscribeToken, recentSignupCount } from '@/server/leads/leadRepo';
 import { sendOfferEmail } from '@/server/email/offerEmail';
 import { upsertNewsletterSubscriber } from '@/server/square/customers';
+import { sendSignupToAgent } from '@/server/businessAgent/newsletter';
 import { INTEREST_KEYS } from '@/shared/lib/interests';
 
 /**
@@ -93,14 +94,24 @@ export async function POST(request: Request) {
       }
     }
 
-    // Mirror the subscriber into Square's Customer Directory after the
-    // response is sent. Supabase already holds the signup, so Square being
-    // down costs nothing but a log line — never a failed signup.
-    after(() =>
-      upsertNewsletterSubscriber({ email: parsed.email, phone: parsed.phone ?? null }).catch(
+    // After the response is sent: into the Business Agent (the café's
+    // customers, with the ticked topics as tags), then mirrored into Square's
+    // Customer Directory. The agent goes first because it also reads Square's
+    // customers: this way it has them as from the website, not from Square.
+    // Supabase already holds the signup, so either being down costs nothing
+    // but a log line — never a failed signup.
+    after(async () => {
+      await sendSignupToAgent({
+        email: parsed.email,
+        interests: parsed.interests,
+        phone: parsed.phone ?? null,
+        lang: parsed.lang ?? null,
+        place: parsed.source,
+      });
+      await upsertNewsletterSubscriber({ email: parsed.email, phone: parsed.phone ?? null }).catch(
         (err) => console.error('square subscriber sync failed', err),
-      ),
-    );
+      );
+    });
 
     // The code goes back to the client so the popup can show it immediately —
     // the email is the durable copy, not the only one.

@@ -1,10 +1,11 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { z } from 'zod';
 import { captureLead, recentSignupCount } from '@/server/leads/leadRepo';
 import { recordCompetitionEntry } from '@/server/competition/entryRepo';
 import { drawMonthFor } from '@/server/competition/drawMonth';
 import { clientIp } from '@/server/requestIp';
 import { parseInstagramHandle } from '@/features/competition/instagram';
+import { sendSignupToAgent } from '@/server/businessAgent/newsletter';
 
 /**
  * Monthly €10 competition entry. Signing up for news & offers is the entry
@@ -79,6 +80,20 @@ export async function POST(request: Request) {
       ip,
       userAgent,
     });
+
+    // Entering signs them up for news (step 2 on the poster), so they go on to
+    // the Business Agent's customers too, after the response — never failing
+    // the entry.
+    after(() =>
+      sendSignupToAgent({
+        email: body.email,
+        interests: [],
+        phone: body.phone ?? null,
+        name: body.name,
+        lang: body.lang,
+        place: 'competition',
+      }),
+    );
 
     return NextResponse.json({ ok: true, alreadyEntered: !isNew, drawMonth });
   } catch (err) {
