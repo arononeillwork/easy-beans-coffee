@@ -35,7 +35,7 @@ npm run media:drinks         # pull the drink photography from Drive and encode 
 | `/order/status/[token]` | Live order status (polls; webhook-fed) |
 | `/admin` | Internal todo board (Supabase `ToDo`) |
 | `/admin/website` | Owner's website desk: domains + Cloudflare DNS editor, and the website studio (redesign / generate a site, regenerate, buy the build-out) |
-| `/display-menu` | The in-café TV (portrait): the newest Instagram post, whole, with the handle under it; checks for a newer post every 2 minutes and reloads itself when it changes. The menu board (`features/menu/display`) is kept for when the screen goes back to the menu |
+| `/display-menu` | The in-café TV (portrait): the cake + coffee €7 post, whole, with the handle under it; reloads itself when its picture changes. Following the newest Instagram post by itself (checked every 2 minutes) is switched off: `SHOW_NEWEST_POST` on the page turns it back on. The menu board (`features/menu/display`) is kept for when the screen goes back to the menu |
 | `/api/menu·prices·checkout·orders/[token]/status·webhooks/square·signup` | Server endpoints |
 
 ## The menu
