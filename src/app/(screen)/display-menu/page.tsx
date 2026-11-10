@@ -1,17 +1,21 @@
 /**
  * The in-café TV (easybeanscoffee.com/display-menu), turned vertical. It shows
- * the café's newest Instagram post, whole, with the handle under it, upright
- * even when the TV still sends the browser a landscape picture (see Poster).
+ * one Instagram post, whole, with the handle under it, upright even when the
+ * TV still sends the browser a landscape picture (see Poster).
  *
- * The page asks Instagram for the newest post every couple of minutes, and the
- * TV reloads itself when the picture changes (ReloadOnChange), so a new post
- * reaches the screen a few minutes after it goes up, without anyone touching
- * the TV. The picture comes through the site's own address for it
- * (media/display/[file]), which stays put while Instagram's own expires.
+ * For now that is the cake + coffee €7 post (PINNED_POST), kept as a file of
+ * the site's own so the screen never waits on Instagram. The TV reloads itself
+ * when the picture changes (ReloadOnChange), so a new picture here reaches the
+ * screen within a minute of the deploy, without anyone touching the TV.
  *
- * If Instagram stops answering, the screen keeps the post it already has: the
- * read throws, and Next keeps serving the last good page. With no Instagram
- * token at all it shows the coffee + Chia Seed Parfait offer poster, as before.
+ * With SHOW_NEWEST_POST on, it follows the café's newest Instagram post
+ * instead: the page asks Instagram for it every couple of minutes, and the
+ * picture comes through the site's own address for it (media/display/[file]),
+ * which stays put while Instagram's own expires. If Instagram stops answering,
+ * the screen keeps the post it already has: the read throws, and Next keeps
+ * serving the last good page. With no Instagram token at all it shows the
+ * coffee + Chia Seed Parfait offer poster.
+ *
  * The menu board (features/menu/display/DisplayBoard) is kept for when the
  * screen goes back to the menu.
  */
@@ -23,18 +27,31 @@ import { ReloadOnChange } from './ReloadOnChange';
 /** Seconds between asks for a newer post. */
 export const revalidate = 120;
 
+/**
+ * Whether the TV follows the newest Instagram post by itself. Off: it shows
+ * PINNED_POST and nothing posted later replaces it. Turning it back on is
+ * this one line.
+ */
+const SHOW_NEWEST_POST = false;
+
+/** What the TV shows while SHOW_NEWEST_POST is off: the cake + coffee €7 post of 5 November 2026. */
+const PINNED_POST = {
+  src: '/media/display/cake-coffee-offer.jpg',
+  alt: 'Cake + coffee for just €7: a slice of Berry Cheesecake or Tarta de la Abuela with a coffee',
+};
+
 const FALLBACK_POSTER = '/media/display/chia-parfait-offer-en-upright.jpg';
 
 const INSTAGRAM_HANDLE = '@easy.beans.coffee';
 
 export default async function DisplayMenuPage() {
-  const post = await latestPost();
-  const src = post ? `/media/display/instagram-${post.mediaId}.jpg` : FALLBACK_POSTER;
+  const shown = SHOW_NEWEST_POST ? await newestPost() : PINNED_POST;
+  const src = shown?.src ?? FALLBACK_POSTER;
 
   return (
     <main style={{ position: 'fixed', inset: 0, background: brand.cream, overflow: 'hidden' }}>
-      {post ? (
-        <Poster src={src} alt={post.caption || `Our latest post on Instagram, ${INSTAGRAM_HANDLE}`} post>
+      {shown ? (
+        <Poster src={src} alt={shown.alt} post>
           <Handle />
         </Poster>
       ) : (
@@ -43,6 +60,14 @@ export default async function DisplayMenuPage() {
       <ReloadOnChange poster={src} />
     </main>
   );
+}
+
+/** The newest Instagram post's picture, through the site's own address for it; null: none to show. */
+async function newestPost() {
+  const post = await latestPost();
+  return post
+    ? { src: `/media/display/instagram-${post.mediaId}.jpg`, alt: post.caption || `Our latest post on Instagram, ${INSTAGRAM_HANDLE}` }
+    : null;
 }
 
 async function latestPost() {

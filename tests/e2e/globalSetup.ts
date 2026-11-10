@@ -28,7 +28,7 @@ const ROUTES = [
   '/admin',
   // The cart asks this for the live opening hours; cold it outlasts an assertion.
   '/api/ordering-hours',
-  // The café TV, which asks Instagram for the newest post.
+  // The café TV.
   '/display-menu',
 ];
 

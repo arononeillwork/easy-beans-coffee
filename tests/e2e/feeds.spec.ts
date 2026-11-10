@@ -48,18 +48,23 @@ test.describe('automatic data feeds', () => {
     }
   });
 
-  test('the café TV shows the newest Instagram post, through the site\'s own picture address', async ({ page, request }) => {
-    const newest = FIXTURE.posts[0];
-    const picture = `/media/display/instagram-${newest.id}.jpg`;
-
+  test('the café TV keeps the cake + coffee post, not the newest Instagram post', async ({ page }) => {
     await page.goto('/display-menu');
     const shown = page.getByTestId('screen-picture');
-    await expect(shown).toHaveAttribute('src', picture);
-    await expect(shown).toHaveAttribute('alt', newest.caption);
+    await expect(shown).toHaveAttribute('src', '/media/display/cake-coffee-offer.jpg');
+    await expect(shown).toHaveAttribute('alt', /Cake \+ coffee for just €7/);
     await expect(page.getByText('@easy.beans.coffee')).toBeVisible();
     // The picture actually arrives, not just its address.
     await expect.poll(() => shown.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0);
+    // Newer posts on Instagram don't take its place while the switch is off.
+    for (const post of FIXTURE.posts) {
+      await expect(page.locator(`img[src="/media/display/instagram-${post.id}.jpg"]`)).toHaveCount(0);
+    }
+  });
 
+  test('a post\'s picture for the TV comes through the site\'s own picture address', async ({ request }) => {
+    // What the TV shows when it follows the newest post (SHOW_NEWEST_POST on the /display-menu page).
+    const picture = `/media/display/instagram-${FIXTURE.posts[0].id}.jpg`;
     const res = await request.get(picture);
     expect(res.ok()).toBe(true);
     expect(res.headers()['content-type']).toMatch(/^image\//);
