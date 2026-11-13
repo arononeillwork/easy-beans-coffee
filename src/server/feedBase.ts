@@ -2,7 +2,7 @@ import 'server-only';
 
 /**
  * Test seam for the third-party feeds the site reads automatically (Google
- * Places, Instagram, TikTok, the Square catalog).
+ * Places, Instagram, TikTok, the Square catalog, the Business Agent's details).
  *
  * With `E2E_FEEDS_BASE` set — and only outside a production build — every feed
  * request goes to `${E2E_FEEDS_BASE}/<service>/...` instead of the real host,
@@ -10,7 +10,7 @@ import 'server-only';
  * sees) against a local stand-in (tests/e2e/mockFeeds.mjs). A production build
  * ignores the variable entirely, so it can never redirect live traffic.
  */
-export type FeedService = 'places' | 'instagram' | 'tiktok' | 'square';
+export type FeedService = 'places' | 'instagram' | 'tiktok' | 'square' | 'agent';
 
 export function feedUrl(service: FeedService, realUrl: string): string {
   const base = process.env.NODE_ENV !== 'production' ? process.env.E2E_FEEDS_BASE?.trim() : undefined;

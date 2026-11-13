@@ -83,6 +83,8 @@ export default defineConfig({
       // the local stand-in (src/server/feedBase.ts honours this only outside a
       // production build). Real keys in .env.local are overridden here.
       E2E_FEEDS_BASE: `http://localhost:${MOCK_FEEDS_PORT}`,
+      // The Business Agent's details (hours, closures, address, contacts): read from the stand-in too.
+      BUSINESS_AGENT_DETAILS_URL: 'https://businesssagent.com/api/site/1/details',
       GOOGLE_PLACES_API_KEY: 'e2e-key',
       GOOGLE_PLACE_ID: 'e2e-place',
       INSTAGRAM_ACCESS_TOKEN: 'e2e-token',

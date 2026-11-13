@@ -1,5 +1,6 @@
 import 'server-only';
 import { parseAgentMenu, type AgentMenu } from '@/features/menu/agentMenu';
+import { liveSiteBase } from './agent';
 
 /**
  * The menu as the Business Agent has it — the café's back office, where the
@@ -12,8 +13,6 @@ import { parseAgentMenu, type AgentMenu } from '@/features/menu/agentMenu';
  * docs/WEBSITE.md.
  */
 
-/** Easy Beans is business 1 on the live agent. */
-const LIVE_FEED = 'https://businesssagent.com/api/site/1/menu';
 
 /**
  * Kept five minutes, so a change in the agent is on the site within a few.
@@ -32,7 +31,7 @@ const TIMEOUT_MS = 4000;
 export function agentMenuUrl(): string | null {
   const set = process.env.BUSINESS_AGENT_MENU_URL?.trim();
   if (set) return set.toLowerCase() === 'off' ? null : set;
-  return process.env.VERCEL === '1' ? LIVE_FEED : null;
+  return process.env.VERCEL === '1' ? `${liveSiteBase()}/menu` : null;
 }
 
 let lastGood: AgentMenu | null = null;

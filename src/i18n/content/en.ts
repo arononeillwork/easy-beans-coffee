@@ -329,13 +329,14 @@ export const en = {
   },
   footer: {
     hoursTitle: 'Opening hours',
-    /** Fallback only: the live hours come from Google Maps. */
+    /** Fallback only: the live hours come from the Business Agent. */
     hours: [
       { label: 'Mon – Fri', value: '8:00 – 15:00' },
       { label: 'Saturday', value: '9:00 – 15:00' },
       { label: 'Sunday', value: 'Closed' },
     ],
     closed: 'Closed',
+    closedOn: 'Closed {dates}',
     allDay: 'Open 24 h',
     contactTitle: 'Contact',
     rights: '© 2026 Easy Beans Coffee',

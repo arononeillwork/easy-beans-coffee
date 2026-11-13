@@ -79,11 +79,21 @@ where the café's ledger has to keep their lines). Same key and address as the n
 seconds, or the switch off, and the card just isn't shown. `src/server/businessAgent/account.ts`;
 the contract is the agent's `docs/WEBSITE.md` → "Accounts & rewards".
 
+### Address, contacts and opening hours come from the Business Agent
+
+The footer (hours, the days the café is closed soon, address, WhatsApp, email, Instagram, TikTok), the
+visit section (the street and town, "open now", directions, WhatsApp) and online ordering's hours all
+come from the Business Agent's details feed, `https://businesssagent.com/api/site/1/details`: change
+them on the agent's Business and Opening hours pages (and closures on its Calendar) and the site
+follows within five minutes, no deploy. Google Maps gets the same from the agent. An agent that can't
+be read gives the last details read, and with none the built-in ones in
+`src/features/details/agentDetails.ts`. `src/server/businessAgent/detailsFeed.ts`.
+
 ## Docs
 
 - `docs/menu.md` — the drink studio, the photography pipeline and the price book
 - `docs/shop.md` — how retail stock is modelled, badged and fulfilled
-- `docs/google-reviews-setup.md` — Places API key/place id: live reviews + footer opening hours
+- `docs/google-reviews-setup.md` — Places API key/place id: live reviews (the opening hours now come from the Business Agent)
 - `docs/social-feed-setup.md` — Instagram/TikTok tokens for the live post grid
 - `docs/square-sandbox-setup.md` — end-to-end sandbox walkthrough
 - `docs/production-deploy.md` — Vercel env + go-live steps

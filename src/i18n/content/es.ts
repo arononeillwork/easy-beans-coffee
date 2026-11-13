@@ -316,6 +316,7 @@ export const es: SiteContent = {
       { label: 'Domingo', value: 'Cerrado' },
     ],
     closed: 'Cerrado',
+    closedOn: 'Cerrado {dates}',
     allDay: 'Abierto 24 h',
     contactTitle: 'Contacto',
     rights: '© 2026 Easy Beans Coffee',

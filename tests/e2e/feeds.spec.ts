@@ -25,15 +25,27 @@ test.describe('automatic data feeds', () => {
     await expect(page.getByTestId('google-review-count').first()).toContainText(String(FIXTURE.total));
   });
 
-  test('opening hours come from Google Maps, not the built-in week', async ({ page }) => {
+  test('opening hours, closures, address and contacts come from the Business Agent, not the built-in ones', async ({ page }) => {
     const home = new HomePage(page);
     await home.withPopupDismissed();
     await home.open();
 
     const hours = page.getByTestId('opening-hours').first();
-    await expect(hours).toHaveAttribute('data-source', 'google');
+    await expect(hours).toHaveAttribute('data-source', 'agent');
     await expect(hours).toContainText('7:45 – 16:15');
     await expect(hours).toContainText('10:00 – 14:00');
+    // A closure on the agent's Calendar in the next two weeks is said under the hours.
+    await expect(page.getByTestId('closure').first()).toContainText(FIXTURE.agent.closureReason);
+
+    const footer = page.locator('footer');
+    await expect(footer.getByRole('link', { name: FIXTURE.agent.address })).toBeVisible();
+    await expect(footer.locator(`a[href="${FIXTURE.agent.whatsappUrl}"]`)).toHaveCount(1);
+    await expect(footer.locator(`a[href="mailto:${FIXTURE.agent.email}"]`)).toHaveCount(1);
+
+    const visit = page.locator('#visit');
+    await expect(visit.getByRole('heading', { level: 2 })).toHaveText(FIXTURE.agent.street);
+    await expect(visit).toContainText(FIXTURE.agent.town);
+    await expect(visit.locator(`a[href="${FIXTURE.agent.whatsappUrl}"]`)).toHaveCount(1);
   });
 
   test('the social grid shows live Instagram posts linking to each post', async ({ page }) => {
@@ -76,7 +88,7 @@ test.describe('automatic data feeds', () => {
     expect((await request.get('/media/display/chia-parfait-offer-en-upright.jpg')).ok()).toBe(true);
   });
 
-  test('the ordering-hours endpoint serves the Google schedule with a 30-minute cutoff', async ({
+  test('the ordering-hours endpoint serves the Business Agent’s week with a 30-minute cutoff', async ({
     request,
   }) => {
     const res = await request.get('/api/ordering-hours');
@@ -86,7 +98,7 @@ test.describe('automatic data feeds', () => {
       cutoffMinutes: number;
       hours: { day: number; ranges: { open: number; close: number | null }[] }[];
     };
-    expect(body.source).toBe('google');
+    expect(body.source).toBe('agent');
     expect(body.cutoffMinutes).toBe(30);
     const monday = body.hours.find((d) => d.day === 1);
     expect(monday?.ranges).toEqual([{ open: 7 * 60 + 45, close: 16 * 60 + 15 }]);
@@ -95,8 +107,8 @@ test.describe('automatic data feeds', () => {
 });
 
 /**
- * Online ordering follows the same Google hours and stops 30 minutes before
- * closing. The browser clock is pinned; times are Madrid local (CEST, UTC+2).
+ * Online ordering follows the Business Agent's hours and stops 30 minutes
+ * before closing. The browser clock is pinned; times are Madrid local (CEST, UTC+2).
  */
 test.describe('online ordering follows the live hours', () => {
   async function cartAt(page: Page, madridLocal: string) {
@@ -115,7 +127,7 @@ test.describe('online ordering follows the live hours', () => {
     return page.getByTestId('ordering-state');
   }
 
-  test('open at 7:50 on a weekday — Google says 7:45, the built-in week says 8:00', async ({ page }) => {
+  test('open at 7:50 on a weekday — the agent says 7:45, the built-in week says 8:00', async ({ page }) => {
     const state = await cartAt(page, '2026-10-21T07:50:00');
     await expect(state).toHaveAttribute('data-open', 'true');
   });

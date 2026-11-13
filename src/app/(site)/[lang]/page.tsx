@@ -9,18 +9,20 @@ import { VisitSection } from '@/components/home/VisitSection';
 import { isLang } from '@/i18n/config';
 import { getDictionary } from '@/i18n/dictionary';
 import { getPlaceDetails } from '@/server/places/googlePlaces';
+import { getCafeDetails } from '@/server/businessAgent/detailsFeed';
 import { getPriceBookOrEmpty } from '@/server/square/priceCache';
 
 /**
- * Six blocks, each carrying live data where it has any: open/closed from the
- * Google hours, prices from Square, posts from Instagram, rating from Google.
+ * Six blocks, each carrying live data where it has any: open/closed, the
+ * address and WhatsApp from the Business Agent, prices from Square, posts from
+ * Instagram, rating from Google.
  * Copy is kept to what a visitor needs to act.
  */
 export default async function HomePage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
   const t = getDictionary(lang);
-  const [place, prices] = await Promise.all([getPlaceDetails(lang), getPriceBookOrEmpty()]);
+  const [place, prices, details] = await Promise.all([getPlaceDetails(lang), getPriceBookOrEmpty(), getCafeDetails()]);
 
   return (
     <>
@@ -30,7 +32,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       <CafeFilm t={t} />
       <CanBand t={t} />
       <InstagramGrid t={t} />
-      <VisitSection t={t} lang={lang} place={place} />
+      <VisitSection t={t} lang={lang} place={place} details={details} />
     </>
   );
 }
