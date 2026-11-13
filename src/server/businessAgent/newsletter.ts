@@ -1,4 +1,5 @@
 import 'server-only';
+import { liveSiteBase } from './agent';
 
 /**
  * Newsletter sign-ups into the Business Agent, the café's back office. Every
@@ -17,8 +18,6 @@ import 'server-only';
  * there for Easy Beans.
  */
 
-/** Easy Beans is business 1 on the live agent. */
-const LIVE_SITE = 'https://businesssagent.com/api/site/1';
 const TIMEOUT_MS = 4000;
 
 /**
@@ -30,7 +29,7 @@ const TIMEOUT_MS = 4000;
 export function agentSiteUrl(): string | null {
   const set = process.env.BUSINESS_AGENT_SITE_URL?.trim();
   if (set) return set.toLowerCase() === 'off' ? null : set.replace(/\/+$/, '');
-  return process.env.VERCEL === '1' ? LIVE_SITE : null;
+  return process.env.VERCEL === '1' ? liveSiteBase() : null;
 }
 
 /**

@@ -1,6 +1,7 @@
 import 'server-only';
 import { cafeDetails, fallbackDetails, parseAgentDetails, type AgentDetails, type CafeDetails } from '@/features/details/agentDetails';
 import { feedUrl } from '../feedBase';
+import { liveSiteBase } from './agent';
 
 /**
  * The café's details — address, contacts, social accounts, opening hours and
@@ -13,9 +14,6 @@ import { feedUrl } from '../feedBase';
  * SEO → Your details on your website). Its contract lives in the
  * business-agent repo, docs/WEBSITE.md.
  */
-
-/** Easy Beans is business 1 on the live agent. */
-const LIVE_FEED = 'https://businesssagent.com/api/site/1/details';
 
 /**
  * Kept five minutes, so a change in the agent (hours, a closure) is on the
@@ -33,7 +31,7 @@ const TIMEOUT_MS = 4000;
 export function agentDetailsUrl(): string | null {
   const set = process.env.BUSINESS_AGENT_DETAILS_URL?.trim();
   if (set) return set.toLowerCase() === 'off' ? null : set;
-  return process.env.VERCEL === '1' ? LIVE_FEED : null;
+  return process.env.VERCEL === '1' ? `${liveSiteBase()}/details` : null;
 }
 
 let lastGood: AgentDetails | null = null;

@@ -2,6 +2,8 @@ import test, { afterEach, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { FALLBACK_DETAILS, cafeDetails, nextWeekOf, parseAgentDetails, weekOf } from '@/features/details/agentDetails';
 import { agentDetailsUrl, getCafeDetails } from '@/server/businessAgent/detailsFeed';
+import { agentMenuUrl } from '@/server/businessAgent/menuFeed';
+import { agentSiteUrl } from '@/server/businessAgent/newsletter';
 import { getOrderingHours } from '@/server/places/orderingHours';
 
 /**
@@ -59,6 +61,9 @@ beforeEach(() => {
   delete process.env.BUSINESS_AGENT_DETAILS_URL;
   delete process.env.VERCEL;
   delete process.env.E2E_FEEDS_BASE;
+  delete process.env.BUSINESS_AGENT_BUSINESS;
+  delete process.env.BUSINESS_AGENT_MENU_URL;
+  delete process.env.BUSINESS_AGENT_SITE_URL;
   globalThis.fetch = (async (input: string | URL | Request) => {
     calls.push(String(input));
     return answer();
@@ -154,4 +159,15 @@ test('a closure on the agent’s Calendar this week closes online ordering that 
   assert.equal(source, 'agent');
   assert.deepEqual(hours.find((d) => d.day === 4)?.ranges, [], 'Thursday the 24th: closed for Christmas');
   assert.deepEqual(hours.find((d) => d.day === 3)?.ranges, [{ open: 7 * 60 + 45, close: 16 * 60 + 15 }]);
+});
+
+test('another business’s site built from this code sets its number once, and every address follows', () => {
+  process.env.VERCEL = '1';
+  assert.equal(agentDetailsUrl(), 'https://businesssagent.com/api/site/1/details', 'Easy Beans is 1');
+  process.env.BUSINESS_AGENT_BUSINESS = '7';
+  assert.equal(agentDetailsUrl(), 'https://businesssagent.com/api/site/7/details');
+  assert.equal(agentMenuUrl(), 'https://businesssagent.com/api/site/7/menu');
+  assert.equal(agentSiteUrl(), 'https://businesssagent.com/api/site/7');
+  process.env.BUSINESS_AGENT_BUSINESS = 'not a number';
+  assert.equal(agentDetailsUrl(), 'https://businesssagent.com/api/site/1/details');
 });
