@@ -22,20 +22,44 @@ export interface AccountProfile {
 }
 
 /**
- * The rewards snapshot as `/api/account/rewards` serves it — the Square
- * loyalty programme plus the signed-in customer's own balance. `program` is
- * null when the café has no active programme; `balance` is null when the
- * customer has not been enrolled at the till yet.
+ * The rewards snapshot as `/api/account/rewards` serves it, read from the
+ * Business Agent (src/server/businessAgent/account.ts): their beans from
+ * Square Loyalty, their credit from the café's reps ledger, how posts earn
+ * cashback, and their code if they're a rep. Each part is null when it doesn't
+ * apply (no loyalty account yet, no credit, cashback off, not a rep).
  */
 export interface AccountRewards {
-  program: {
-    /** Square's name for one point — "Bean" — and for several. */
-    one: string;
-    other: string;
-    tiers: Array<{ id: string; name: string; points: number }>;
+  firstName: string | null;
+  points: {
+    program: {
+      /** Square's name for one point — "Bean" — and for several. */
+      one: string;
+      other: string;
+      tiers: Array<{ id: string; name: string; points: number }>;
+    };
+    balance: number;
+    lifetime: number;
   } | null;
-  balance: number | null;
-  lifetimePoints: number | null;
+  credit: {
+    /** Euros to spend at the till (with the gift card on file). */
+    balance: number;
+    /** Waiting for the café's OK. */
+    pending: number;
+    gift_card_linked: boolean;
+    lines: Array<{ date: string; label: string; amount: number; status: 'pending' | 'approved' | 'rejected'; note: string | null }>;
+  } | null;
+  cashback: { on: true; per_1000_views: number; per_100_likes: number; per_follower: number; max: number } | null;
+  rep: {
+    code: string;
+    kind: 'team' | 'ambassador' | 'customer';
+    earns: 'credit' | 'commission';
+    reach: number;
+    reach_step: string;
+    reach_step_id?: string;
+    multiplier: number;
+    crew: { leads: boolean; members: number };
+    this_month: number;
+  } | null;
 }
 
 /**

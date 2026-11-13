@@ -1,11 +1,13 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { z } from 'zod';
 import { isAccountAuthConfigured } from '@/server/env';
 import { getAccountIdentity, deleteAuthUser } from '@/server/account/identity';
 import { getSupabaseAuthServer } from '@/server/auth/supabaseSession';
 import { deleteLeadByEmail } from '@/server/leads/leadRepo';
 import { sendUnsubscribeToAgent } from '@/server/businessAgent/newsletter';
-import { deleteCustomer, updateCustomer, type CustomerProfileInput } from '@/server/square/customers';
+import { eraseAccountInAgent, syncAccountToAgent } from '@/server/businessAgent/account';
+import { deleteCustomer, updateCustomer, type CustomerProfile, type CustomerProfileInput } from '@/server/square/customers';
+import type { AccountIdentity } from '@/server/account/identity';
 
 /**
  * The signed-in customer's own profile — the GDPR self-service surface.
@@ -43,6 +45,24 @@ function unauthorised() {
   return NextResponse.json({ error: 'not_signed_in' }, { status: 401 });
 }
 
+/**
+ * They're a customer in the Business Agent too (the café's back office), with
+ * what we know here: on each visit to the account page (so the first sign-in
+ * adds them) and after each edit. It only fills what the café hasn't got, and
+ * runs after the answer, so it never slows the page. Only for a confirmed email.
+ */
+function syncToAgent(identity: AccountIdentity, profile: CustomerProfile = identity.customer) {
+  if (!identity.emailVerified) return;
+  after(async () => {
+    await syncAccountToAgent({
+      email: identity.email,
+      name: [profile.givenName, profile.familyName].filter(Boolean).join(' ') || null,
+      phone: profile.phoneNumber,
+      squareCustomerId: profile.id,
+    });
+  });
+}
+
 export async function GET() {
   if (!isAccountAuthConfigured()) {
     return NextResponse.json({ error: 'accounts_unavailable' }, { status: 503 });
@@ -50,6 +70,7 @@ export async function GET() {
   try {
     const identity = await getAccountIdentity();
     if (!identity) return unauthorised();
+    syncToAgent(identity);
     return NextResponse.json({ profile: identity.customer });
   } catch (err) {
     console.error('account read failed', err);
@@ -93,6 +114,7 @@ export async function PUT(request: Request) {
     };
 
     const profile = await updateCustomer(customerId, input);
+    syncToAgent(identity, profile);
     return NextResponse.json({ profile });
   } catch (err) {
     console.error('account update failed', err);
@@ -108,14 +130,20 @@ export async function DELETE() {
     const identity = await getAccountIdentity();
     if (!identity) return unauthorised();
 
-    // Erasure covers every store: the Square profile, our newsletter rows and
-    // the Supabase Auth user. Paid orders stay — accounting, not marketing.
+    // Erasure covers every store: the Business Agent's customer record, the
+    // Square profile, our newsletter rows and the Supabase Auth user. Paid
+    // orders stay — accounting, not marketing.
+    // The agent erases them (or blanks them where its rewards ledger has to
+    // stay, and unsubscribes them). If it can't just then, at least their yes
+    // to marketing goes, and the log says so for the café to erase them there.
+    // Only a confirmed email is erased there: it's taken as theirs.
+    const erased = identity.emailVerified ? await eraseAccountInAgent(identity.email) : null;
+    if (!erased) {
+      if (identity.emailVerified) console.error('Business Agent erase did not happen: unsubscribed only; erase them on its Customers page');
+      await sendUnsubscribeToAgent(identity.email);
+    }
     await deleteCustomer(identity.customer.id);
     await deleteLeadByEmail(identity.email);
-    // The Business Agent keeps the café's customer record but takes back the
-    // yes to marketing; erasing them there is the café's to do (Customers →
-    // delete), as the agent's API can't delete anyone.
-    await sendUnsubscribeToAgent(identity.email);
     await deleteAuthUser(identity.userId);
 
     // The cookies still hold tokens for a user that no longer exists; clear

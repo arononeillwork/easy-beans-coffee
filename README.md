@@ -67,6 +67,18 @@ campaigns can pick them. Unsubscribes and deleted accounts take that yes back th
 website key in `BUSINESS_AGENT_NEWSLETTER_KEY` (`docs/production-deploy.md`); without it, or when the
 agent is down, sign-ups here carry on as before. `src/server/businessAgent/newsletter.ts`.
 
+### The account page reads rewards from the Business Agent
+
+Someone signed in is a customer in the Business Agent too: the account page adds them there on
+each visit and after each profile edit (it only fills what the café hasn't got), and their
+**Rewards** card is read from it: their beans (Square Loyalty, which the agent reads), their credit
+and recent lines from the café's reps ledger, and their code and what a post earns if they're a rep.
+The site no longer reads Square Loyalty itself. Deleting the account erases them there too (blanked
+where the café's ledger has to keep their lines). Same key and address as the newsletter; it needs
+**Website accounts** switched on in the agent (Website & SEO). Anything but a good answer within 4
+seconds, or the switch off, and the card just isn't shown. `src/server/businessAgent/account.ts`;
+the contract is the agent's `docs/WEBSITE.md` → "Accounts & rewards".
+
 ### Address, contacts and opening hours come from the Business Agent
 
 The footer (hours, the days the café is closed soon, address, WhatsApp, email, Instagram, TikTok), the

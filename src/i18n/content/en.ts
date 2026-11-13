@@ -298,13 +298,26 @@ export const en = {
      * the site always agree on what a point is called.
      */
     rewardsHeadline: 'Rewards',
-    rewardsBody: 'Counted by Square — the same balance as at the counter.',
+    rewardsBody: 'The same as at the counter: kept by the café, counted by Square.',
     rewardsLifetime: '{points} collected all-time',
     rewardsNone: 'None yet. Your first order at the counter starts the count.',
     rewardsReady: 'Ready to redeem',
     rewardsToGo: '{points} to go',
     rewardsRedeemNote: 'Redeem at the counter — just ask before you pay.',
-    rewardsFailed: 'Could not load your rewards just now.',
+    /** Credit (to spend at the counter) or commission (paid out), from the café's own ledger. */
+    creditHeadline: 'Your credit',
+    creditCommissionHeadline: 'Your commission',
+    creditPending: '{amount} waiting for the café to check',
+    creditGiftCard: 'Spend it at the counter: it is on your gift card there.',
+    creditAtTill: 'Spend it at the counter: just ask before you pay.',
+    creditWaiting: 'waiting',
+    creditDeclined: 'not approved',
+    /** Their code, when they bring people in (a rep). */
+    repHeadline: 'Your code',
+    repThisMonth: '{amount} earned this month',
+    repMultiplier: 'rewards ×{n} for your reach',
+    repCrew: '{n} in your crew',
+    repCashback: 'Post about us on Instagram: {views} per 1,000 views, {likes} per 100 likes, {follower} per new follower, up to {max} a post.',
     deleteHeadline: 'Delete account',
     deleteBody:
       'Removes your details and newsletter signup for good. Completed orders stay in the books — the tax office insists.',

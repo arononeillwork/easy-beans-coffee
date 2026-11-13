@@ -20,7 +20,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 import { useLanguage } from '@/i18n/LanguageProvider';
 import { getSupabaseAuth } from '@/shared/lib/supabaseAuthClient';
 import { brand, radius, shadow } from '@/theme/brand';
-import type { AccountProfile, AccountUpdate } from '../types';
+import type { AccountProfile, AccountRewards, AccountUpdate } from '../types';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD = 8;
@@ -682,18 +682,13 @@ function ResetCard({ onDone }: { onDone: () => void }) {
   );
 }
 
-// ── Rewards: the beans, straight from Square Loyalty ────────────────────────
-
-interface AccountRewards {
-  program: { one: string; other: string; tiers: Array<{ id: string; name: string; points: number }> } | null;
-  balance: number | null;
-  lifetimePoints: number | null;
-}
+// ── Rewards: beans, credit and their code, from the Business Agent ──────────
 
 function RewardsCard() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const labels = t.account;
-  const [rewards, setRewards] = useState<AccountRewards | null | 'error'>(null);
+  // null while loading; 'hidden' when there's nothing to show or it couldn't be read (fails closed).
+  const [rewards, setRewards] = useState<AccountRewards | 'hidden' | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -704,7 +699,7 @@ function RewardsCard() {
         const body = (await res.json()) as AccountRewards;
         if (!cancelled) setRewards(body);
       } catch {
-        if (!cancelled) setRewards('error');
+        if (!cancelled) setRewards('hidden');
       }
     })();
     return () => {
@@ -712,12 +707,18 @@ function RewardsCard() {
     };
   }, []);
 
-  // No programme in the Square Dashboard means no section — not an apology.
-  if (rewards !== 'error' && rewards?.program === null) return null;
+  if (rewards === null || rewards === 'hidden') return null;
 
-  const program = rewards !== null && rewards !== 'error' ? rewards.program : null;
-  const balance = rewards !== null && rewards !== 'error' ? rewards.balance : null;
-  const unit = (count: number) => (count === 1 ? program?.one : program?.other) ?? '';
+  const { points, credit, rep, cashback } = rewards;
+  const unit = (count: number) => (count === 1 ? points?.program.one : points?.program.other) ?? '';
+  const euros = (n: number) =>
+    new Intl.NumberFormat(lang === 'es' ? 'es-ES' : 'en-IE', { style: 'currency', currency: 'EUR' }).format(n);
+  const day = (iso: string) =>
+    new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-IE', { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(
+      new Date(`${iso}T12:00:00Z`),
+    );
+  const row = { display: 'flex', alignItems: 'center', gap: 1.5, py: 1.4, borderTop: `1px solid ${brand.ink06}` } as const;
+  const small = { fontSize: '0.8125rem', color: brand.ink45 } as const;
 
   return (
     <Card>
@@ -728,63 +729,48 @@ function RewardsCard() {
         {labels.rewardsBody}
       </Typography>
 
-      {rewards === 'error' && <Typography color="text.secondary">{labels.rewardsFailed}</Typography>}
-      {rewards === null && <Typography color="text.secondary">…</Typography>}
-
-      {rewards !== null && rewards !== 'error' && program && (
-        <>
-          {/* The balance, as the headline fact. */}
-          <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 0.5 }}>
-            <Box
-              aria-hidden
-              sx={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 48,
-                height: 48,
-                borderRadius: '50%',
-                backgroundColor: brand.cream,
-                color: brand.rosePinkDeep,
-              }}
-            >
-              <CoffeeRoundedIcon />
-            </Box>
-            <Typography sx={{ fontSize: '2rem', fontWeight: 600, lineHeight: 1 }}>
-              {balance ?? 0}{' '}
-              <Typography component="span" sx={{ fontSize: '1.125rem', color: brand.ink70 }}>
-                {unit(balance ?? 0)}
-              </Typography>
+      {/* The beans, as the headline fact. */}
+      <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 0.5 }}>
+        <Box
+          aria-hidden
+          sx={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 48,
+            height: 48,
+            borderRadius: '50%',
+            backgroundColor: brand.cream,
+            color: brand.rosePinkDeep,
+          }}
+        >
+          <CoffeeRoundedIcon />
+        </Box>
+        {points ? (
+          <Typography sx={{ fontSize: '2rem', fontWeight: 600, lineHeight: 1 }}>
+            {points.balance}{' '}
+            <Typography component="span" sx={{ fontSize: '1.125rem', color: brand.ink70 }}>
+              {unit(points.balance)}
             </Typography>
-          </Stack>
+          </Typography>
+        ) : (
+          <Typography sx={{ color: brand.ink70 }}>{labels.rewardsNone}</Typography>
+        )}
+      </Stack>
 
-          {balance === null ? (
-            <Typography sx={{ color: brand.ink70, mb: 2.5 }}>{labels.rewardsNone}</Typography>
-          ) : (
-            rewards.lifetimePoints !== null && (
-              <Typography sx={{ fontSize: '0.8125rem', color: brand.ink45, mb: 2.5 }}>
-                {labels.rewardsLifetime.replace('{points}', String(rewards.lifetimePoints))}
-              </Typography>
-            )
-          )}
-
+      {points && (
+        <>
+          <Typography sx={{ ...small, mb: 2.5 }}>
+            {labels.rewardsLifetime.replace('{points}', String(points.lifetime))}
+          </Typography>
           {/* The rewards on offer, cheapest first, as Square lists them. */}
-          {program.tiers.map((tier) => {
-            const affordable = balance !== null && balance >= tier.points;
+          {points.program.tiers.map((tier) => {
+            const affordable = points.balance >= tier.points;
             return (
-              <Box
-                key={tier.id}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1.5,
-                  py: 1.4,
-                  borderTop: `1px solid ${brand.ink06}`,
-                }}
-              >
+              <Box key={tier.id} sx={row}>
                 <Box sx={{ flexGrow: 1, minWidth: 0 }}>
                   <Typography sx={{ fontWeight: 500 }}>{tier.name}</Typography>
-                  <Typography sx={{ fontSize: '0.8125rem', color: brand.ink45 }}>
+                  <Typography sx={small}>
                     {tier.points} {unit(tier.points)}
                   </Typography>
                 </Box>
@@ -804,18 +790,85 @@ function RewardsCard() {
                     {labels.rewardsReady}
                   </Typography>
                 ) : (
-                  <Typography sx={{ fontSize: '0.8125rem', color: brand.ink45, whiteSpace: 'nowrap' }}>
-                    {labels.rewardsToGo.replace('{points}', String(tier.points - (balance ?? 0)))}
+                  <Typography sx={{ ...small, whiteSpace: 'nowrap' }}>
+                    {labels.rewardsToGo.replace('{points}', String(tier.points - points.balance))}
                   </Typography>
                 )}
               </Box>
             );
           })}
-
-          <Typography sx={{ fontSize: '0.75rem', color: brand.ink45, mt: 2 }}>
-            {labels.rewardsRedeemNote}
-          </Typography>
+          <Typography sx={{ fontSize: '0.75rem', color: brand.ink45, mt: 2 }}>{labels.rewardsRedeemNote}</Typography>
         </>
+      )}
+
+      {/* Their credit (or commission), from the café's ledger. */}
+      {credit && (
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h6" component="h3" sx={{ mb: 0.5 }}>
+            {rep?.earns === 'commission' ? labels.creditCommissionHeadline : labels.creditHeadline}
+          </Typography>
+          <Typography sx={{ fontSize: '2rem', fontWeight: 600, lineHeight: 1.2 }}>{euros(credit.balance)}</Typography>
+          {credit.pending > 0 && (
+            <Typography sx={small}>{labels.creditPending.replace('{amount}', euros(credit.pending))}</Typography>
+          )}
+          {rep?.earns !== 'commission' && (
+            <Typography sx={{ ...small, mb: 1.5 }}>
+              {credit.gift_card_linked ? labels.creditGiftCard : labels.creditAtTill}
+            </Typography>
+          )}
+          {credit.lines.slice(0, 5).map((line, i) => (
+            <Box key={`${line.date}-${i}`} sx={row}>
+              <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                <Typography sx={{ fontWeight: 500 }}>{line.label}</Typography>
+                <Typography sx={small}>
+                  {[day(line.date), line.note, line.status === 'pending' ? labels.creditWaiting : null,
+                    line.status === 'rejected' ? labels.creditDeclined : null]
+                    .filter(Boolean)
+                    .join(' · ')}
+                </Typography>
+              </Box>
+              <Typography
+                sx={{
+                  fontWeight: 600,
+                  whiteSpace: 'nowrap',
+                  color: line.amount < 0 ? brand.ink70 : brand.matchaGreenDeep,
+                  textDecoration: line.status === 'rejected' ? 'line-through' : 'none',
+                }}
+              >
+                {line.amount > 0 ? '+' : ''}
+                {euros(line.amount)}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
+      )}
+
+      {/* Their code, if they bring people in, and what a post about the café earns. */}
+      {rep && (
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h6" component="h3" sx={{ mb: 0.5 }}>
+            {labels.repHeadline}
+          </Typography>
+          <Typography sx={{ fontSize: '1.5rem', fontWeight: 600, letterSpacing: '0.06em' }}>{rep.code}</Typography>
+          <Typography sx={small}>
+            {[
+              labels.repThisMonth.replace('{amount}', euros(rep.this_month)),
+              rep.multiplier > 1 ? labels.repMultiplier.replace('{n}', String(rep.multiplier)) : null,
+              rep.crew.leads ? labels.repCrew.replace('{n}', String(rep.crew.members)) : null,
+            ]
+              .filter(Boolean)
+              .join(' · ')}
+          </Typography>
+          {cashback && (
+            <Typography sx={{ ...small, mt: 1.5 }}>
+              {labels.repCashback
+                .replace('{views}', euros(cashback.per_1000_views))
+                .replace('{likes}', euros(cashback.per_100_likes))
+                .replace('{follower}', euros(cashback.per_follower))
+                .replace('{max}', euros(cashback.max))}
+            </Typography>
+          )}
+        </Box>
       )}
     </Card>
   );
