@@ -171,19 +171,21 @@ export function cafeDetails(details: AgentDetails): CafeDetails {
 export const FALLBACK_DETAILS: AgentDetails = {
   version: 1,
   business: { id: 1, name: 'Easy Beans Coffee' },
-  address: 'C. Pizarro 8, 29670 San Pedro de Alcántara, Málaga',
-  address_lines: ['C. Pizarro 8', '29670 San Pedro de Alcántara', 'Málaga'],
-  maps_url: 'https://www.google.com/maps/search/?api=1&query=Easy+Beans+Coffee+C.+Pizarro+8+San+Pedro+de+Alc%C3%A1ntara',
-  phone: null,
+  // The contacts as the agent had them when this was written (2026-11-13).
+  address: 'C. Pizarro, 8, 29670 San Pedro de Alcántara, Málaga',
+  address_lines: ['C. Pizarro, 8', '29670 San Pedro de Alcántara', 'Málaga'],
+  maps_url: 'https://maps.google.com/maps?cid=9564056643340584302',
+  phone: '+34 695 415 335',
   whatsapp: '+34 695 415 335',
   whatsapp_url: 'https://wa.me/34695415335',
   email: 'easybeanscafe@gmail.com',
-  website: null,
+  website: 'https://www.easybeanscoffee.com/',
   social: {
     instagram: { handle: 'easy.beans.coffee', url: 'https://www.instagram.com/easy.beans.coffee' },
     tiktok: { handle: 'easybeanscoffee', url: 'https://www.tiktok.com/@easybeanscoffee' },
   },
   timezone: 'Europe/Madrid',
+  // The same week as the cart's built-in one (FALLBACK_HOURS in features/order/lib/pickupTimes).
   hours: {
     mon: { open: '08:00', close: '15:00' }, tue: { open: '08:00', close: '15:00' }, wed: { open: '08:00', close: '15:00' },
     thu: { open: '08:00', close: '15:00' }, fri: { open: '08:00', close: '15:00' }, sat: { open: '09:00', close: '15:00' }, sun: null,
