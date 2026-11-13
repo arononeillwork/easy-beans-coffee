@@ -40,6 +40,8 @@ export interface AuthUser {
   email: string;
   /** Linked Square customer, once account/identity.ts has done its work. */
   squareCustomerId: string | null;
+  /** Supabase has confirmed the email (its link clicked, or Google said so). */
+  emailVerified: boolean;
 }
 
 /** Null unless the request carries a valid, server-verified session. */
@@ -53,5 +55,6 @@ export async function getAuthUser(): Promise<AuthUser | null> {
     id: data.user.id,
     email: data.user.email.toLowerCase(),
     squareCustomerId: typeof linked === 'string' && linked ? linked : null,
+    emailVerified: Boolean(data.user.email_confirmed_at),
   };
 }

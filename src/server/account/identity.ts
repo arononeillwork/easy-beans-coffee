@@ -20,6 +20,8 @@ import { seedNewCustomerFields } from '../square/customerAttributes';
 export interface AccountIdentity {
   userId: string;
   email: string;
+  /** Supabase confirmed the email: only then is it said to the Business Agent as theirs. */
+  emailVerified: boolean;
   customer: CustomerProfile;
 }
 
@@ -38,14 +40,14 @@ export async function getAccountIdentity(): Promise<AccountIdentity | null> {
 
   if (user.squareCustomerId) {
     const linked = await getCustomerById(user.squareCustomerId);
-    if (linked) return { userId: user.id, email: user.email, customer: linked };
+    if (linked) return { userId: user.id, email: user.email, emailVerified: user.emailVerified, customer: linked };
     // Profile gone (deleted or merged in the Dashboard) — fall through, relink.
   }
 
   const existing = await findCustomerByEmail(user.email);
   if (existing) {
     await linkSquareCustomer(user.id, existing.id);
-    return { userId: user.id, email: user.email, customer: existing };
+    return { userId: user.id, email: user.email, emailVerified: user.emailVerified, customer: existing };
   }
 
   // A genuinely new customer: create the profile, then stamp the directory's
@@ -53,7 +55,7 @@ export async function getAccountIdentity(): Promise<AccountIdentity | null> {
   const created = await findOrCreateCustomerByEmail(user.email);
   await seedNewCustomerFields(created.id);
   await linkSquareCustomer(user.id, created.id);
-  return { userId: user.id, email: user.email, customer: created };
+  return { userId: user.id, email: user.email, emailVerified: user.emailVerified, customer: created };
 }
 
 /** GDPR erasure of the sign-in itself; Square/lead cleanup happens beside it. */
