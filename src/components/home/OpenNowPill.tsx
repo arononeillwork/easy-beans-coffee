@@ -19,11 +19,14 @@ export function OpenNowPill({
   lang,
   openUntil,
   opensAt,
+  timeZone = CAFE_TZ,
 }: {
   hours: DayHours[];
   lang: string;
   openUntil: string;
   opensAt: string;
+  /** The café's, as the Business Agent says (its hours are in it). */
+  timeZone?: string;
 }) {
   const [now, setNow] = useState<number | null>(null);
 
@@ -35,11 +38,11 @@ export function OpenNowPill({
 
   if (now === null) return <Box sx={{ height: 34 }} aria-hidden />;
 
-  const state: OpenState = openState(hours, now, CAFE_TZ);
+  const state: OpenState = openState(hours, now, timeZone);
   const text = state.open
-    ? openUntil.replace('{time}', clockLabel(state.closesAt, CAFE_TZ))
+    ? openUntil.replace('{time}', clockLabel(state.closesAt, timeZone))
     : state.opensAt
-      ? opensAt.replace('{when}', describeWhen(state.opensAt, now, lang, CAFE_TZ))
+      ? opensAt.replace('{when}', describeWhen(state.opensAt, now, lang, timeZone))
       : null;
   if (!text) return null;
 

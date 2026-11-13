@@ -1,4 +1,5 @@
-// Local stand-in for the third-party feeds the site reads automatically.
+// Local stand-in for the third-party feeds the site reads automatically (and the
+// Business Agent's details feed).
 //
 // The site is pointed here through E2E_FEEDS_BASE (see src/server/feedBase.ts
 // and playwright.config.ts), so the browser suite exercises the real path —
@@ -37,6 +38,50 @@ function place() {
     },
     regularOpeningHours: { periods: periods() },
     currentOpeningHours: { periods: periods() },
+  };
+}
+
+const pad = (n) => String(n).padStart(2, '0');
+const hhmm = (t) => `${pad(t.hour)}:${pad(t.minute)}`;
+
+/** The Business Agent's details feed (GET /api/site/1/details), as docs/WEBSITE.md in business-agent has it. */
+function agentDetails() {
+  const weekday = { open: hhmm(FIXTURE.weekdayOpen), close: hhmm(FIXTURE.weekdayClose) };
+  const hours = { mon: weekday, tue: weekday, wed: weekday, thu: weekday, fri: weekday,
+    sat: { open: hhmm(FIXTURE.saturdayOpen), close: hhmm(FIXTURE.saturdayClose) }, sun: null };
+  const keys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+  const today = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Madrid' }));
+  const date = (offset) => {
+    const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + offset);
+    return { iso: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`, day: keys[d.getDay()] };
+  };
+  const closure = date(FIXTURE.agent.closureInDays);
+  const days = Array.from({ length: 14 }, (_, i) => {
+    const { iso, day } = date(i);
+    const shut = i === FIXTURE.agent.closureInDays && hours[day];
+    return { date: iso, day, open: shut ? null : hours[day]?.open ?? null, close: shut ? null : hours[day]?.close ?? null,
+      closed_reason: shut ? FIXTURE.agent.closureReason : null };
+  });
+  return {
+    version: 1,
+    business: { id: 1, name: 'Easy Beans Coffee' },
+    address: FIXTURE.agent.address,
+    address_lines: FIXTURE.agent.address.split(',').map((s) => s.trim()),
+    maps_url: 'https://www.google.com/maps/search/?api=1&query=Easy%20Beans%20E2E',
+    phone: null,
+    whatsapp: FIXTURE.agent.whatsapp,
+    whatsapp_url: FIXTURE.agent.whatsappUrl,
+    email: FIXTURE.agent.email,
+    website: null,
+    social: {
+      instagram: { handle: 'easy.beans.coffee', url: 'https://www.instagram.com/easy.beans.coffee' },
+      tiktok: { handle: 'easybeanscoffee', url: 'https://www.tiktok.com/@easybeanscoffee' },
+    },
+    timezone: 'Europe/Madrid',
+    hours,
+    closures: [{ from: closure.iso, to: closure.iso, reason: FIXTURE.agent.closureReason }],
+    days,
+    generated_at: new Date().toISOString(),
   };
 }
 
@@ -80,6 +125,7 @@ createServer((req, res) => {
     return post ? json(res, 200, post) : json(res, 400, { error: { code: 100 } });
   }
   if (pathname.startsWith('/instagram/')) return json(res, 200, instagram());
+  if (pathname === '/agent/api/site/1/details') return json(res, 200, agentDetails());
   // TikTok, Square and anything else: answer like an unconfigured service.
   return json(res, 404, { error: 'not mocked' });
 }).listen(PORT, () => {

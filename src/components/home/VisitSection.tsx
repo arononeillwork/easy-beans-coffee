@@ -13,10 +13,9 @@ import DirectionsRoundedIcon from '@mui/icons-material/DirectionsRounded';
 import type { Lang } from '@/i18n/config';
 import type { SiteContent } from '@/i18n/content/en';
 import type { PlaceDetails } from '@/server/places/googlePlaces';
-import { FALLBACK_HOURS } from '@/features/order/lib/pickupTimes';
+import type { CafeDetails } from '@/features/details/agentDetails';
 import { brand, radius, shadow } from '@/theme/brand';
 import { Stars } from '@/components/marketing/Stars';
-import { MAPS_LINK, WHATSAPP_HREF } from './links';
 import { OpenNowPill } from './OpenNowPill';
 
 /** Same order as `location.amenities`: dogs, wifi, terrace. */
@@ -25,19 +24,24 @@ const AMENITY_ICONS = [PetsOutlinedIcon, WifiIcon, DeckOutlinedIcon];
 /**
  * "Come and see us": the terrace itself, with the live Google rating (and a
  * link to leave one) pinned to the photo, whether we are open right now, and the two ways to get here.
- * Rating, review count and hours are all live from Google Maps.
+ * The address, the hours (with the days we're closed) and the WhatsApp come from the Business Agent,
+ * where they're changed; the rating and review count from Google Maps.
  */
 export function VisitSection({
   t,
   lang,
   place,
+  details,
 }: {
   t: SiteContent;
   lang: Lang;
   place: PlaceDetails | null;
+  details: CafeDetails;
 }) {
   const rating = place?.rating ?? null;
-  const mapsUrl = place?.mapsUrl ?? MAPS_LINK;
+  const mapsUrl = details.mapsUrl ?? place?.mapsUrl ?? null;
+  // The street as the headline, the town under it: the agent's address, line by line.
+  const [street, town] = details.addressLines.length ? details.addressLines : [t.location.title, t.location.town];
 
   return (
     <Box
@@ -58,10 +62,11 @@ export function VisitSection({
           {/* ── Words ─────────────────────────────────────────────────── */}
           <Stack spacing={{ xs: 2.5, md: 3 }}>
             <OpenNowPill
-              hours={place?.hours ?? FALLBACK_HOURS}
+              hours={details.nextWeek}
               lang={lang}
               openUntil={t.status.openUntil}
               opensAt={t.status.opensAt}
+              timeZone={details.timeZone}
             />
 
             <Box>
@@ -71,12 +76,12 @@ export function VisitSection({
                 translate="no"
                 sx={{ fontSize: { xs: 'clamp(2.4rem, 11vw, 3.2rem)', md: '4rem' }, lineHeight: 1 }}
               >
-                {t.location.title}
+                {street}
               </Typography>
               <Stack direction="row" alignItems="center" spacing={0.75} sx={{ mt: 1.5, color: brand.ink70 }}>
                 <PlaceOutlinedIcon aria-hidden sx={{ fontSize: 20, color: brand.rosePinkDeep }} />
                 <Typography sx={{ fontSize: '1.0625rem' }} translate="no">
-                  {t.location.town}
+                  {town}
                 </Typography>
               </Stack>
             </Box>
@@ -132,6 +137,7 @@ export function VisitSection({
             </Stack>
 
             <Stack direction="row" spacing={1.5} useFlexGap flexWrap="wrap" sx={{ pt: 1 }}>
+              {mapsUrl && (
               <Button
                 component="a"
                 href={mapsUrl}
@@ -143,9 +149,11 @@ export function VisitSection({
               >
                 {t.location.directions}
               </Button>
+              )}
+              {details.whatsappUrl && (
               <Button
                 component="a"
-                href={WHATSAPP_HREF}
+                href={details.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="outlined"
@@ -160,6 +168,7 @@ export function VisitSection({
               >
                 {t.location.whatsapp}
               </Button>
+              )}
             </Stack>
           </Stack>
 
@@ -202,7 +211,7 @@ export function VisitSection({
                 {rating !== null && (
                   <Box
                     component="a"
-                    href={place?.reviewsUrl ?? mapsUrl}
+                    href={place?.reviewsUrl ?? mapsUrl ?? undefined}
                     target="_blank"
                     rel="noopener noreferrer"
                     sx={{ display: 'block', color: 'inherit', textDecoration: 'none' }}
