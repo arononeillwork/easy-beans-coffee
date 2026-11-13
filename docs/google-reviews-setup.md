@@ -1,5 +1,11 @@
 # Google Maps: reviews and opening hours
 
+> **The opening hours now come from the Business Agent**, not from Google: the footer, "open now" and
+> online ordering read the agent's details feed (`src/server/businessAgent/detailsFeed.ts`), with the
+> days the café is closed on its Calendar, and the agent sends the same hours and closures to Google
+> Maps. Change them on the agent's Opening hours page. What follows about hours describes how it
+> worked before; the rating, review count and review cards are still read from Google.
+
 Three things on the site are read live from the café's Google presence:
 
 - the **rating and review count** on the home page — Places API;

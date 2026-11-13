@@ -56,7 +56,8 @@ export async function GET() {
       email: { configured: isEmailConfigured() },
       competition,
       squarePrices: { items: prices.items.length, stale: prices.stale, fetchedAt: prices.fetchedAt },
-      googleHours: { source: hours.source },
+      // Hours, closures and contacts: from the Business Agent ('agent'), or the built-in ones ('fallback').
+      businessAgentDetails: { source: hours.source },
       googleRating: { rating: place?.rating ?? null, reviews: place?.total ?? null },
       instagram: {
         ...instagram,

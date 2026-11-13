@@ -22,6 +22,7 @@ Set for **Production** only — never reuse sandbox values:
 | `SQUARE_EXCLUDE_RULES` | *(optional)* Catalog names to hide, e.g. `starts:test, contains:do not use`. Unset means `starts:test, starts:promo`; empty means filter nothing. |
 | `BUSINESS_AGENT_MENU_URL` | *(optional)* Where the menu's listing is read from: the Business Agent's feed. Unset, a Vercel deployment reads `https://businesssagent.com/api/site/1/menu` (Easy Beans) and a laptop reads nothing; `off` switches it off. See `docs/menu.md`. |
 | `BUSINESS_AGENT_NEWSLETTER_KEY` | The website key for newsletter sign-ups (server-only secret): Business Agent → Website & SEO → Newsletter sign-ups → **Make a website key** (shown once; making another replaces it). With it, every sign-up, competition entry and unsubscribe is sent on to the café's customers there, with the ticked topics. Unset, nothing is sent (the logs say so). |
+| `BUSINESS_AGENT_DETAILS_URL` | *(optional)* Where the café's address, contacts and opening hours (with closures) are read from: the Business Agent's details feed. Unset, a Vercel deployment reads `https://businesssagent.com/api/site/1/details` (Easy Beans) and a laptop shows the built-in details; `off` switches it off. |
 | `BUSINESS_AGENT_SITE_URL` | *(optional)* Where sign-ups are sent: unset, a Vercel deployment sends to `https://businesssagent.com/api/site/1` (Easy Beans) and a laptop sends nothing; `off` switches it off. |
 | `NEXT_PUBLIC_SITE_URL` | `https://www.easybeanscoffee.com` |
 | `CAFE_TIMEZONE` | `Europe/Madrid` |

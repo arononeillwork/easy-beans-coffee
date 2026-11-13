@@ -153,19 +153,8 @@ test('Google: an API error degrades to null rather than breaking the page', asyn
   assert.equal(await getPlaceDetails('en'), null);
 });
 
-test('Ordering hours: holiday hours on Google (currentOpeningHours) win over the regular week', async () => {
-  const holidayWeek = PERIODS.filter((p) => p.open.day !== 3); // Wednesday closed
-  useGoogle({
-    regularOpeningHours: { periods: PERIODS },
-    currentOpeningHours: { periods: holidayWeek },
-  });
-  const { hours, source } = await getOrderingHours();
-  assert.equal(source, 'google');
-  assert.deepEqual(hours.find((d) => d.day === 3)?.ranges, []);
-  assert.deepEqual(hours.find((d) => d.day === 2)?.ranges, [{ open: 480, close: 900 }]);
-});
-
-test('Ordering hours: Google down falls back to the known week, so ordering keeps working', async () => {
+// Ordering follows the Business Agent's week and closures now (tests/unit/agentDetails.test.ts), not Google's.
+test('Ordering hours: Google down changes nothing, and with no Business Agent the known week, so ordering keeps working', async () => {
   useGoogle({}, 500);
   const { hours, source } = await getOrderingHours();
   assert.equal(source, 'fallback');

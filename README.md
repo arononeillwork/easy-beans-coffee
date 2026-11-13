@@ -67,11 +67,21 @@ campaigns can pick them. Unsubscribes and deleted accounts take that yes back th
 website key in `BUSINESS_AGENT_NEWSLETTER_KEY` (`docs/production-deploy.md`); without it, or when the
 agent is down, sign-ups here carry on as before. `src/server/businessAgent/newsletter.ts`.
 
+### Address, contacts and opening hours come from the Business Agent
+
+The footer (hours, the days the café is closed soon, address, WhatsApp, email, Instagram, TikTok), the
+visit section (the street and town, "open now", directions, WhatsApp) and online ordering's hours all
+come from the Business Agent's details feed, `https://businesssagent.com/api/site/1/details`: change
+them on the agent's Business and Opening hours pages (and closures on its Calendar) and the site
+follows within five minutes, no deploy. Google Maps gets the same from the agent. An agent that can't
+be read gives the last details read, and with none the built-in ones in
+`src/features/details/agentDetails.ts`. `src/server/businessAgent/detailsFeed.ts`.
+
 ## Docs
 
 - `docs/menu.md` — the drink studio, the photography pipeline and the price book
 - `docs/shop.md` — how retail stock is modelled, badged and fulfilled
-- `docs/google-reviews-setup.md` — Places API key/place id: live reviews + footer opening hours
+- `docs/google-reviews-setup.md` — Places API key/place id: live reviews (the opening hours now come from the Business Agent)
 - `docs/social-feed-setup.md` — Instagram/TikTok tokens for the live post grid
 - `docs/square-sandbox-setup.md` — end-to-end sandbox walkthrough
 - `docs/production-deploy.md` — Vercel env + go-live steps
