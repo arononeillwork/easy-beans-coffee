@@ -60,18 +60,20 @@ test.describe('automatic data feeds', () => {
     }
   });
 
-  test('the café TV keeps the cake + coffee post, not the newest Instagram post', async ({ page }) => {
+  test('the café TV shows its screen from the Business Agent, the same way round as its poster was', async ({ page }) => {
+    // Shown to the TV, not loaded here: the Business Agent is tested in its own repository.
+    await page.route('https://businesssagent.com/**', route => route.fulfill({ contentType: 'text/html', body: '<p>The screen</p>' }));
     await page.goto('/display-menu');
-    const shown = page.getByTestId('screen-picture');
-    await expect(shown).toHaveAttribute('src', '/media/display/cake-coffee-offer.jpg');
-    await expect(shown).toHaveAttribute('alt', /Cake \+ coffee for just €7/);
-    await expect(page.getByText('@easy.beans.coffee')).toBeVisible();
-    // The picture actually arrives, not just its address.
-    await expect.poll(() => shown.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0);
-    // Newer posts on Instagram don't take its place while the switch is off.
-    for (const post of FIXTURE.posts) {
-      await expect(page.locator(`img[src="/media/display/instagram-${post.id}.jpg"]`)).toHaveCount(0);
-    }
+    const frame = page.getByTestId('screen-frame');
+    await expect(frame).toHaveAttribute('src', 'https://businesssagent.com/display-menu');
+    await expect(page.getByTestId('screen-picture')).toHaveCount(0);
+    // A TV whose poster was flipped keeps that way round.
+    await page.evaluate(() => localStorage.setItem('eb-display-flip-2', '1'));
+    await page.reload();
+    await expect(frame).toHaveAttribute('src', 'https://businesssagent.com/display-menu?turn=left');
+    // A TV still on the poster finds a new picture name in the page, and reloads onto the screen.
+    const html = await (await page.request.get('/display-menu')).text();
+    expect(html.match(/\/media\/display\/[\w.-]+\.(?:jpe?g|png|webp)/)?.[0]).toBe('/media/display/screens-page.jpg');
   });
 
   test('a post\'s picture for the TV comes through the site\'s own picture address', async ({ request }) => {

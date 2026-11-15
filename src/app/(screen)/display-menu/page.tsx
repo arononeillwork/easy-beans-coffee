@@ -1,5 +1,13 @@
 /**
- * The in-café TV (easybeanscoffee.com/display-menu), turned vertical. It shows
+ * The in-café TV (easybeanscoffee.com/display-menu).
+ *
+ * With SHOW_SCREENS_PAGE on, it shows the café TV's screen from the Business
+ * Agent (ScreensPageFrame): what's picked on the Screens page there reaches the
+ * TV within a minute, with no deploy here. The screen is set to portrait there
+ * and stands upright on the TV by itself. TVs still on the poster below reload
+ * onto it by themselves (SCREENS_PAGE_SIGNAL).
+ *
+ * With it off, the page shows a poster of its own, turned vertical. It shows
  * one Instagram post, whole, with the handle under it, upright even when the
  * TV still sends the browser a landscape picture (see Poster).
  *
@@ -23,6 +31,7 @@ import { getLatestInstagramPost } from '@/server/social/instagram';
 import { brand } from '@/theme/brand';
 import { Poster } from './Poster';
 import { ReloadOnChange } from './ReloadOnChange';
+import { ScreensPageFrame } from './ScreensPageFrame';
 
 /** Seconds between asks for a newer post. */
 export const revalidate = 120;
@@ -42,9 +51,33 @@ const PINNED_POST = {
 
 const FALLBACK_POSTER = '/media/display/chia-parfait-offer-en-upright.jpg';
 
+/**
+ * Whether the TV shows its screen from the Business Agent (picked on its Screens
+ * page) instead of a poster from here. Going back to the poster is this one line.
+ */
+const SHOW_SCREENS_PAGE = true;
+
+/** The café TV's screen in the Business Agent: Easy Beans' first screen. */
+const SCREEN_LINK = 'https://businesssagent.com/display-menu';
+
+/**
+ * A TV left on the poster reads this page every minute and reloads when the
+ * first /media/display/ picture named in it changes (ReloadOnChange). This name
+ * is that signal for the switch to the Screens page: there is no such picture.
+ */
+const SCREENS_PAGE_SIGNAL = '/media/display/screens-page.jpg';
+
 const INSTAGRAM_HANDLE = '@easy.beans.coffee';
 
 export default async function DisplayMenuPage() {
+  if (SHOW_SCREENS_PAGE) {
+    return (
+      <main style={{ position: 'fixed', inset: 0, background: '#000', overflow: 'hidden' }}>
+        <ScreensPageFrame link={SCREEN_LINK} />
+        <ReloadOnChange poster={SCREENS_PAGE_SIGNAL} />
+      </main>
+    );
+  }
   const shown = SHOW_NEWEST_POST ? await newestPost() : PINNED_POST;
   const src = shown?.src ?? FALLBACK_POSTER;
 
