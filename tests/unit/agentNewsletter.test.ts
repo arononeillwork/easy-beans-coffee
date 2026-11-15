@@ -95,11 +95,21 @@ test('an unsubscribe goes to the agent with the key', async () => {
   assert.deepEqual(JSON.parse(String(calls[0].init.body)), { email: 'lucia@example.com' });
 });
 
-test('without a key or switched off, nothing is sent; a missing key is said in the logs', async () => {
-  process.env.VERCEL = '1';
-  await sendSignupToAgent(signup);
-  assert.equal(calls.length, 0);
-  assert.match(String(logged[0]?.[0]), /BUSINESS_AGENT_NEWSLETTER_KEY is not set/);
+test('with no key it still sends, saying which visitor it was and sending no authorization', async () => {
+  process.env.BUSINESS_AGENT_SITE_URL = 'https://agent.test/api/site/1';
+  await sendSignupToAgent({ ...signup, ip: '198.51.100.9' });
+  await sendUnsubscribeToAgent('lucia@example.com');
+  assert.equal(calls.length, 2);
+  const first = calls[0].init.headers as Record<string, string>;
+  assert.equal(first.authorization, undefined);
+  assert.equal(first['x-visitor-ip'], '198.51.100.9');
+  assert.equal((calls[1].init.headers as Record<string, string>).authorization, undefined);
+  assert.deepEqual(logged, []);
+  // The visitor's address is a header, never part of what's saved.
+  assert.ok(!('ip' in JSON.parse(String(calls[0].init.body))));
+});
+
+test('switched off, nothing is sent', async () => {
   process.env.BUSINESS_AGENT_NEWSLETTER_KEY = 'nl_test';
   process.env.BUSINESS_AGENT_SITE_URL = 'off';
   await sendSignupToAgent(signup);
