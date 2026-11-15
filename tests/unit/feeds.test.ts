@@ -4,16 +4,20 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fetchAndNormalizeCatalog } from '@/server/square/catalog';
 import { toPriceBook } from '@/features/menu/priceBook';
-import { getPlaceDetails } from '@/server/places/googlePlaces';
 import { getOrderingHours } from '@/server/places/orderingHours';
-import { getInstagramPostImageUrl, getInstagramPosts, getLatestInstagramPost } from '@/server/social/instagram';
+import { getInstagramPostImageUrl, getLatestInstagramPost } from '@/server/social/instagram';
 import { getSocialFeed } from '@/server/social/feed';
+import { getCafeReviews } from '@/server/businessAgent/reviewsFeed';
+import { parseAgentReviews, cafeReviews } from '@/features/reviews/agentReviews';
+import { parseAgentPosts } from '@/features/social/agentPosts';
 import { FALLBACK_HOURS } from '@/features/order/lib/pickupTimes';
 import { derivePublicStatus, shouldSyncFromSquare } from '@/server/orders/statusMapping';
 
 /**
- * The site's facts come from other systems: prices from Square, rating and
- * hours from Google, posts from Instagram, order progress from Square again.
+ * The site's facts come from other systems: what's on the menu, its prices,
+ * the hours, the Google rating and the Instagram posts from the Business Agent
+ * (the café's back office, which reads Google and Instagram itself), the ids an
+ * order is placed with and its progress from Square.
  * Each test below runs one of those paths end to end with the network faked at
  * `fetch`, and pins the two behaviours that matter: a change at the source
  * shows up on the site, and a dead source degrades instead of breaking a page.
@@ -116,82 +120,128 @@ test('Square: test entries in the POS never reach the site', async () => {
   assert.equal(book.items.some((item) => /^test\b/i.test(item.name)), false);
 });
 
-// ── Google Maps → rating, review count, opening hours ───────────────────────
+// ── Business Agent → Google rating and reviews ───────────────────────────────
 
-const PERIODS = [1, 2, 3, 4, 5]
-  .map((day) => ({ open: { day, hour: 8, minute: 0 }, close: { day, hour: 15, minute: 0 } }))
-  .concat([{ open: { day: 6, hour: 9, minute: 0 }, close: { day: 6, hour: 15, minute: 0 } }]);
-
-function useGoogle(body: Record<string, unknown>, status = 200) {
-  process.env.GOOGLE_PLACES_API_KEY = 'unit-key';
-  process.env.GOOGLE_PLACE_ID = 'unit-place';
-  fakeNetwork((url) =>
-    url.startsWith('https://places.googleapis.com/v1/places/unit-place') ? { status, body } : undefined,
-  );
-}
-
-test('Google: rating, review count and weekly hours come from the listing', async () => {
-  useGoogle({ rating: 4.7, userRatingCount: 24, regularOpeningHours: { periods: PERIODS } });
-  const place = await getPlaceDetails('es');
-
-  assert.equal(place?.rating, 4.7);
-  assert.equal(place?.total, 24);
-  const monday = place?.hours?.find((d) => d.day === 1);
-  assert.deepEqual(monday?.ranges, [{ open: 480, close: 900 }]);
-  assert.deepEqual(place?.hours?.find((d) => d.day === 0)?.ranges, []);
+const REVIEWS_URL = 'https://agent.test/api/site/1/reviews';
+const reviewsFeed = (more: Record<string, unknown> = {}) => ({
+  version: 1,
+  business: { id: 1, name: 'Easy Beans Coffee' },
+  source: 'business_profile',
+  rating: 4.7,
+  count: 27,
+  maps_url: 'https://maps.google.com/maps?cid=95',
+  write_review_url: 'https://search.google.com/local/writereview?placeid=ChIJeasy',
+  reviews: [
+    { id: 'a', rating: 5, text: 'Best flat white', reviewer: 'Ana', created_at: '2026-11-10T10:00:00Z', language: 'en', reply: 'Thanks!', url: null, photos: [] },
+    { id: 'b', rating: 2, text: 'Slow', reviewer: 'Tom', created_at: '2026-11-12T10:00:00Z', language: 'en', reply: null, url: null, photos: [] },
+    { id: 'c', rating: 4, text: 'Lovely terrace', reviewer: 'Lu', created_at: '2026-11-11T10:00:00Z', language: 'es', reply: null, url: 'http://not-https.test', photos: [{ url: 'https://lh3.test/p' }] },
+    { id: 'd', rating: 5, text: 'Ube latte!', reviewer: 'Sam', created_at: '2026-11-09T10:00:00Z', language: 'en', reply: null, url: null, photos: [] },
+    { rating: 5, text: 'No id: left out' },
+  ],
+  checked_at: '2026-11-15T09:00:00Z',
+  generated_at: '2026-11-15T09:05:00Z',
+  ...more,
 });
 
-test('Google: no key configured means no request and a null result, never an error', async () => {
-  delete process.env.GOOGLE_PLACES_API_KEY;
+test('Agent reviews: the rating, count and links come from the Business Agent', async () => {
+  process.env.BUSINESS_AGENT_REVIEWS_URL = REVIEWS_URL;
+  fakeNetwork((url) => (url === REVIEWS_URL ? { body: reviewsFeed() } : undefined));
+  const reviews = await getCafeReviews();
+
+  assert.equal(reviews?.rating, 4.7);
+  assert.equal(reviews?.total, 27);
+  assert.equal(reviews?.reviewsUrl, 'https://maps.google.com/maps?cid=95');
+  assert.equal(reviews?.writeReviewUrl, 'https://search.google.com/local/writereview?placeid=ChIJeasy');
+  assert.ok(!calls.some((u) => u.includes('googleapis.com')), 'Google is never asked by the site');
+});
+
+test('Agent reviews: a change in the agent (a new review) is a change here', async () => {
+  process.env.BUSINESS_AGENT_REVIEWS_URL = REVIEWS_URL;
+  fakeNetwork((url) => (url === REVIEWS_URL ? { body: reviewsFeed({ rating: 4.8, count: 28 }) } : undefined));
+  const reviews = await getCafeReviews();
+  assert.equal(reviews?.rating, 4.8);
+  assert.equal(reviews?.total, 28);
+});
+
+test('Agent reviews: the agent down keeps the last rating read', async () => {
+  process.env.BUSINESS_AGENT_REVIEWS_URL = REVIEWS_URL;
+  fakeNetwork(() => ({ status: 503, body: { error: 'down' } }));
+  assert.equal((await getCafeReviews())?.rating, 4.8);
+});
+
+test('Agent reviews: switched off, nothing is asked and there is no rating to show', async () => {
+  process.env.BUSINESS_AGENT_REVIEWS_URL = 'off';
   fakeNetwork(() => undefined);
-  assert.equal(await getPlaceDetails('es'), null);
+  assert.equal(await getCafeReviews(), null);
   assert.equal(calls.length, 0);
 });
 
-test('Google: an API error degrades to null rather than breaking the page', async () => {
-  useGoogle({ error: { code: 403 } }, 403);
-  assert.equal(await getPlaceDetails('en'), null);
+test('Agent reviews: the best of the newest are picked, and only https links kept', () => {
+  const feed = parseAgentReviews(reviewsFeed());
+  assert.ok(feed);
+  assert.equal(feed.reviews.length, 4, 'a review without an id is left out, not the feed');
+  assert.equal(feed.reviews.find((r) => r.id === 'c')?.url, null);
+  assert.deepEqual(cafeReviews(feed).reviews.map((r) => r.id), ['c', 'a', 'd'], 'four stars and up, newest first');
+  assert.equal(parseAgentReviews({ ...reviewsFeed(), version: 2 }), null, 'another version is not read as this one');
+  assert.equal(parseAgentReviews(reviewsFeed({ rating: 9 }))?.rating, null, 'a rating that is not one is not shown');
 });
 
 // Ordering follows the Business Agent's week and closures now (tests/unit/agentDetails.test.ts), not Google's.
-test('Ordering hours: Google down changes nothing, and with no Business Agent the known week, so ordering keeps working', async () => {
-  useGoogle({}, 500);
+test('Ordering hours: with no Business Agent the known week, so ordering keeps working', async () => {
+  fakeNetwork(() => ({ status: 500, body: {} }));
   const { hours, source } = await getOrderingHours();
   assert.equal(source, 'fallback');
   assert.deepEqual(hours, FALLBACK_HOURS);
 });
 
-// ── Instagram → post grid ───────────────────────────────────────────────────
+// ── Business Agent → post grid ──────────────────────────────────────────────
 
-test('Instagram: latest posts become tiles linking to each post', async () => {
-  process.env.INSTAGRAM_ACCESS_TOKEN = 'unit-token';
-  delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+const POSTS_URL = 'https://agent.test/api/site/1/posts';
+const postsFeed = (posts: unknown[]) => ({
+  version: 1,
+  business: { id: 1, name: 'Easy Beans Coffee' },
+  source: 'instagram',
+  account: { handle: 'easy.beans.coffee', url: 'https://www.instagram.com/easy.beans.coffee' },
+  posts,
+  fetched_at: '2026-11-15T10:00:00Z',
+  generated_at: '2026-11-15T10:01:00Z',
+});
+
+test('Social grid: the posts the agent reads from Instagram become tiles linking to each post', async () => {
+  process.env.BUSINESS_AGENT_POSTS_URL = POSTS_URL;
   fakeNetwork((url) =>
-    url.startsWith('https://graph.instagram.com/')
+    url === POSTS_URL
       ? {
-          body: {
-            data: [
-              { id: '1', media_type: 'IMAGE', media_url: 'https://scontent.cdninstagram.com/a.jpg', permalink: 'https://www.instagram.com/p/AAA/', caption: 'Ube latte\n#ube' },
-              { id: '2', media_type: 'VIDEO', media_url: 'https://x/video.mp4', thumbnail_url: 'https://scontent.cdninstagram.com/b.jpg', permalink: 'https://www.instagram.com/reel/BBB/' },
-              { id: '3', media_type: 'IMAGE', permalink: 'https://www.instagram.com/p/CCC/' }, // no image: dropped
-            ],
-          },
+          body: postsFeed([
+            { id: '1', permalink: 'https://www.instagram.com/p/AAA/', image_url: 'https://scontent.cdninstagram.com/a.jpg', caption: 'Ube latte\n#ube', posted_at: '2026-11-15T08:00:00Z', video: false },
+            { id: '2', permalink: 'https://www.instagram.com/reel/BBB/', image_url: 'https://scontent.cdninstagram.com/b.jpg', caption: null, posted_at: '2026-11-14T08:00:00Z', video: true },
+            { id: '3', permalink: 'https://www.instagram.com/p/CCC/', posted_at: '2026-11-13T08:00:00Z' }, // no picture: left out
+          ]),
         }
       : undefined,
   );
-  const posts = await getInstagramPosts(8);
+  const feed = await getSocialFeed(['a', 'b', 'c', 'd']);
 
-  assert.deepEqual(posts.map((p) => p.permalink), ['https://www.instagram.com/p/AAA/', 'https://www.instagram.com/reel/BBB/']);
-  assert.equal(posts[0].caption, 'Ube latte');
-  assert.equal(posts[1].imageUrl, 'https://scontent.cdninstagram.com/b.jpg', 'videos show their still');
-  assert.ok(posts.every((p) => p.remote));
+  assert.equal(feed.live, true);
+  assert.deepEqual(feed.posts.map((p) => p.permalink), ['https://www.instagram.com/p/AAA/', 'https://www.instagram.com/reel/BBB/']);
+  assert.equal(feed.posts[0].caption, 'Ube latte', 'one line, hashtags dropped');
+  assert.equal(feed.posts[1].isVideo, true);
+  assert.deepEqual(feed.account, { handle: 'easy.beans.coffee', url: 'https://www.instagram.com/easy.beans.coffee' });
+  assert.ok(!calls.some((u) => u.includes('graph.instagram.com')), 'Instagram is never asked by the site');
 });
 
-test('Instagram: an expired token yields no posts (the grid shows our own photos)', async () => {
-  process.env.INSTAGRAM_ACCESS_TOKEN = 'expired';
-  delete process.env.NEXT_PUBLIC_SUPABASE_URL;
-  fakeNetwork(() => ({ status: 400, body: { error: { code: 190 } } }));
-  assert.deepEqual(await getInstagramPosts(8), []);
+test('Social grid: with no posts from the agent, our own photos all link to Instagram — never TikTok', async () => {
+  process.env.BUSINESS_AGENT_POSTS_URL = 'off';
+  fakeNetwork(() => undefined);
+  const feed = await getSocialFeed(['a', 'b', 'c', 'd']);
+  assert.equal(feed.live, false);
+  assert.equal(feed.posts.length, 4);
+  assert.ok(feed.posts.every((p) => p.permalink.includes('instagram.com')), 'every tile opens Instagram');
+});
+
+test('Social grid: a feed that is not one is not read', () => {
+  assert.equal(parseAgentPosts({ version: 1, business: {}, posts: 'none' }), null);
+  assert.equal(parseAgentPosts(postsFeed([{ id: '1', permalink: 'javascript:alert(1)', image_url: 'https://x.test/a.jpg', posted_at: '2026-11-15T08:00:00Z' }]))?.posts.length, 0);
 });
 
 // ── Instagram → the café TV (/display-menu) ────────────────────────────────
@@ -243,17 +293,6 @@ test("Café TV: a post's picture is asked for afresh by its id; a video gives it
   assert.equal(await getInstagramPostImageUrl('20'), 'https://scontent.cdninstagram.com/cake.jpg');
   assert.equal(await getInstagramPostImageUrl('21'), 'https://scontent.cdninstagram.com/still.jpg');
   assert.equal(await getInstagramPostImageUrl('99'), null, 'not one of ours');
-});
-
-test('Social grid: with Instagram down, our own photos all link to Instagram — never TikTok', async () => {
-  process.env.INSTAGRAM_ACCESS_TOKEN = 'expired';
-  delete process.env.TIKTOK_ACCESS_TOKEN;
-  delete process.env.NEXT_PUBLIC_SUPABASE_URL;
-  fakeNetwork(() => ({ status: 400, body: { error: { code: 190 } } }));
-  const feed = await getSocialFeed(['a', 'b', 'c', 'd']);
-  assert.equal(feed.live, false);
-  assert.equal(feed.posts.length, 4);
-  assert.ok(feed.posts.every((p) => p.permalink.includes('instagram.com')), 'every tile opens Instagram');
 });
 
 // ── Square → live order status ──────────────────────────────────────────────

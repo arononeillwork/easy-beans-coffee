@@ -1,26 +1,22 @@
 import 'server-only';
-import type { SocialPost } from './types';
 import { feedUrl } from '../feedBase';
 import { getInstagramToken } from './instagramToken';
 
 /**
- * Latest posts from the café's Instagram account, via the Instagram Graph API
- * (`graph.instagram.com/me/media`). Needs a long-lived access token from an
- * Instagram **Business or Creator** account — see docs/social-feed-setup.md.
+ * The café TV's own read of the café's Instagram (`graph.instagram.com`), for
+ * its poster mode that follows the newest post (SHOW_NEWEST_POST on
+ * /display-menu, off while the TV shows the Business Agent's screen). Needs a
+ * long-lived token from an Instagram **Business or Creator** account — see
+ * docs/social-feed-setup.md.
  *
- * The old Basic Display API this used to be built on was switched off in
- * December 2024; there is no token-free way to read a feed any more.
- *
- * The grid's read never throws: a missing or expired token returns an empty
- * list and the grid falls back to our own photography. The café TV's read
- * (getLatestInstagramPost) is the one that does, on purpose.
+ * The home page's post grid doesn't use this: it reads the posts from the
+ * Business Agent, which holds the café's Instagram connection
+ * (server/businessAgent/postsFeed).
  */
 
 const GRAPH = 'https://graph.instagram.com/v21.0';
 const ENDPOINT = `${GRAPH}/me/media`;
 const FIELDS = 'id,caption,media_type,media_url,permalink,thumbnail_url,timestamp';
-/** An hour: the CDN URLs Instagram hands out are signed and time-limited. */
-const REVALIDATE_SECONDS = 3_600;
 
 type ApiMedia = {
   id?: string;
@@ -31,18 +27,6 @@ type ApiMedia = {
   permalink?: string;
   timestamp?: string;
 };
-
-export async function getInstagramPosts(limit: number): Promise<SocialPost[]> {
-  const token = await instagramToken();
-  if (!token) return [];
-  try {
-    return (await requestMedia(token, limit, REVALIDATE_SECONDS)).flatMap(toPost);
-  } catch (error) {
-    // 190 = token expired or revoked, which is the failure worth spotting.
-    console.warn('[social] Instagram request failed', error);
-    return [];
-  }
-}
 
 /**
  * The newest post with a picture, for the café TV (/display-menu), asked for
@@ -108,23 +92,6 @@ async function requestMedia(token: string, limit: number, revalidateSeconds: num
 /** A video's media_url is the file itself; thumbnail_url is the still we want. */
 function imageOf(media: ApiMedia): string | undefined {
   return media.media_type === 'VIDEO' ? media.thumbnail_url : media.media_url;
-}
-
-function toPost(media: ApiMedia): SocialPost[] {
-  const image = imageOf(media);
-  if (!media.id || !media.permalink || !image) return [];
-  return [
-    {
-      id: `ig-${media.id}`,
-      platform: 'instagram',
-      permalink: media.permalink,
-      imageUrl: image,
-      caption: firstLine(media.caption ?? ''),
-      postedAt: media.timestamp ?? null,
-      isVideo: media.media_type === 'VIDEO',
-      remote: true,
-    },
-  ];
 }
 
 /** Captions run long and carry hashtag tails; the tile shows one line. */

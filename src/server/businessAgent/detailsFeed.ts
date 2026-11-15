@@ -1,7 +1,6 @@
 import 'server-only';
 import { cafeDetails, fallbackDetails, parseAgentDetails, type AgentDetails, type CafeDetails } from '@/features/details/agentDetails';
-import { feedUrl } from '../feedBase';
-import { liveSiteBase } from './agent';
+import { agentFeed, agentFeedUrl } from './feed';
 
 /**
  * The café's details — address, contacts, social accounts, opening hours and
@@ -20,7 +19,6 @@ import { liveSiteBase } from './agent';
  * site, and moves the online ordering cutoff, within a few.
  */
 const REVALIDATE_SECONDS = 5 * 60;
-const TIMEOUT_MS = 4000;
 
 /**
  * Where the feed is read from. `BUSINESS_AGENT_DETAILS_URL` names it (another
@@ -28,14 +26,15 @@ const TIMEOUT_MS = 4000;
  * reads the live agent and a laptop reads nothing (it shows the built-in
  * details), so trying the site locally never depends on the agent.
  */
-export function agentDetailsUrl(): string | null {
-  const set = process.env.BUSINESS_AGENT_DETAILS_URL?.trim();
-  if (set) return set.toLowerCase() === 'off' ? null : set;
-  return process.env.VERCEL === '1' ? `${liveSiteBase()}/details` : null;
-}
+export const agentDetailsUrl = () => agentFeedUrl('details', 'BUSINESS_AGENT_DETAILS_URL');
 
-let lastGood: AgentDetails | null = null;
-let reported = false;
+const readDetails = agentFeed<AgentDetails>({
+  name: 'details',
+  path: 'details',
+  env: 'BUSINESS_AGENT_DETAILS_URL',
+  parse: parseAgentDetails,
+  revalidateSeconds: REVALIDATE_SECONDS,
+});
 
 /**
  * The café's details. Never throws: an agent that's down or slow costs their
@@ -43,28 +42,6 @@ let reported = false;
  * the built-in ones (`source: 'fallback'`).
  */
 export async function getCafeDetails(): Promise<CafeDetails> {
-  const url = agentDetailsUrl();
-  if (!url) return fallbackDetails();
-  try {
-    const response = await fetch(feedUrl('agent', url), {
-      headers: { accept: 'application/json' },
-      next: { revalidate: REVALIDATE_SECONDS },
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-    });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const details = parseAgentDetails(await response.json());
-    if (!details) throw new Error('not a details feed (version 1)');
-    lastGood = details;
-    reported = false;
-    return cafeDetails(details);
-  } catch (err) {
-    if (!reported) {
-      reported = true;
-      console.warn(
-        'Business Agent details unavailable — showing the last details read, or the built-in ones.',
-        err instanceof Error ? err.message : err,
-      );
-    }
-    return lastGood ? cafeDetails(lastGood) : fallbackDetails();
-  }
+  const details = await readDetails();
+  return details ? cafeDetails(details) : fallbackDetails();
 }

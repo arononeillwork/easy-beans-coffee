@@ -16,6 +16,11 @@ import type { DayHours } from '@/shared/lib/openingHours';
 const TZ = 'Europe/Madrid';
 const madrid = (iso: string) => Date.parse(`${iso}+02:00`);
 
+// The system clock in a zone that isn't the café's, as a visitor abroad (or a UTC server) has:
+// café time must still be read as Madrid's. (The browser suite runs in Madrid time; see
+// tests/e2e/feeds.spec.ts.)
+process.env.TZ = 'America/New_York';
+
 // Wednesday 21 Oct 2026; Saturday 24; Sunday 25 (still CEST until 25 Oct 03:00).
 test('weekday: open from 8:00 until 14:30, closed from 14:31', () => {
   assert.equal(isOpenForAsap(madrid('2026-10-21T07:59:00'), TZ), false);

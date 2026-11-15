@@ -1,6 +1,6 @@
 import 'server-only';
 import { parseAgentMenu, type AgentMenu } from '@/features/menu/agentMenu';
-import { liveSiteBase } from './agent';
+import { agentFeed, agentFeedUrl } from './feed';
 
 /**
  * The menu as the Business Agent has it — the café's back office, where the
@@ -20,7 +20,6 @@ import { liveSiteBase } from './agent';
  * would make them dynamic; see the same note in square/priceCache).
  */
 const REVALIDATE_SECONDS = 5 * 60;
-const TIMEOUT_MS = 4000;
 
 /**
  * Where the feed is read from. `BUSINESS_AGENT_MENU_URL` names it (another
@@ -28,14 +27,7 @@ const TIMEOUT_MS = 4000;
  * reads the live agent and a laptop or a test run reads nothing, so the e2e
  * suite never depends on the real menu.
  */
-export function agentMenuUrl(): string | null {
-  const set = process.env.BUSINESS_AGENT_MENU_URL?.trim();
-  if (set) return set.toLowerCase() === 'off' ? null : set;
-  return process.env.VERCEL === '1' ? `${liveSiteBase()}/menu` : null;
-}
-
-let lastGood: AgentMenu | null = null;
-let reported = false;
+export const agentMenuUrl = () => agentFeedUrl('menu', 'BUSINESS_AGENT_MENU_URL');
 
 /**
  * The agent's menu, or null when there is none to follow (not configured, or
@@ -43,29 +35,10 @@ let reported = false;
  * never the board: the last good menu is served, and with none the site lists
  * what it shipped with.
  */
-export async function getAgentMenu(): Promise<AgentMenu | null> {
-  const url = agentMenuUrl();
-  if (!url) return null;
-  try {
-    const response = await fetch(url, {
-      headers: { accept: 'application/json' },
-      next: { revalidate: REVALIDATE_SECONDS },
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-    });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const menu = parseAgentMenu(await response.json());
-    if (!menu) throw new Error('not a menu feed (version 1)');
-    lastGood = menu;
-    reported = false;
-    return menu;
-  } catch (err) {
-    if (!reported) {
-      reported = true;
-      console.warn(
-        'Business Agent menu unavailable — listing from the last menu read, or the built-in one.',
-        err instanceof Error ? err.message : err,
-      );
-    }
-    return lastGood;
-  }
-}
+export const getAgentMenu: () => Promise<AgentMenu | null> = agentFeed({
+  name: 'menu',
+  path: 'menu',
+  env: 'BUSINESS_AGENT_MENU_URL',
+  parse: parseAgentMenu,
+  revalidateSeconds: REVALIDATE_SECONDS,
+});

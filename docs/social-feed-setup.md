@@ -1,16 +1,19 @@
-# Live Instagram + TikTok feed
+# Instagram on the site
 
-The "follow along" grid on the home page shows the newest posts from both
-networks, each tile linking to that post. Until tokens are configured it shows
-four of our own photos linking to the profiles, and says so in the line beneath.
+**The home page's post grid reads the café's posts from the Business Agent**, not from Instagram:
+the agent holds the Instagram connection (its Connections page) and keeps its token renewed, and the
+site reads `GET https://businesssagent.com/api/site/1/posts` (Website & SEO → *Your Instagram posts on
+your website*, contract in the business-agent repo, `docs/WEBSITE.md`). The grid needs no token here:
+reconnect Instagram in the agent if it ever lapses. Until the agent answers with posts, the grid shows
+four of the café's own photos linking to the profile.
 
-Code: [`src/server/social/`](../src/server/social) (one file per network, plus
-`feed.ts` which merges them) and
-[`src/components/marketing/client/SocialBoard.tsx`](../src/components/marketing/client/SocialBoard.tsx)
-(grid + the two filter buttons).
+Code: [`src/server/businessAgent/postsFeed.ts`](../src/server/businessAgent/postsFeed.ts),
+[`src/server/social/feed.ts`](../src/server/social/feed.ts) and
+[`src/components/home/InstagramGrid.tsx`](../src/components/home/InstagramGrid.tsx).
 
-Live and curated posts are never mixed: as soon as one network answers, the
-whole grid is real posts.
+The site's own Instagram token, below, is now used only by the café TV's poster mode that follows the
+newest post (`SHOW_NEWEST_POST` on `/display-menu`, off while the TV shows the agent's screen). TikTok
+is no longer read by the site.
 
 ## The honest summary first
 

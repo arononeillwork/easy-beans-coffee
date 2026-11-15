@@ -50,10 +50,14 @@ in the agent is here within a few. If the agent can't be reached the last menu r
 none, the board is `drinks.ts` as shipped. `BUSINESS_AGENT_MENU_URL` points it elsewhere or turns it
 `off`; a laptop or the e2e suite reads nothing unless it's set.
 
-**Prices.** The agent reads its prices from Square, so they are Square's. Square is still the one
-that charges, so the price shown is always Square's: if the two ever differ (the hour before the
-agent next reads Square) the site shows what the customer will pay and logs the difference. To
-change a price, change it in Square; the agent, Google Maps, the screens and this site follow.
+**Prices.** The prices shown are the agent's (`price`, `price_label` and `variants` in its feed),
+read the way the agent writes them to Square: its price is for the way of selling its label names (else
+the first), its variants name the others, and any it doesn't name keeps its difference in Square. Where
+the agent has no price (not priced yet, or the extras such as oat milk, which the agent leaves to
+Square), Square's is shown. Square still charges at checkout, with its own price; the agent reads its
+menu from Square and writes a price changed there back to Square within a minute, so the two agree, and
+the server logs any moment they don't. Change a price on the agent's Menu page (or in Square): the
+agent, Google Maps, the screens and this site follow.
 
 ## Prices
 

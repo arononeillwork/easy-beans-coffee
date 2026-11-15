@@ -77,12 +77,31 @@ follows within five minutes, no deploy. Google Maps gets the same from the agent
 be read gives the last details read, and with none the built-in ones in
 `src/features/details/agentDetails.ts`. `src/server/businessAgent/detailsFeed.ts`.
 
+### Google reviews, Instagram posts and prices come from the Business Agent
+
+The rating card on the visit section (Google's rating, the review count and the "write a review" link)
+reads the agent's reviews feed, `https://businesssagent.com/api/site/1/reviews`: the agent reads Google
+itself, from the café's own Business Profile, every hour. The home page's Instagram grid reads its posts
+feed, `/api/site/1/posts`: the agent holds the Instagram connection, so the site needs neither a Google
+key nor an Instagram token. The menu's prices are the agent's too (`docs/menu.md`); Square still charges
+and says what's sold out. Every feed is read the same way (`src/server/businessAgent/feed.ts`): an agent
+that can't be read gives the last answer read, and with none the site's own (no rating, the café's own
+photos, Square's prices). `/api/status` says what each feed last gave.
+
+### A site for another business
+
+Everything a visitor reads that the business changes (its menu and prices, address, contacts, opening
+hours and closures, Google rating and Instagram posts) comes from the Business Agent, and every address is
+`https://businesssagent.com/api/site/<business>/…`. A site built from this code for another business sets
+`BUSINESS_AGENT_BUSINESS` to its number and turns each feed on in the agent (Website & SEO, the steps in
+the business-agent repo's `docs/WEBSITE.md`); its own keys are only Square's, for taking orders, and the
+website key for sign-ups and accounts. A new feed is one call to `agentFeed()` with its parser.
+
 ## Docs
 
 - `docs/menu.md` — the drink studio, the photography pipeline and the price book
 - `docs/shop.md` — how retail stock is modelled, badged and fulfilled
-- `docs/google-reviews-setup.md` — Places API key/place id: live reviews (the opening hours now come from the Business Agent)
-- `docs/social-feed-setup.md` — Instagram/TikTok tokens for the live post grid
+- `docs/social-feed-setup.md` — Instagram: the grid reads it from the Business Agent; the token here is only for the café TV's poster mode
 - `docs/square-sandbox-setup.md` — end-to-end sandbox walkthrough
 - `docs/production-deploy.md` — Vercel env + go-live steps
 - `docs/website-admin.md` — `/admin/website`: domain & DNS editing and the website studio

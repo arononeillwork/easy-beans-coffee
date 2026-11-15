@@ -169,7 +169,7 @@ test('joins on the name when the agent has no Square id (a menu kept in the agen
   assert.deepEqual(book.items.map((i) => i.id), ['SQ-FW']);
 });
 
-test('shows Square’s price, and reports a different agent price', () => {
+test('shows the agent’s price, and reports where Square’s differs (Square still charges its own)', () => {
   const drifted = agentMenu([
     {
       name: 'Classics',
@@ -180,11 +180,30 @@ test('shows Square’s price, and reports a different agent price', () => {
   const { book, disagreements } = applyAgentMenu(squareBook(), drifted);
   assert.deepEqual(
     book.items[0].variations.map((v) => [v.name, v.cents]),
-    [['Hot', 380], ['Iced', 480]],
+    [['Hot', 390], ['Iced', 480]],
   );
+  // What an order is placed with stays Square's.
+  assert.deepEqual(book.items[0].variations.map((v) => v.id), squareBook().items.find((i) => i.name === 'Flat White')!.variations.map((v) => v.id));
   assert.deepEqual(disagreements, ['Flat White (Hot): agent 3.90, Square 3.80']);
   // The live shape agrees everywhere.
   assert.deepEqual(applyAgentMenu(squareBook(), LIVE).disagreements, []);
+});
+
+test('a way of selling the agent doesn’t name keeps its difference in Square, as the agent prices Square; no agent price keeps Square’s', () => {
+  const book = squareBook();
+  const flat = book.items.find((i) => i.name === 'Flat White')!; // Hot 3.80, Iced 4.80
+  const soft = book.items.find((i) => i.name === 'Soft Drinks')!; // Coca Cola and Sprite, 2.50 each
+  const menu = agentMenu([{ name: 'Classics', extras: false, items: [
+    entry('Flat White', { square_id: flat.id, price: 4.1 }),
+    entry('Soft Drinks', { square_id: soft.id, price: 2.7 }),
+  ] }]);
+  const { book: priced, disagreements } = applyAgentMenu(book, menu);
+  const cents = (name: string) => priced.items.find((i) => i.name === name)!.variations.map((v) => v.cents);
+  assert.deepEqual(cents('Flat White'), [410, 510], 'Iced stays a euro more');
+  assert.deepEqual(cents('Soft Drinks'), [270, 270], 'one price stays one price');
+  assert.equal(disagreements.length, 4);
+  const unpriced = agentMenu([{ name: 'Classics', extras: false, items: [entry('Flat White', { square_id: flat.id, price: null })] }]);
+  assert.deepEqual(applyAgentMenu(book, unpriced).book.items[0].variations.map((v) => v.cents), [380, 480]);
 });
 
 test('Square down: the board still follows the agent, without prices', () => {

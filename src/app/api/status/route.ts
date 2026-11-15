@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getPriceBookOrEmpty } from '@/server/square/priceCache';
 import { getOrderingHours } from '@/server/places/orderingHours';
-import { getPlaceDetails } from '@/server/places/googlePlaces';
+import { getCafeReviews } from '@/server/businessAgent/reviewsFeed';
+import { getAgentPosts } from '@/server/businessAgent/postsFeed';
+import { getAgentMenu } from '@/server/businessAgent/menuFeed';
 import { instagramHealth } from '@/server/social/instagram';
 import { readStoredToken } from '@/server/social/instagramToken';
 import { isWebhookConfigured } from '@/server/square/webhookVerify';
@@ -17,10 +19,12 @@ export const dynamic = 'force-dynamic';
  * Open https://www.easybeanscoffee.com/api/status in a browser.
  */
 export async function GET() {
-  const [prices, hours, place, instagram, stored] = await Promise.all([
+  const [prices, hours, reviews, posts, menu, instagram, stored] = await Promise.all([
     getPriceBookOrEmpty(),
     getOrderingHours(),
-    getPlaceDetails('es'),
+    getCafeReviews(),
+    getAgentPosts(),
+    getAgentMenu(),
     instagramHealth(),
     readStoredToken('instagram', false),
   ]);
@@ -58,7 +62,13 @@ export async function GET() {
       squarePrices: { items: prices.items.length, stale: prices.stale, fetchedAt: prices.fetchedAt },
       // Hours, closures and contacts: from the Business Agent ('agent'), or the built-in ones ('fallback').
       businessAgentDetails: { source: hours.source },
-      googleRating: { rating: place?.rating ?? null, reviews: place?.total ?? null },
+      // What's on the menu and its prices: null when the agent has never been read (the site lists its own).
+      businessAgentMenu: menu ? { items: menu.sections.reduce((n, s) => n + s.items.length, 0), generatedAt: menu.generated_at } : null,
+      // The Google rating, as the agent reads it from Google Maps.
+      businessAgentReviews: reviews ? { rating: reviews.rating, reviews: reviews.total } : null,
+      // The Instagram grid, as the agent reads it from Instagram.
+      businessAgentPosts: posts ? { source: posts.source, posts: posts.posts.length, fetchedAt: posts.fetched_at } : null,
+      // The site's own Instagram token: only the café TV's poster mode (SHOW_NEWEST_POST) still uses it.
       instagram: {
         ...instagram,
         autoRenewed: stored !== null,

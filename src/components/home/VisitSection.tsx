@@ -12,7 +12,7 @@ import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import DirectionsRoundedIcon from '@mui/icons-material/DirectionsRounded';
 import type { Lang } from '@/i18n/config';
 import type { SiteContent } from '@/i18n/content/en';
-import type { PlaceDetails } from '@/server/places/googlePlaces';
+import type { CafeReviews } from '@/features/reviews/agentReviews';
 import type { CafeDetails } from '@/features/details/agentDetails';
 import { brand, radius, shadow } from '@/theme/brand';
 import { Stars } from '@/components/marketing/Stars';
@@ -24,22 +24,22 @@ const AMENITY_ICONS = [PetsOutlinedIcon, WifiIcon, DeckOutlinedIcon];
 /**
  * "Come and see us": the terrace itself, with the live Google rating (and a
  * link to leave one) pinned to the photo, whether we are open right now, and the two ways to get here.
- * The address, the hours (with the days we're closed) and the WhatsApp come from the Business Agent,
- * where they're changed; the rating and review count from Google Maps.
+ * All of it comes from the Business Agent: the address, the hours (with the days we're closed) and the
+ * WhatsApp where they're changed, and the rating and review count as it reads them from Google Maps.
  */
 export function VisitSection({
   t,
   lang,
-  place,
+  reviews,
   details,
 }: {
   t: SiteContent;
   lang: Lang;
-  place: PlaceDetails | null;
+  reviews: CafeReviews | null;
   details: CafeDetails;
 }) {
-  const rating = place?.rating ?? null;
-  const mapsUrl = details.mapsUrl ?? place?.mapsUrl ?? null;
+  const rating = reviews?.rating ?? null;
+  const mapsUrl = details.mapsUrl ?? reviews?.reviewsUrl ?? null;
   // The street as the headline, the town under it: the agent's address, line by line.
   const [street, town] = details.addressLines.length ? details.addressLines : [t.location.title, t.location.town];
 
@@ -193,7 +193,7 @@ export function VisitSection({
             </Box>
 
             {/* The live Google rating, pinned to the photo, with the way to add one. */}
-            {(rating !== null || place?.writeReviewUrl) && (
+            {(rating !== null || reviews?.writeReviewUrl) && (
               <Box
                 data-testid="rating-card"
                 sx={{
@@ -211,7 +211,7 @@ export function VisitSection({
                 {rating !== null && (
                   <Box
                     component="a"
-                    href={place?.reviewsUrl ?? mapsUrl ?? undefined}
+                    href={reviews?.reviewsUrl ?? mapsUrl ?? undefined}
                     target="_blank"
                     rel="noopener noreferrer"
                     sx={{ display: 'block', color: 'inherit', textDecoration: 'none' }}
@@ -232,14 +232,14 @@ export function VisitSection({
                       <Stars value={rating} size={16} label={`${rating.toFixed(1)} / 5`} />
                     </Stack>
                     <Typography data-testid="google-review-count" sx={{ mt: 0.75, fontSize: '0.8125rem', color: brand.ink70 }}>
-                      {place?.total ? `${place.total} ${t.reviews.count}` : t.reviews.read}
+                      {reviews?.total ? `${reviews.total} ${t.reviews.count}` : t.reviews.read}
                     </Typography>
                   </Box>
                 )}
-                {place?.writeReviewUrl && (
+                {reviews?.writeReviewUrl && (
                   <Box
                     component="a"
-                    href={place.writeReviewUrl}
+                    href={reviews.writeReviewUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     sx={{

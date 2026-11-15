@@ -79,17 +79,16 @@ export default defineConfig({
       SQUARE_ENVIRONMENT: 'sandbox',
       SQUARE_ACCESS_TOKEN: '',
       SQUARE_LOCATION_ID: '',
-      // Google Places and Instagram are configured, but every request goes to
+      // The Business Agent's feeds are configured, but every request goes to
       // the local stand-in (src/server/feedBase.ts honours this only outside a
-      // production build). Real keys in .env.local are overridden here.
+      // production build). Real addresses in .env.local are overridden here.
       E2E_FEEDS_BASE: `http://localhost:${MOCK_FEEDS_PORT}`,
-      // The Business Agent's details (hours, closures, address, contacts): read from the stand-in too.
+      // The Business Agent's details (hours, closures, address, contacts), Google reviews and Instagram posts.
       BUSINESS_AGENT_DETAILS_URL: 'https://businesssagent.com/api/site/1/details',
-      GOOGLE_PLACES_API_KEY: 'e2e-key',
-      GOOGLE_PLACE_ID: 'e2e-place',
+      BUSINESS_AGENT_REVIEWS_URL: 'https://businesssagent.com/api/site/1/reviews',
+      BUSINESS_AGENT_POSTS_URL: 'https://businesssagent.com/api/site/1/posts',
+      // Only the café TV's poster mode still reads Instagram itself (the stand-in too).
       INSTAGRAM_ACCESS_TOKEN: 'e2e-token',
-      TIKTOK_ACCESS_TOKEN: '',
-      GOOGLE_BUSINESS_CLIENT_ID: '',
     },
   },
   ],
