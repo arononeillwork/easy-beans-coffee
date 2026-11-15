@@ -1,6 +1,7 @@
 // Values the stand-in feeds serve; shared by mockFeeds.mjs and feeds.spec.ts.
 // Deliberately unlike the café's real data, so a pass can only come from the feed.
 export const FIXTURE = {
+  // The Google rating and review count, as the Business Agent's reviews feed gives them.
   rating: 4.6,
   total: 37,
   // Mon–Fri 7:45–16:15, Sat 10:00–14:00, Sunday closed.
@@ -19,6 +20,10 @@ export const FIXTURE = {
     email: 'e2e@easybeans.example',
     closureInDays: 10,
     closureReason: 'Closed for the e2e party',
+    // Its Google reviews feed's links, and the Instagram it reads the posts from.
+    mapsUrl: 'https://maps.google.com/?cid=e2e',
+    writeReviewUrl: 'https://search.google.com/local/writereview?placeid=e2e-place',
+    instagramHandle: 'e2e.beans',
   },
   // Numeric ids, like Instagram's own: the café TV asks for a post's picture by its id.
   posts: [

@@ -13,13 +13,17 @@
  * - Items the site does know keep everything that makes them look right:
  *   the bilingual copy, the photography, the option rails (`drinks.ts`).
  *
+ * - The prices shown are the agent's: change a price on its Menu page and the
+ *   site, the screens and Google Maps all show it within minutes. Where the
+ *   agent has no price for something (not priced yet, or an extra like oat
+ *   milk, which the agent leaves to Square), Square's is shown.
+ *
  * Square still takes the money, so ordering still needs Square's ids: the
  * agent's items are joined to the Square catalog by Square item id (the agent
- * reads its menu from Square) and then by name. The price shown is the one
- * Square will charge. For Easy Beans that is the agent's price too, because the
- * agent reads its prices from Square; when the two ever differ (the hour before
- * the agent next reads Square) the site shows what the customer will pay and
- * the server logs the difference.
+ * reads its menu from Square) and then by name, and checkout charges Square's
+ * price. For Easy Beans the two are the same: the agent reads its menu from
+ * Square, and a price changed in the agent is changed in Square within a
+ * minute. Any moment they differ, the server logs it.
  *
  * Without the agent (not configured, or never reached) nothing here applies
  * and the board is `drinks.ts`, as before.
@@ -114,27 +118,49 @@ export function parseAgentMenu(raw: unknown): AgentMenu | null {
 
 const cents = (price: number) => Math.round(price * 100);
 
+/**
+ * The agent's price for each of the item's Square variations, in cents, by
+ * variation id — read the way the agent itself writes prices to Square
+ * (business-agent: shared/menuSquare.ts, squarePriceChanges): its price is for
+ * the variation its price label names ("Hot"), else the first; its variants
+ * name the others ("Iced"), each at its whole price; any variation it doesn't
+ * name keeps the difference it has in Square from that one, so sit in and
+ * takeaway at one price stay at one price. Nothing when the agent has no price.
+ */
+function agentCents(entry: AgentMenuItem, item: PricedItem): Map<string, number> {
+  const out = new Map<string, number>();
+  if (entry.price === null || entry.price < 0 || item.variations.length === 0) return out;
+  const named = new Map<string, number | null>();
+  for (const variant of entry.variants) named.set(normalizeName(variant.name), variant.price);
+  const label = entry.price_label ? normalizeName(entry.price_label) : null;
+  const anchor = (label && item.variations.find((v) => v.key === label)) || item.variations[0];
+  const base = cents(entry.price);
+  for (const variation of item.variations) {
+    if (variation === anchor) out.set(variation.id, base);
+    else if (named.has(variation.key)) {
+      const price = named.get(variation.key);
+      if (price !== null && price !== undefined && price >= 0) out.set(variation.id, cents(price));
+    } else out.set(variation.id, Math.max(0, base + variation.cents - anchor.cents));
+  }
+  return out;
+}
+
 /** Where the agent's price and Square's differ, as lines for the server log. */
-function disagreementsFor(entry: AgentMenuItem, item: PricedItem): string[] {
-  if (entry.price === null) return [];
-  const agent = new Map<string, number | null>();
-  if (entry.price_label) agent.set(normalizeName(entry.price_label), entry.price);
-  for (const variant of entry.variants) agent.set(normalizeName(variant.name), variant.price);
-  // One price with no label covers every way Square sells it (sit in and
-  // takeaway at the same price, or a lone "Regular").
-  const single = !entry.price_label && entry.variants.length === 0;
+function disagreementsFor(item: PricedItem, prices: Map<string, number>): string[] {
   return item.variations.flatMap((variation) => {
-    const price = single ? entry.price : agent.get(variation.key);
-    if (price === null || price === undefined || cents(price) === variation.cents) return [];
-    return [`${item.name} (${variation.name}): agent ${price.toFixed(2)}, Square ${(variation.cents / 100).toFixed(2)}`];
+    const agent = prices.get(variation.id);
+    if (agent === undefined || agent === variation.cents) return [];
+    return [`${item.name} (${variation.name}): agent ${(agent / 100).toFixed(2)}, Square ${(variation.cents / 100).toFixed(2)}`];
   });
 }
 
 /**
- * The price book, cut to what the agent lists: Square items the agent does not
- * list are dropped (so their drinks leave the board), the rest carry where they
- * sit on the agent's menu. `listed` keeps the listed names even when Square
- * could not be read, so the board still follows the agent without prices.
+ * The price book, cut to what the agent lists and priced at the agent's
+ * prices: Square items the agent does not list are dropped (so their drinks
+ * leave the board), the rest carry where they sit on the agent's menu and the
+ * agent's price for each way they're sold. `listed` keeps the listed names even
+ * when Square could not be read, so the board still follows the agent without
+ * prices.
  */
 export function applyAgentMenu(
   book: PriceBook,
@@ -148,6 +174,7 @@ export function applyAgentMenu(
   const byId = new Map(book.items.map((item) => [item.id, item]));
   const byKey = indexPriceBook(book);
   const claimed = new Map<string, Listing>();
+  const prices = new Map<string, Map<string, number>>();
   const listed = new Set<string>();
   const disagreements: string[] = [];
 
@@ -163,7 +190,9 @@ export function applyAgentMenu(
       description: entry.description?.trim() || null,
       featured: entry.featured,
     });
-    disagreements.push(...disagreementsFor(entry, item));
+    const agent = agentCents(entry, item);
+    prices.set(item.id, agent);
+    disagreements.push(...disagreementsFor(item, agent));
   });
 
   return {
@@ -171,7 +200,13 @@ export function applyAgentMenu(
       ...book,
       items: book.items.flatMap((item) => {
         const listing = claimed.get(item.id);
-        return listing ? [{ ...item, listing }] : [];
+        if (!listing) return [];
+        const agent = prices.get(item.id);
+        const variations = item.variations.map((variation) => {
+          const price = agent?.get(variation.id);
+          return price === undefined ? variation : { ...variation, cents: price };
+        });
+        return [{ ...item, variations, listing }];
       }),
       listed: [...listed],
     },

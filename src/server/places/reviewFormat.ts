@@ -1,13 +1,13 @@
 import type { Lang } from '@/i18n/config';
 
 /**
- * One rule for *which* reviews the band shows, and how their dates read.
+ * One rule for *which* reviews the site shows, and how their dates read.
  *
- * Two sources feed that band — the public Places API and the café's own
- * Business Profile (see `businessProfile.ts`) — and they disagree about almost
- * everything: Places caps at five and offers no sort, Business Profile returns
- * up to fifty and sorts on request. Keeping the choice here means the site
- * shows the same reviews either way, and the docs only have one rule to state.
+ * The reviews come from the Business Agent (features/reviews/agentReviews),
+ * which reads them from Google: from the café's own Business Profile all of
+ * them, from the public listing only its five newest. Keeping the choice here
+ * means the site shows the same reviews either way, and the docs only have one
+ * rule to state.
  *
  * Pure functions, no I/O, no `server-only` — the ranking is unit-tested.
  */

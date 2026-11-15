@@ -8,21 +8,21 @@ import { InstagramGrid } from '@/components/home/InstagramGrid';
 import { VisitSection } from '@/components/home/VisitSection';
 import { isLang } from '@/i18n/config';
 import { getDictionary } from '@/i18n/dictionary';
-import { getPlaceDetails } from '@/server/places/googlePlaces';
 import { getCafeDetails } from '@/server/businessAgent/detailsFeed';
+import { getCafeReviews } from '@/server/businessAgent/reviewsFeed';
 import { getPriceBookOrEmpty } from '@/server/square/priceCache';
 
 /**
- * Six blocks, each carrying live data where it has any: open/closed, the
- * address and WhatsApp from the Business Agent, prices from Square, posts from
- * Instagram, rating from Google.
- * Copy is kept to what a visitor needs to act.
+ * Six blocks, each carrying live data where it has any, all of it from the
+ * Business Agent (the café's back office): open/closed, the address and
+ * WhatsApp, what's on the menu and its prices, the Instagram posts and the
+ * Google rating. Copy is kept to what a visitor needs to act.
  */
 export default async function HomePage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
   const t = getDictionary(lang);
-  const [place, prices, details] = await Promise.all([getPlaceDetails(lang), getPriceBookOrEmpty(), getCafeDetails()]);
+  const [reviews, prices, details] = await Promise.all([getCafeReviews(), getPriceBookOrEmpty(), getCafeDetails()]);
 
   return (
     <>
@@ -32,7 +32,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       <CafeFilm t={t} />
       <CanBand t={t} />
       <InstagramGrid t={t} />
-      <VisitSection t={t} lang={lang} place={place} details={details} />
+      <VisitSection t={t} lang={lang} reviews={reviews} details={details} />
     </>
   );
 }

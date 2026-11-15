@@ -12,7 +12,6 @@
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:unit": "node --import tsx --conditions=react-server --test \"tests/unit/**/*.test.ts\"",
-    "auth:google-business": "tsx scripts/google-business-auth.ts",
     "seed:catalog": "tsx scripts/seed-square-catalog.ts",
     "seed:todo": "tsx scripts/seed-todo-board.ts",
     "fix:todo": "tsx scripts/fix-todo-board.ts",

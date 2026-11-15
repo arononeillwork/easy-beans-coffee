@@ -9,10 +9,11 @@ import { fetchAndNormalizeCatalog } from './catalog';
  * The menu's price snapshot, and what the Business Agent lists.
  *
  * Two reads, kept apart. The Business Agent says which items are on the menu
- * (server/businessAgent/menuFeed, kept five minutes); Square says what each
- * one costs and gives the ids an order is placed with. The agent reads its own
- * prices from Square, so the two agree; see features/menu/agentMenu for what
- * happens when they briefly don't.
+ * and what each costs (server/businessAgent/menuFeed, kept five minutes);
+ * Square gives the ids an order is placed with, what's sold out, the extras'
+ * prices, and charges at checkout. The agent reads its menu from Square, so the
+ * two agree; see features/menu/agentMenu for what happens when they briefly
+ * don't.
  *
  * Square is read at most every fifteen minutes. It used to be once a café day,
  * when the board was fixed and only a price could change; now an item added or
@@ -65,7 +66,7 @@ function reportDisagreements(lines: string[]) {
   if (!fresh.length) return;
   for (const line of fresh) reportedDisagreements.add(line);
   console.warn(
-    `Business Agent and Square disagree on ${fresh.length} price(s); the site shows Square's, which is what is charged:`,
+    `Business Agent and Square disagree on ${fresh.length} price(s); the site shows the agent's, Square charges its own:`,
     fresh.join('; '),
   );
 }

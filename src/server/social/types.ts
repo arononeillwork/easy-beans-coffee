@@ -1,8 +1,9 @@
-export type SocialPlatform = 'instagram' | 'tiktok';
+export type SocialPlatform = 'instagram' | 'facebook';
 
 /**
- * One tile in the follow-along grid, normalised across the two networks so the
- * component never branches on where a post came from.
+ * One tile in the follow-along grid, normalised so the component never branches
+ * on where a post came from (the café's Instagram through the Business Agent, or
+ * its Facebook Page while Instagram isn't connected there).
  */
 export type SocialPost = {
   id: string;

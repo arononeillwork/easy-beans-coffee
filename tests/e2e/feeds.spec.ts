@@ -4,8 +4,9 @@ import { HomePage, OrderPage } from './builders/pages';
 import { FIXTURE } from './mockFeedsFixture.mjs';
 
 /**
- * The site reads its facts from other systems instead of hardcoding them:
- * Google Maps (rating, review count, opening hours), Instagram (the post grid)
+ * The site reads its facts from the Business Agent instead of hardcoding them:
+ * the Google rating and review count and the Instagram posts (which the agent
+ * reads from Google and Instagram), the opening hours, closures and contacts,
  * and, through the same hours, when online ordering is open. These specs run
  * the whole path against a local stand-in (tests/e2e/mockFeeds.mjs) whose
  * values differ from the café's real ones, so a pass proves the page is showing
@@ -16,13 +17,15 @@ import { FIXTURE } from './mockFeedsFixture.mjs';
  */
 
 test.describe('automatic data feeds', () => {
-  test('Google rating and review count come from Google Places', async ({ page }) => {
+  test('Google rating, review count and the way to leave a review come from the Business Agent', async ({ page }) => {
     const home = new HomePage(page);
     await home.withPopupDismissed();
     await home.open();
 
     await expect(page.getByTestId('google-rating').first()).toHaveText(FIXTURE.rating.toFixed(1));
     await expect(page.getByTestId('google-review-count').first()).toContainText(String(FIXTURE.total));
+    const card = page.getByTestId('rating-card');
+    await expect(card.locator(`a[href="${FIXTURE.agent.writeReviewUrl}"]`)).toHaveCount(1);
   });
 
   test('opening hours, closures, address and contacts come from the Business Agent, not the built-in ones', async ({ page }) => {
@@ -48,7 +51,7 @@ test.describe('automatic data feeds', () => {
     await expect(visit.locator(`a[href="${FIXTURE.agent.whatsappUrl}"]`)).toHaveCount(1);
   });
 
-  test('the social grid shows live Instagram posts linking to each post', async ({ page }) => {
+  test('the social grid shows the Instagram posts the Business Agent reads, linking to each post', async ({ page }) => {
     const home = new HomePage(page);
     await home.withPopupDismissed();
     await home.open();
@@ -58,6 +61,11 @@ test.describe('automatic data feeds', () => {
     for (const post of FIXTURE.posts) {
       await expect(page.locator(`[data-testid="social-post"][href="${post.permalink}"]`)).toHaveCount(1);
     }
+    // Under the account the agent has connected.
+    await expect(page.getByRole('link', { name: `@${FIXTURE.agent.instagramHandle}` })).toHaveAttribute(
+      'href',
+      `https://www.instagram.com/${FIXTURE.agent.instagramHandle}`,
+    );
   });
 
   test('the café TV shows its screen from the Business Agent, the same way round as its poster was', async ({ page }) => {

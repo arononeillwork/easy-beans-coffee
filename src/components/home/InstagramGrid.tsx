@@ -10,21 +10,24 @@ import { INSTAGRAM_URL } from '@/shared/lib/social';
 import { brand, radius } from '@/theme/brand';
 
 /**
- * The newest posts, straight from Instagram, each
- * opening its own post. Until a feed answers it shows our own photography
- * linking to the profile — silently; visitors do not need to know which.
+ * The newest posts from the café's Instagram, read through the Business Agent,
+ * each opening its own post, under the account the agent has connected. Until
+ * the agent answers it shows our own photography linking to the profile —
+ * silently; visitors do not need to know which.
  */
 export async function InstagramGrid({ t }: { t: SiteContent }) {
-  const { posts } = await getSocialFeed(t.social.captions);
+  const { posts, account, live } = await getSocialFeed(t.social.captions);
   const shown = posts.slice(0, 8);
+  const profileUrl = account?.url ?? INSTAGRAM_URL;
+  const handle = account ? `@${account.handle}` : t.social.handle;
 
   return (
     <Box component="section" aria-labelledby="social-title">
       <Container maxWidth="lg" sx={{ py: { xs: 9, md: 14 } }}>
         <Stack direction="row" alignItems="baseline" justifyContent="space-between" spacing={2} sx={{ mb: { xs: 3, md: 4 } }}>
           <Typography id="social-title" variant="h2" sx={{ fontSize: { xs: 'clamp(1.6rem, 7.4vw, 2.25rem)', md: undefined } }}>
-            <Box component="a" href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" sx={{ color: 'inherit', textDecoration: 'none', '&:hover': { color: brand.rosePinkDeep } }}>
-              {t.social.handle}
+            <Box component="a" href={profileUrl} target="_blank" rel="noopener noreferrer" sx={{ color: 'inherit', textDecoration: 'none', '&:hover': { color: brand.rosePinkDeep } }}>
+              {handle}
             </Box>
           </Typography>
         </Stack>
@@ -38,7 +41,7 @@ export async function InstagramGrid({ t }: { t: SiteContent }) {
               target="_blank"
               rel="noopener noreferrer"
               data-testid="social-post"
-              data-live={post.remote ? 'true' : 'false'}
+              data-live={live ? 'true' : 'false'}
               aria-label={post.caption ? `${t.social.viewPost}: ${post.caption}` : t.social.viewPost}
               sx={{
                 position: 'relative',

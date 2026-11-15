@@ -1,16 +1,16 @@
 import 'server-only';
 import { INSTAGRAM_URL } from '@/shared/lib/social';
-import { getInstagramPosts } from './instagram';
-import { getTikTokPosts } from './tiktok';
+import { captionLine } from '@/features/social/agentPosts';
+import { getAgentPosts } from '../businessAgent/postsFeed';
 import type { SocialPost } from './types';
 
 export const FEED_LIMIT = 8;
 
 /**
- * Our own photography, shown until at least one network is connected. The
- * links go to the profile because there is no post behind these — the moment a
- * token is configured they are replaced wholesale by real posts with real
- * permalinks.
+ * Our own photography, shown until the Business Agent has posts to give (its
+ * Instagram not connected, or the agent never reached). The links go to the
+ * profile because there is no post behind these — the moment the agent answers
+ * with posts they are replaced wholesale by real posts with real permalinks.
  */
 const CURATED: Omit<SocialPost, 'caption'>[] = [
   {
@@ -55,33 +55,44 @@ const CURATED: Omit<SocialPost, 'caption'>[] = [
 
 export type SocialFeed = {
   posts: SocialPost[];
-  /** True once at least one network answered with real posts. */
+  /** True once the agent answered with real posts. */
   live: boolean;
+  /** The account the posts are from, as the agent has it; null: the café's own, as shipped. */
+  account: { handle: string; url: string } | null;
 };
 
 /**
- * Newest posts across both networks.
+ * The newest posts, from the café's Instagram as the Business Agent reads it
+ * (server/businessAgent/postsFeed): the agent holds the Instagram connection,
+ * the site holds no token.
  *
- * Live and curated are never mixed: as soon as one network answers, the grid is
- * entirely real posts. Half a feed of stand-ins next to real ones would be
- * impossible for a visitor to tell apart.
+ * Live and curated are never mixed: as soon as the agent answers with posts,
+ * the grid is entirely real posts. Half a feed of stand-ins next to real ones
+ * would be impossible for a visitor to tell apart.
  */
 export async function getSocialFeed(fallbackCaptions: string[]): Promise<SocialFeed> {
-  const [instagram, tiktok] = await Promise.all([
-    getInstagramPosts(FEED_LIMIT),
-    getTikTokPosts(FEED_LIMIT),
-  ]);
+  const feed = await getAgentPosts();
+  const account = feed?.account?.url ? { handle: feed.account.handle, url: feed.account.url } : null;
 
-  const live = [...instagram, ...tiktok];
-  if (live.length > 0) {
-    const posts = live
-      .sort((a, b) => Date.parse(b.postedAt ?? '0') - Date.parse(a.postedAt ?? '0'))
-      .slice(0, FEED_LIMIT);
-    return { posts, live: true };
+  if (feed && feed.posts.length > 0) {
+    const posts = feed.posts.slice(0, FEED_LIMIT).map(
+      (post): SocialPost => ({
+        id: post.id,
+        platform: feed.source === 'facebook' ? 'facebook' : 'instagram',
+        permalink: post.permalink,
+        imageUrl: post.image_url,
+        caption: captionLine(post.caption),
+        postedAt: post.posted_at,
+        isVideo: post.video,
+        remote: !post.image_url.startsWith('/'),
+      }),
+    );
+    return { posts, live: true, account };
   }
 
   return {
     posts: CURATED.map((post, i) => ({ ...post, caption: fallbackCaptions[i] ?? '' })),
     live: false,
+    account,
   };
 }
