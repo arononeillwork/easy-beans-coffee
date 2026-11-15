@@ -1,6 +1,6 @@
 'use client';
 
-import type { AccountProfile, AccountUpdate } from '../types';
+import type { AccountOrder, AccountProfile, AccountUpdate } from '../types';
 
 /**
  * Thin typed client for the account endpoints. Sign-in itself never passes
@@ -38,4 +38,6 @@ export const accountApi = {
     }),
 
   deleteAccount: () => call<object>('/api/account', { method: 'DELETE' }),
+
+  fetchOrders: () => call<{ orders: AccountOrder[] }>('/api/account/orders'),
 };

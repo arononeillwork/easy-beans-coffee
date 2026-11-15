@@ -17,10 +17,14 @@ import Typography from '@mui/material/Typography';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import CoffeeRoundedIcon from '@mui/icons-material/CoffeeRounded';
 import GoogleIcon from '@mui/icons-material/Google';
+import Link from 'next/link';
 import { useLanguage } from '@/i18n/LanguageProvider';
+import { localePath } from '@/i18n/config';
+import { formatEuros } from '@/features/order/lib/price';
 import { getSupabaseAuth } from '@/shared/lib/supabaseAuthClient';
 import { brand, radius, shadow } from '@/theme/brand';
-import type { AccountProfile, AccountUpdate } from '../types';
+import type { AccountOrder, AccountProfile, AccountUpdate } from '../types';
+import { accountApi } from './accountApi';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD = 8;
@@ -106,9 +110,25 @@ async function readError(res: Response): Promise<string> {
   }
 }
 
-/** Where Supabase Auth emails and Google send the visitor back to. */
+/**
+ * Where to send the visitor once signed in, when they came here to do
+ * something else — the cart sends `?next=/es/order?cart=open` so an order can
+ * go on as soon as there is an account. Same-site paths only, as in
+ * /auth/callback, so the parameter can't be pointed off-site.
+ */
+function returnTo(): string | null {
+  const raw = new URLSearchParams(window.location.search).get('next');
+  if (raw && raw.startsWith('/') && !raw.startsWith('//') && !raw.includes('\\')) return raw;
+  return null;
+}
+
+/**
+ * Where Supabase Auth emails and Google send the visitor back to: the page
+ * they were on their way to, else this one. A password reset always comes
+ * back here (`params`), since the new password is set on this page.
+ */
 function callbackUrl(lang: string, params = ''): string {
-  const next = encodeURIComponent(`/${lang}/account${params}`);
+  const next = encodeURIComponent((!params && returnTo()) || `/${lang}/account${params}`);
   return `${window.location.origin}/auth/callback?next=${next}`;
 }
 
@@ -145,6 +165,12 @@ export function AccountView() {
         if (cancelled) return;
         if (res.ok) {
           const body = (await res.json()) as AccountPayload;
+          // Already signed in and on the way to something (an order): go on.
+          const next = wantsReset ? null : returnTo();
+          if (next) {
+            window.location.assign(next);
+            return;
+          }
           if (wantsReset) {
             setPayload(body);
             setPhase('reset');
@@ -170,8 +196,18 @@ export function AccountView() {
   const loadProfile = async () => {
     const res = await fetch('/api/account');
     if (!res.ok) throw new Error(`account read failed: ${res.status}`);
-    signedIn((await res.json()) as AccountPayload);
+    const body = (await res.json()) as AccountPayload;
+    // Signed in on the way to an order: straight back to it, cart open.
+    const next = returnTo();
+    if (next) {
+      window.location.assign(next);
+      return;
+    }
+    signedIn(body);
   };
+
+  // Shown above sign-in / sign-up when the cart sent them: why an account.
+  const [forOrder] = useState(() => typeof window !== 'undefined' && returnTo() !== null);
 
   return (
     <Box sx={{ backgroundColor: brand.cream }}>
@@ -186,6 +222,12 @@ export function AccountView() {
         {notice && (
           <Typography role="status" sx={{ mb: 3, color: brand.matchaGreenDeep, fontWeight: 500 }}>
             {notice}
+          </Typography>
+        )}
+
+        {forOrder && (phase === 'signIn' || phase === 'signUp') && (
+          <Typography data-testid="order-sign-in-hint" sx={{ mb: 3, color: brand.ink70 }}>
+            {labels.forOrderHint}
           </Typography>
         )}
 
@@ -252,6 +294,7 @@ export function AccountView() {
 
         {phase === 'signedIn' && payload && (
           <Stack spacing={3}>
+            <OrdersCard />
             <RewardsCard />
             <ProfileCard
               payload={payload}
@@ -683,6 +726,104 @@ function ResetCard({ onDone }: { onDone: () => void }) {
 }
 
 // ── Rewards: the beans, straight from Square Loyalty ────────────────────────
+
+// ── Orders: every collection order placed from this account ────────────────
+
+function OrdersCard() {
+  const { t, lang } = useLanguage();
+  const labels = t.account;
+  const [orders, setOrders] = useState<AccountOrder[] | null | 'error'>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    accountApi.fetchOrders().then((result) => {
+      if (!cancelled) setOrders(result.ok ? result.orders : 'error');
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const when = (iso: string) =>
+    new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-IE', {
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'Europe/Madrid',
+    }).format(new Date(iso));
+
+  return (
+    <Card>
+      <Typography variant="h4" component="h2" sx={{ mb: 2 }}>
+        {labels.ordersHeadline}
+      </Typography>
+
+      {orders === null && <Typography color="text.secondary">…</Typography>}
+      {orders === 'error' && <Typography color="text.secondary">{labels.ordersFailed}</Typography>}
+      {Array.isArray(orders) && orders.length === 0 && (
+        <Stack spacing={2} alignItems="flex-start">
+          <Typography color="text.secondary">{labels.ordersNone}</Typography>
+          <Button component={Link} href={localePath(lang, '/order')} variant="outlined" size="small">
+            {t.nav.orderCta}
+          </Button>
+        </Stack>
+      )}
+
+      {Array.isArray(orders) &&
+        orders.map((order) => (
+          <Box
+            key={order.token}
+            data-testid="account-order"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1.5,
+              py: 1.4,
+              borderTop: `1px solid ${brand.ink06}`,
+            }}
+          >
+            <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+              <Typography sx={{ fontWeight: 500 }}>
+                {when(order.createdAt)}
+                {order.orderNumber && (
+                  <Typography component="span" sx={{ fontSize: '0.8125rem', color: brand.ink45, ml: 1 }}>
+                    #{order.orderNumber}
+                  </Typography>
+                )}
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: '0.8125rem',
+                  color: brand.ink70,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {order.items.join(', ')}
+              </Typography>
+              <Typography sx={{ fontSize: '0.8125rem', color: brand.ink45 }}>
+                {t.order.status[order.status]}
+              </Typography>
+            </Box>
+            <Stack alignItems="flex-end" spacing={0.25} sx={{ flexShrink: 0 }}>
+              <Typography sx={{ fontWeight: 500 }}>{formatEuros(order.totalCents, lang)}</Typography>
+              <Button
+                component={Link}
+                href={localePath(lang, `/order/status/${order.token}`)}
+                variant="text"
+                size="small"
+                sx={{ minWidth: 0, px: 0.5 }}
+              >
+                {labels.ordersView}
+              </Button>
+            </Stack>
+          </Box>
+        ))}
+    </Card>
+  );
+}
 
 interface AccountRewards {
   program: { one: string; other: string; tiers: Array<{ id: string; name: string; points: number }> } | null;

@@ -1,3 +1,5 @@
+import type { PublicOrderStatus } from '@/features/order/types';
+
 /**
  * The account profile as `/api/account` serves it — a client-side mirror of
  * the server's `CustomerProfile` (src/server/square/customers.ts), which is
@@ -36,6 +38,23 @@ export interface AccountRewards {
   } | null;
   balance: number | null;
   lifetimePoints: number | null;
+}
+
+/**
+ * One collection order on the account page, as `/api/account/orders` serves
+ * it. `status` is the same customer-facing status the order's own status page
+ * shows; `token` opens that page.
+ */
+export interface AccountOrder {
+  token: string;
+  /** Last six of the Square order id, as the receipt and the counter call it. */
+  orderNumber: string | null;
+  createdAt: string;
+  status: PublicOrderStatus;
+  totalCents: number;
+  currency: string;
+  /** "2 × Flat white", one entry per line. */
+  items: string[];
 }
 
 /**

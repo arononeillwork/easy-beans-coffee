@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -12,8 +14,10 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
+import PersonOutlineRoundedIcon from '@mui/icons-material/PersonOutlineRounded';
 import { accountApi } from '@/features/account/client/accountApi';
 import { useLanguage } from '@/i18n/LanguageProvider';
+import { localePath } from '@/i18n/config';
 import { brand, radius, shadow } from '@/theme/brand';
 import type { CartApi } from '../hooks/useCart';
 import type { CartLine, CheckoutRequestBody } from '../types';
@@ -36,36 +40,57 @@ interface Props {
   cart: CartApi;
 }
 
+/** Whether the visitor can order: collection orders need an account. */
+type AccountState =
+  | { kind: 'loading' }
+  | { kind: 'signedIn'; email: string }
+  | { kind: 'signedOut' }
+  /** Accounts not set up on this deployment, or unreachable: no online orders. */
+  | { kind: 'unavailable' };
+
 /**
  * Cart lines + who the order is for + hand-off to Square checkout.
  *
  * Collection is always "now": every order goes in as ASAP and the café has to
  * be open to take it, so there is no time picker and no day picker — when we
  * are shut the panel says so and checkout is off.
+ *
+ * Ordering needs an account: the order is recorded on it (the account page
+ * lists it) and the receipt goes to its sign-in email. A signed-out visitor
+ * gets a sign-in button that brings them back here with the cart open — the
+ * cart itself is kept in the browser, so nothing is lost on the way.
  */
 export function CartPanel({ cart }: Props) {
   const { t, lang } = useLanguage();
+  const pathname = usePathname();
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
   const [note, setNote] = useState('');
+  const [account, setAccount] = useState<AccountState>({ kind: 'loading' });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Signed-in customers should not retype who they are: their Square profile
-  // fills the empty fields once, and anything already typed is left alone.
+  // Who is signed in decides whether the order can go through; their Square
+  // profile also fills the name once, leaving anything already typed alone.
   useEffect(() => {
     let cancelled = false;
     accountApi.fetchProfile().then((result) => {
-      if (cancelled || !result.ok) return;
+      if (cancelled) return;
+      if (!result.ok) {
+        setAccount({ kind: result.error === 'not_signed_in' ? 'signedOut' : 'unavailable' });
+        return;
+      }
       const { givenName, familyName, emailAddress } = result.profile;
       const fullName = [givenName, familyName].filter(Boolean).join(' ');
       if (fullName) setName((current) => current || fullName);
-      if (emailAddress) setEmail((current) => current || emailAddress);
+      setAccount({ kind: 'signedIn', email: emailAddress ?? '' });
     });
     return () => {
       cancelled = true;
     };
   }, []);
+
+  // Back here, cart open, once signed in (CartProvider reads ?cart=open).
+  const signInHref = `${localePath(lang, '/account')}?next=${encodeURIComponent(`${pathname}?cart=open`)}`;
 
   // Mirrors prepMinutesFor on the server; the server call stays authoritative.
   const retailOnly = cart.lines.length > 0 && cart.lines.every((l) => l.kind === 'retail');
@@ -93,7 +118,8 @@ export function CartPanel({ cart }: Props) {
   const open = isOpenForAsap(now, CAFE_TZ, prepMinutes, hours);
   const reopensAt = open ? null : nextOrderingOpen(now, CAFE_TZ, prepMinutes, hours);
 
-  const canSubmit = cart.lines.length > 0 && open && name.trim().length >= 2 && !submitting;
+  const canSubmit =
+    cart.lines.length > 0 && open && account.kind === 'signedIn' && name.trim().length >= 2 && !submitting;
 
   const checkout = async () => {
     setError(null);
@@ -109,7 +135,6 @@ export function CartPanel({ cart }: Props) {
         pickup: { type: 'ASAP' },
         customer: {
           name: name.trim(),
-          email: email.trim() || undefined,
           note: note.trim() || undefined,
         },
         lang,
@@ -121,6 +146,11 @@ export function CartPanel({ cart }: Props) {
       });
       if (!res.ok) {
         const payload = (await res.json().catch(() => null)) as { error?: string; reason?: string } | null;
+        // Signed out in another tab, or the session expired: back to the sign-in prompt.
+        if (payload?.error === 'sign_in_required') {
+          setAccount({ kind: 'signedOut' });
+          return;
+        }
         setError(
           payload?.error === 'catalog_mismatch'
             ? t.errors.cartChanged
@@ -177,11 +207,25 @@ export function CartPanel({ cart }: Props) {
 
         <PickupNote open={open} prepMinutes={prepMinutes} reopensAt={reopensAt} now={now} />
 
-        <Stack spacing={1.25} sx={{ mt: 2.5 }}>
-          <Field required label={t.order.nameLabel} value={name} onChange={setName} />
-          <Field type="email" label={t.order.emailLabel} value={email} onChange={setEmail} />
-          <Field label={t.order.noteLabel} value={note} onChange={setNote} />
-        </Stack>
+        {account.kind === 'signedIn' && (
+          <Stack spacing={1.25} sx={{ mt: 2.5 }}>
+            <Field required label={t.order.nameLabel} value={name} onChange={setName} />
+            <Field label={t.order.noteLabel} value={note} onChange={setNote} />
+            {account.email && (
+              <Typography variant="caption" data-testid="receipt-email" sx={{ color: brand.ink70, px: 0.5 }}>
+                {t.order.receiptTo.replace('{email}', account.email)}
+              </Typography>
+            )}
+          </Stack>
+        )}
+
+        {account.kind === 'signedOut' && <SignInNote />}
+
+        {account.kind === 'unavailable' && (
+          <Typography variant="body2" sx={{ mt: 2.5, color: brand.ink70 }}>
+            {t.order.accountsDown}
+          </Typography>
+        )}
 
         {error && (
           <Typography
@@ -208,9 +252,23 @@ export function CartPanel({ cart }: Props) {
           <Typography sx={{ color: brand.ink70 }}>{t.order.total}</Typography>
           <Typography variant="h4">{formatEuros(cart.subtotalCents, lang)}</Typography>
         </Stack>
-        <Button variant="contained" fullWidth size="large" disabled={!canSubmit} onClick={checkout}>
-          {t.order.checkout}
-        </Button>
+        {account.kind === 'signedOut' ? (
+          <Button
+            component={Link}
+            href={signInHref}
+            variant="contained"
+            fullWidth
+            size="large"
+            startIcon={<PersonOutlineRoundedIcon />}
+            data-testid="cart-sign-in"
+          >
+            {t.order.signInCta}
+          </Button>
+        ) : (
+          <Button variant="contained" fullWidth size="large" disabled={!canSubmit} onClick={checkout}>
+            {t.order.checkout}
+          </Button>
+        )}
       </Box>
     </>
   );
@@ -394,7 +452,26 @@ function PickupNote({
   );
 }
 
-/** One rounded, label-inside field — the whole form is four of these. */
+/** Why the pay button became a sign-in button: orders go on an account. */
+function SignInNote() {
+  const { t } = useLanguage();
+  return (
+    <Stack
+      spacing={0.5}
+      data-testid="cart-sign-in-note"
+      sx={{ mt: 2.5, p: 1.75, borderRadius: `${radius.lg}px`, backgroundColor: brand.roseWash }}
+    >
+      <Typography variant="h6" component="p">
+        {t.order.signInTitle}
+      </Typography>
+      <Typography variant="body2" sx={{ color: brand.ink70 }}>
+        {t.order.signInBody}
+      </Typography>
+    </Stack>
+  );
+}
+
+/** One rounded, label-inside field — the whole form is a couple of these. */
 function Field({
   label,
   value,

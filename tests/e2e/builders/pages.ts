@@ -269,6 +269,34 @@ export class OrderPage extends SitePage {
     return this.page.locator('header .MuiBadge-badge');
   }
 
+  /** No session: the cart asks the visitor to sign in before they can pay. */
+  async withSignedOut(): Promise<this> {
+    await this.page.route('**/api/account', (route: Route) =>
+      route.fulfill({ status: 401, json: { error: 'not_signed_in' } }),
+    );
+    return this;
+  }
+
+  /** A signed-in customer, as /api/account serves their Square profile. */
+  async withSignedIn(email = 'ana@example.com'): Promise<this> {
+    await this.page.route('**/api/account', (route: Route) =>
+      route.fulfill({
+        json: {
+          profile: {
+            id: 'CUST1',
+            emailAddress: email,
+            givenName: 'Ana',
+            familyName: 'García',
+            phoneNumber: null,
+            birthday: null,
+            address: null,
+          },
+        },
+      }),
+    );
+    return this;
+  }
+
   /** Opens the cart drawer from the header. */
   async openCart(): Promise<void> {
     await this.page.locator('header').getByRole('button', { name: /tu pedido|your order/i }).click();

@@ -4,6 +4,8 @@ import { ZodError } from 'zod';
 import { checkoutRequestSchema } from '@/server/validation/checkoutSchema';
 import { getCatalogForCheckout } from '@/server/square/catalogCache';
 import { getOrderingHours } from '@/server/places/orderingHours';
+import { isAccountAuthConfigured } from '@/server/env';
+import { getAccountIdentity } from '@/server/account/identity';
 import {
   CheckoutError,
   createCheckout,
@@ -14,20 +16,38 @@ import {
 
 export const dynamic = 'force-dynamic';
 
+/**
+ * Collection orders need an account: the order is recorded against the
+ * signed-in customer (their account page lists it) and attached to their
+ * Square customer. No session → 401 `sign_in_required`; accounts not set up
+ * on this deployment → 503, since an order can't be placed without one.
+ */
 export async function POST(request: Request) {
   const parsed = checkoutRequestSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
     return NextResponse.json({ error: 'invalid_request' }, { status: 400 });
   }
+  if (!isAccountAuthConfigured()) {
+    return NextResponse.json({ error: 'accounts_unavailable' }, { status: 503 });
+  }
 
   try {
+    const identity = await getAccountIdentity();
+    if (!identity) {
+      return NextResponse.json({ error: 'sign_in_required' }, { status: 401 });
+    }
+
     // Lines are validated first: whether the cart is retail-only decides how
     // much prep buffer the collection slot has to clear.
     const menu = await getCatalogForCheckout();
     const lines = validateLines(parsed.data, menu);
     const { hours } = await getOrderingHours();
     validatePickup(parsed.data, Date.now(), prepMinutesFor(lines), hours);
-    const result = await createCheckout(parsed.data, lines);
+    const result = await createCheckout(parsed.data, lines, {
+      userId: identity.userId,
+      email: identity.email,
+      squareCustomerId: identity.customer.id,
+    });
     return NextResponse.json(result);
   } catch (err) {
     if (err instanceof CheckoutError) {

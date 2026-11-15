@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useCart, type CartApi } from '../hooks/useCart';
 
 interface CartContextValue extends CartApi {
@@ -19,6 +19,16 @@ const CartContext = createContext<CartContextValue | null>(null);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const cart = useCart();
   const [open, setOpen] = useState(false);
+
+  // `?cart=open` reopens the cart: where sign-in sends a customer back to
+  // after the cart asked them to sign in. Read once, then swept from the URL.
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('cart') !== 'open') return;
+    setOpen(true);
+    url.searchParams.delete('cart');
+    window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+  }, []);
 
   const value = useMemo<CartContextValue>(
     () => ({

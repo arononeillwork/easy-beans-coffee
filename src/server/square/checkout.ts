@@ -144,14 +144,26 @@ async function resolveOffer(
   return offer ? { code: offer.code, percentage } : null;
 }
 
+/** Who is ordering: collection orders need an account (see /api/checkout). */
+export interface CheckoutAccount {
+  /** Supabase Auth user id — the order is listed on their account page. */
+  userId: string;
+  /** Their verified sign-in email: the receipt goes here, not to a typed address. */
+  email: string;
+  /** Their Square customer, so the till sees the order on their profile. */
+  squareCustomerId: string;
+}
+
 /**
  * Creates the itemized Square order + hosted checkout link in one request
  * (Checkout API CreatePaymentLink with a full order — not Quick Pay), stores
- * the local order row, and returns only the hosted checkout URL + token.
+ * the local order row against the account that placed it, and returns only
+ * the hosted checkout URL + token.
  */
 export async function createCheckout(
   request: CheckoutRequest,
   lines: ValidatedLine[],
+  account: CheckoutAccount,
 ): Promise<{ checkoutUrl: string; token: string }> {
   const client = getSquareClient();
   const locationId = getLocationId();
@@ -172,7 +184,7 @@ export async function createCheckout(
   const pickupDetails: Square.FulfillmentPickupDetails = {
     recipient: {
       displayName: request.customer.name,
-      emailAddress: request.customer.email,
+      emailAddress: account.email,
     },
     scheduleType: scheduled ? 'SCHEDULED' : 'ASAP',
     ...(scheduled
@@ -186,6 +198,9 @@ export async function createCheckout(
     order: {
       locationId,
       referenceId: token.slice(0, 12),
+      // The order lands on the customer's Square profile, as a till sale to a
+      // known customer would.
+      customerId: account.squareCustomerId,
       // Apply each item's own catalog tax, exactly as the till does: IVA
       // Reducido 10% on food and drink, IVA General 21% on alcohol. Both are
       // INCLUSIVE in Square, so the customer's total is unchanged — this only
@@ -242,7 +257,7 @@ export async function createCheckout(
     square_payment_link_id: paymentLink.id ?? null,
     square_location_id: locationId,
     customer_name: request.customer.name,
-    customer_email: request.customer.email ?? null,
+    customer_email: account.email,
     customer_note: request.customer.note ?? null,
     pickup_type: request.pickup.type,
     requested_pickup_at: scheduled ? request.pickup.at! : null,
@@ -265,6 +280,8 @@ export async function createCheckout(
     },
     offer_code: offer?.code ?? null,
     lang: request.lang,
+    auth_user_id: account.userId,
+    square_customer_id: account.squareCustomerId,
   });
 
   return { checkoutUrl: paymentLink.url, token };

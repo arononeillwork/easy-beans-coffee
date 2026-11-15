@@ -21,6 +21,10 @@ export interface OrderRow {
   order_snapshot: unknown;
   offer_code: string | null;
   lang: string;
+  /** The Supabase Auth user who placed it (migration 0013); null for older orders and erased accounts. */
+  auth_user_id: string | null;
+  /** The Square customer the order was attached to. */
+  square_customer_id: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -42,6 +46,18 @@ export async function getOrderByToken(token: string): Promise<OrderRow | null> {
     .maybeSingle();
   if (error) throw new Error(`order lookup failed: ${error.message}`);
   return data as OrderRow | null;
+}
+
+/** A signed-in customer's own orders, newest first — the account page's order list. */
+export async function listOrdersForUser(userId: string, limit = 20): Promise<OrderRow[]> {
+  const { data, error } = await getSupabaseAdmin()
+    .from(TABLE)
+    .select('*')
+    .eq('auth_user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+  if (error) throw new Error(`order list failed: ${error.message}`);
+  return (data ?? []) as OrderRow[];
 }
 
 export async function getOrderBySquareOrderId(squareOrderId: string): Promise<OrderRow | null> {

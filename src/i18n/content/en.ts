@@ -305,6 +305,12 @@ export const en = {
     rewardsToGo: '{points} to go',
     rewardsRedeemNote: 'Redeem at the counter — just ask before you pay.',
     rewardsFailed: 'Could not load your rewards just now.',
+    /** The order list, and the line above sign-in when the cart sent them here. */
+    forOrderHint: 'Sign in or create an account to place your collection order — your cart is waiting.',
+    ordersHeadline: 'Your orders',
+    ordersNone: 'No orders yet. Collection orders you place online appear here.',
+    ordersFailed: 'Could not load your orders just now.',
+    ordersView: 'View',
     deleteHeadline: 'Delete account',
     deleteBody:
       'Removes your details and newsletter signup for good. Completed orders stay in the books — the tax office insists.',
@@ -390,8 +396,13 @@ export const en = {
     pickupReadyIn: 'Ready in about {min} min',
     pickupReadyNow: 'Ready as soon as you arrive',
     nameLabel: 'Name for the order',
-    emailLabel: 'Email (receipt)',
+    /** Orders go on an account, so the receipt goes to its sign-in email. */
+    receiptTo: 'Receipt to {email}',
     noteLabel: 'Note for the counter',
+    signInTitle: 'Sign in to order',
+    signInBody: 'Collection orders are saved to your account, so you can follow them and find them later.',
+    signInCta: 'Sign in or create an account',
+    accountsDown: 'Online orders need an account, and accounts are not available right now. Order at the counter instead.',
     total: 'Total',
     subtotal: 'Subtotal',
     closedNow: 'Online orders are closed right now. We stop taking them {min} minutes before closing.',

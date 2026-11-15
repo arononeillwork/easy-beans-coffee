@@ -19,6 +19,26 @@ it for a session cookie → the first `/api/account` read finds-or-creates the
 Square customer (by exact email, oldest profile wins) and stamps the custom
 fields. Google sign-in follows the same callback path without the email hop.
 
+## Orders need an account
+
+Collection orders can only be placed signed in:
+
+- `/api/checkout` answers `401 sign_in_required` without a session, and `503`
+  when accounts aren't configured (no account, no online order).
+- The order is stored with `orders.auth_user_id` (the Supabase user) and
+  `orders.square_customer_id`, and the Square order is attached to that
+  customer (`order.customerId`), so the till sees it on their profile. The
+  receipt goes to the verified sign-in email — the cart no longer asks for one.
+- The cart shows a sign-in prompt to signed-out visitors. Its button goes to
+  `/account?next=<this page>?cart=open`; after sign-in (password, Google, or
+  the confirmation email link) the visitor lands back with the cart open.
+  The cart itself lives in the browser, so nothing is lost on the way.
+- `/api/account/orders` lists the customer's orders (newest 20) on the account
+  page, each linking to its live status page.
+
+Needs migration `0013_orders_account.sql` (adds the two columns + index).
+Orders placed before it have no owner and don't appear on any account.
+
 ## Square custom fields
 
 The Directory's seller-defined custom fields are discovered **by name** at
@@ -65,4 +85,5 @@ earlier passwordless draft is not used any more and can be deleted.
 The account page is the self-service surface: GET is access, PUT is
 rectification, DELETE is erasure. Deletion removes the Square customer, the
 newsletter rows (`email_signups`) and the Supabase Auth user in one action;
-paid orders stay, as accounting records.
+paid orders stay, as accounting records — the `auth_user_id` foreign key is
+`on delete set null`, so they are unlinked from the deleted account.

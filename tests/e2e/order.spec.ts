@@ -90,3 +90,56 @@ test.describe('ordering', () => {
     await expect(order.addButton()).toBeDisabled();
   });
 });
+
+test.describe('ordering needs an account', () => {
+  async function cartWithEspresso(order: OrderPage): Promise<void> {
+    await order.railEntry('Espresso').click();
+    await order.addButton().click();
+    await order.openCart();
+  }
+
+  test('a signed-out visitor is asked to sign in, and comes back to the cart', async ({ page }) => {
+    const order = new OrderPage(page);
+    await order.withPopupDismissed();
+    await order.withPrices(priceBookFixture());
+    await order.withSignedOut();
+    await order.open();
+    await cartWithEspresso(order);
+
+    const cart = page.getByRole('dialog');
+    await expect(cart.getByTestId('cart-sign-in-note')).toBeVisible();
+    await expect(cart.getByRole('button', { name: /pagar con square/i })).toHaveCount(0);
+    // Sign-in sends them back here with the cart open.
+    await expect(cart.getByTestId('cart-sign-in')).toHaveAttribute(
+      'href',
+      `/es/account?next=${encodeURIComponent('/es/order?cart=open')}`,
+    );
+  });
+
+  test('a signed-in customer pays, with the receipt going to their account email', async ({ page }) => {
+    const order = new OrderPage(page);
+    await order.withPopupDismissed();
+    await order.withPrices(priceBookFixture());
+    await order.withSignedIn('ana@example.com');
+    await order.open();
+    await cartWithEspresso(order);
+
+    const cart = page.getByRole('dialog');
+    await expect(cart.getByTestId('receipt-email')).toContainText('ana@example.com');
+    await expect(cart.getByLabel(/nombre para el pedido/i)).toHaveValue('Ana García');
+    await expect(cart.getByRole('textbox', { name: /email/i })).toHaveCount(0);
+    await expect(cart.getByRole('button', { name: /pagar con square/i })).toBeVisible();
+    await expect(cart.getByTestId('cart-sign-in')).toHaveCount(0);
+  });
+
+  test('?cart=open opens the cart, then leaves the address clean', async ({ page }) => {
+    const order = new OrderPage(page);
+    await order.withPopupDismissed();
+    await order.withPrices(priceBookFixture());
+    await order.withSignedIn();
+    await page.goto('/es/order?cart=open');
+
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await expect(page).toHaveURL(/\/es\/order$/);
+  });
+});

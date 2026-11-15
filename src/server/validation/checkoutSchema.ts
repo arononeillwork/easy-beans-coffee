@@ -21,6 +21,7 @@ export const checkoutRequestSchema = z.object({
   }),
   customer: z.object({
     name: z.string().trim().min(2).max(80),
+    /** Ignored since orders need an account: the receipt goes to the sign-in email. */
     email: z.email().optional(),
     note: z.string().trim().max(240).optional(),
   }),
