@@ -35,7 +35,7 @@ export const es: SiteContent = {
   ],
   video: {
     headline: 'Del primer molido al último sorbo.',
-    body: 'Mañanas en la barra, tardes en la terraza. Así es un día en Easy Beans.',
+    body: 'Barra, molinillo y terraza. Así es un día en Easy Beans.',
     cta: 'Más en Instagram',
     label: 'Un día normal en Easy Beans: mostrador, molinillo y terraza',
   },

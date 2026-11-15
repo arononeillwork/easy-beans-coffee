@@ -181,7 +181,16 @@ export function DrinkStage({
   }, [activeIndex, panels.length]);
 
   return (
-    <Box sx={{ position: 'relative', overflow: 'hidden' }}>
+    <Box
+      sx={{
+        position: 'relative',
+        overflow: 'hidden',
+        // On a laptop the parent is a fixed-height column: the cup takes the
+        // height the title and rail leave over.
+        flex: { md: '1 1 0' },
+        minHeight: { md: 0 },
+      }}
+    >
       {/* Layer 2: the photographs, on plain white. */}
       <Box
         ref={scroller}
@@ -197,7 +206,7 @@ export function DrinkStage({
           scrollSnapType: 'x mandatory',
           scrollbarWidth: 'none',
           '&::-webkit-scrollbar': { display: 'none' },
-          height: { xs: 'clamp(240px, 34vh, 340px)', md: 'clamp(340px, 48vh, 480px)' },
+          height: { xs: 'clamp(240px, 34vh, 340px)', md: '100%' },
         }}
       >
         {panels.map((panel, index) => (

@@ -311,13 +311,26 @@ export function MenuStudio({ priceBook }: { priceBook: PriceBook }) {
           position: { md: 'sticky' },
           // Clear of the pinned banner + header.
           top: { md: 136 },
+          // Sized to the window, not to its contents: title, cup and rail are
+          // stacked in a column and the cup takes whatever height is left, so
+          // on a laptop the whole drink fits on screen instead of being cut
+          // off at the fold and reading as "zoomed in".
+          display: { md: 'flex' },
+          flexDirection: { md: 'column' },
+          height: { md: 'calc(100dvh - 152px)' },
+          minHeight: { md: 440 },
+          maxHeight: { md: 740 },
         }}
       >
         <Container maxWidth="sm" sx={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
           <Typography
             variant="h2"
             translate="no"
-            sx={{ fontSize: 'clamp(2.1rem, 7.5vw, 3.2rem)', lineHeight: 1.02, mb: 0.75 }}
+            sx={{
+              fontSize: { xs: 'clamp(2.1rem, 7.5vw, 3.2rem)', md: 'clamp(1.9rem, min(4vw, 6vh), 3.2rem)' },
+              lineHeight: 1.02,
+              mb: 0.75,
+            }}
           >
             {name}
           </Typography>

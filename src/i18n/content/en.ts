@@ -39,7 +39,7 @@ export const en = {
   ],
   video: {
     headline: 'From first grind to last sip.',
-    body: 'Mornings at the counter, afternoons on the terrace. This is a day at Easy Beans.',
+    body: 'Counter, grinder and terrace. This is a day at Easy Beans.',
     cta: 'More on Instagram',
     label: 'A normal day at Easy Beans: counter, grinder and terrace',
   },
