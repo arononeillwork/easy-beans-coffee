@@ -121,6 +121,15 @@ test.describe('automatic data feeds', () => {
  * before closing. The browser clock is pinned; times are Madrid local (CEST, UTC+2).
  */
 test.describe('online ordering follows the live hours', () => {
+  // The browser runs in Madrid time, like the café's customers. Playwright's
+  // pinned clock replaces `Date`, and a class that extends it (@date-fns/tz's
+  // TZDate, which the cart uses to read café time) then gets back a plain Date:
+  // in a browser in another zone (a UTC test machine) it would read that zone's
+  // time, 7:50 in Madrid as 5:50. Real browsers have no fake clock, so TZDate
+  // works anywhere; tests/unit/pickupTimes.test.ts proves café time is read
+  // right from another zone.
+  test.use({ timezoneId: 'Europe/Madrid' });
+
   async function cartAt(page: Page, madridLocal: string) {
     await page.clock.setFixedTime(new Date(`${madridLocal}+02:00`));
     const order = new OrderPage(page);
