@@ -73,3 +73,32 @@ export interface AccountUpdate {
     postalCode?: string;
   } | null;
 }
+
+/**
+ * The coffee club as `/api/account/club` serves it, from the Business Agent
+ * (its account summary's `club`; docs/WEBSITE.md there). Null when the café
+ * has no club, or the agent couldn't be asked.
+ */
+export interface AccountClub {
+  name: string;
+  /** A month, in `currency`. */
+  price: number;
+  currency: string;
+  coffees_per_week: number;
+  /** Square's checkout page to join; null for a member, or while the café isn't taking members. */
+  join_url: string | null;
+  /** Their membership; null when they aren't a member (or it has ended). */
+  pass: {
+    standing: 'active' | 'ending' | 'pending' | 'paused' | 'payment_failed';
+    used_this_week: number;
+    /** 0 unless the membership is active and paid. */
+    left_this_week: number;
+    /** This week's Monday (`YYYY-MM-DD`): a new week's coffees start then. */
+    week_start: string;
+    started_on: string | null;
+    /** The last day a cancelled membership runs. */
+    ends_on: string | null;
+    /** Their member code (8 letters and digits), shown as a Code 128 barcode. Null until the agent gives one. */
+    card_code?: string | null;
+  } | null;
+}

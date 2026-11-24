@@ -25,6 +25,7 @@ import { getSupabaseAuth } from '@/shared/lib/supabaseAuthClient';
 import { brand, radius, shadow } from '@/theme/brand';
 import type { AccountOrder, AccountProfile, AccountUpdate } from '../types';
 import { accountApi } from './accountApi';
+import { ClubCard } from './ClubCard';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD = 8;
@@ -294,6 +295,9 @@ export function AccountView() {
 
         {phase === 'signedIn' && payload && (
           <Stack spacing={3}>
+            <ClubCard
+              name={[payload.profile.givenName, payload.profile.familyName].filter(Boolean).join(' ') || null}
+            />
             <OrdersCard />
             <RewardsCard />
             <ProfileCard
