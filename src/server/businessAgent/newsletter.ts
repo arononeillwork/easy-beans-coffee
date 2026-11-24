@@ -38,7 +38,7 @@ export function agentSiteUrl(): string | null {
  * without the per-address limit (they all come from this server) and is the
  * only way to unsubscribe someone there.
  */
-function agentKey(): string | null {
+export function agentKey(): string | null {
   return process.env.BUSINESS_AGENT_NEWSLETTER_KEY?.trim() || null;
 }
 

@@ -87,3 +87,23 @@ rectification, DELETE is erasure. Deletion removes the Square customer, the
 newsletter rows (`email_signups`) and the Supabase Auth user in one action;
 paid orders stay, as accounting records — the `auth_user_id` foreign key is
 `on delete set null`, so they are unlinked from the deleted account.
+
+## The coffee club pass
+
+When the café runs a coffee club in the Business Agent (a monthly membership on Square, worth free coffees a
+week), the account page shows it first:
+
+- **A member** gets their pass to hold up at the counter: their name, large, so the team finds them on the
+  till; this week's coffee ("ready", or "had, the next one on Monday"; a failed payment or a pause says so);
+  and their member code as a **Code 128 barcode** with the code under it (`7Q2K 9XMB`), for scanning once the
+  till has a scanner. `src/shared/lib/code128.ts` draws it; no library is loaded.
+- **Someone who isn't a member** gets the club's price and a **Join the club** button to Square's checkout,
+  while the café is taking members.
+- **No club**, or the agent off or unreachable: no card. The page never fails over it.
+
+`GET /api/account/club` asks the agent server to server (`src/server/businessAgent/accounts.ts`): its
+`account/summary` with the website key (`BUSINESS_AGENT_NEWSLETTER_KEY`) and the email in the body, said to be
+checked (a session here exists only once the address is confirmed). Someone the agent doesn't know yet is
+synced first, with their Square customer. It needs **Accounts & rewards on your website** switched on in the
+agent (Website & SEO); off, the agent answers 404 and there's no card. The agent finds the person by email, so a
+member sees their pass when they signed up here with the email they joined the club with.

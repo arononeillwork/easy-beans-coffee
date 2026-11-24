@@ -1,6 +1,6 @@
 # Business Agent — account & rewards endpoints (spec)
 
-**Status: proposed. Nothing here is built.** This is the contract the Easy Beans
+**Status: built in the agent** (its docs/WEBSITE.md → Accounts & rewards is the current contract, the coffee club's `club` included); the site reads the coffee club from it (accounts.md → The coffee club pass). What follows was the proposal. This is the contract the Easy Beans
 website needs from the Business Agent (the Cloudflare Worker `business-agent`,
 `worker/site.ts` + `docs/WEBSITE.md` in the agent's repo). It extends the
 existing `/api/site/<business>/…` family (menu, newsletter, signup,

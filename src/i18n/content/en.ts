@@ -305,6 +305,25 @@ export const en = {
     rewardsToGo: '{points} to go',
     rewardsRedeemNote: 'Redeem at the counter — just ask before you pay.',
     rewardsFailed: 'Could not load your rewards just now.',
+    /**
+     * The coffee club card, from the Business Agent: the member's pass (this
+     * week's coffee and the barcode they show at the counter) or how to join.
+     */
+    clubReady: 'This week’s coffee is ready.',
+    clubLeft: '{left} of {n} coffees left this week.',
+    clubHadOne: 'This week’s coffee: had. The next one’s yours on Monday.',
+    clubHadAll: 'All {n} coffees had this week. More on Monday.',
+    clubPaymentFailed: 'Your last payment didn’t go through. Update your card from Square’s email to keep your coffees coming.',
+    clubPaused: 'Your membership is paused.',
+    clubStarts: 'Starts {date}.',
+    clubEnds: 'Ends {date}.',
+    clubShow: 'Show this at the counter when you order.',
+    clubCode: 'Member code',
+    clubBarcode: 'Barcode for member code {code}',
+    clubOne: 'A coffee a week',
+    clubMany: '{n} coffees a week',
+    clubJoinBody: '{coffees} for {price} a month. Join on Square’s secure checkout, cancel any time.',
+    clubJoin: 'Join the club',
     /** The order list, and the line above sign-in when the cart sent them here. */
     forOrderHint: 'Sign in or create an account to place your collection order — your cart is waiting.',
     ordersHeadline: 'Your orders',
