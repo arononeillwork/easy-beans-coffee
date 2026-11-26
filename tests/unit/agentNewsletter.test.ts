@@ -4,8 +4,9 @@ import { agentSiteUrl, sendSignupToAgent, sendUnsubscribeToAgent } from '@/serve
 
 /**
  * Sign-ups and unsubscribes sent on to the Business Agent (the café's
- * customers). What must hold: it goes where it should with the website key,
- * a laptop or a test run sends nothing, and a Business Agent that's down or
+ * customers). What must hold: it goes where it should (a sign-up with or
+ * without the website key, an unsubscribe only with it), a laptop or a test
+ * run sends nothing, and a Business Agent that's down or
  * says no never costs a sign-up (nothing throws) or leaks an address to logs.
  *
  * Run with `npm run test:unit`.
@@ -95,9 +96,51 @@ test('an unsubscribe goes to the agent with the key', async () => {
   assert.deepEqual(JSON.parse(String(calls[0].init.body)), { email: 'lucia@example.com' });
 });
 
-test('without a key or switched off, nothing is sent; a missing key is said in the logs', async () => {
+test('without the key a sign-up still goes, under the visitor’s address; with it, the key goes too', async () => {
   process.env.VERCEL = '1';
-  await sendSignupToAgent(signup);
+  await sendSignupToAgent({ ...signup, visitorIp: '203.0.113.7' });
+  assert.equal(calls.length, 1, 'the agent takes sign-ups from any website: a missing key must not lose them');
+  assert.equal(calls[0].url, 'https://businesssagent.com/api/site/1/signup');
+  const headers = calls[0].init.headers as Record<string, string>;
+  assert.equal(headers.authorization, undefined);
+  assert.equal(headers['x-visitor-ip'], '203.0.113.7', 'so the per-visitor limit counts the visitor, not this server');
+  assert.equal(JSON.parse(String(calls[0].init.body)).email, 'lucia@example.com');
+  assert.equal(logged.length, 0);
+
+  process.env.BUSINESS_AGENT_NEWSLETTER_KEY = 'nl_test';
+  await sendSignupToAgent({ ...signup, visitorIp: '203.0.113.7' });
+  assert.equal((calls[1].init.headers as Record<string, string>).authorization, 'Bearer nl_test');
+});
+
+test('a key the agent doesn’t know never loses a sign-up: it goes again without it, and the logs say to replace it', async () => {
+  process.env.BUSINESS_AGENT_SITE_URL = 'https://agent.test/api/site/1';
+  process.env.BUSINESS_AGENT_NEWSLETTER_KEY = 'nl_old';
+  answer = async () =>
+    calls.length === 1
+      ? new Response('{"error":"That key isn’t this business’s website key."}', { status: 401 })
+      : new Response('{"ok":true}', { status: 200 });
+  await sendSignupToAgent({ ...signup, visitorIp: '203.0.113.7' });
+  assert.equal(calls.length, 2);
+  assert.equal((calls[0].init.headers as Record<string, string>).authorization, 'Bearer nl_old');
+  const retry = calls[1].init.headers as Record<string, string>;
+  assert.equal(retry.authorization, undefined);
+  assert.equal(retry['x-visitor-ip'], '203.0.113.7');
+  assert.equal(calls[1].init.body, calls[0].init.body);
+  assert.equal(logged.length, 1);
+  assert.match(String(logged[0][0]), /doesn't know BUSINESS_AGENT_NEWSLETTER_KEY/);
+
+  // An unsubscribe can't go without the key, so a refused one is a failure, said once.
+  calls = [];
+  logged = [];
+  answer = async () => new Response('{}', { status: 401 });
+  await sendUnsubscribeToAgent('lucia@example.com');
+  assert.equal(calls.length, 1);
+  assert.deepEqual(logged.map((l) => l[1]), [{ outcome: 'http_401' }]);
+});
+
+test('an unsubscribe needs the key: without it nothing is sent and the logs say so; switched off, nothing at all', async () => {
+  process.env.VERCEL = '1';
+  await sendUnsubscribeToAgent('lucia@example.com');
   assert.equal(calls.length, 0);
   assert.match(String(logged[0]?.[0]), /BUSINESS_AGENT_NEWSLETTER_KEY is not set/);
   process.env.BUSINESS_AGENT_NEWSLETTER_KEY = 'nl_test';

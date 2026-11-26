@@ -1,4 +1,4 @@
-import type { DayHours } from '@/shared/lib/openingHours';
+import type { DayHours, HourRange } from '@/shared/lib/openingHours';
 
 /**
  * The café's details as the Business Agent has them — its back office, where
@@ -18,7 +18,9 @@ const DAY_KEYS: DayKey[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 /** JS / Google convention, as DayHours uses it: 0 = Sunday. */
 const WEEKDAY: Record<DayKey, number> = { sun: 0, mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6 };
 
-interface Hours { open: string; close: string }
+/** A day that closes in between (09:00–14:00 and 17:00–20:00): `open`/`close` stay the first opening and last closing. */
+interface Break { from: string; to: string }
+interface Hours { open: string; close: string; break?: Break }
 
 /** The agent's feed (version 1), as far as the site reads it. */
 export interface AgentDetails {
@@ -39,7 +41,7 @@ export interface AgentDetails {
   timezone: string;
   hours: Record<DayKey, Hours | null>;
   closures: Array<{ from: string; to: string; reason: string }>;
-  days: Array<{ date: string; day: DayKey; open: string | null; close: string | null; closed_reason: string | null }>;
+  days: Array<{ date: string; day: DayKey; open: string | null; close: string | null; break?: Break | null; closed_reason: string | null }>;
   generated_at: string;
 }
 
@@ -114,17 +116,26 @@ export function parseAgentDetails(json: unknown): AgentDetails | null {
   };
 }
 
-const range = (open: string | null, close: string | null) => {
+const range = (open: string | null, close: string | null, pause?: Break | null): HourRange[] => {
   const o = open ? minutes(open) : null;
   const c = close ? minutes(close) : null;
-  return o !== null && c !== null ? [{ open: o, close: c }] : [];
+  if (o === null || c === null) return [];
+  // A break splits the day in two, so the hours list, "open now" and online
+  // ordering all have the café closed through it. One that doesn't sit inside
+  // the day is left out rather than guessed at.
+  const from = pause && isText(pause.from) ? minutes(pause.from) : null;
+  const to = pause && isText(pause.to) ? minutes(pause.to) : null;
+  if (from !== null && to !== null && o < from && from < to && to < c) {
+    return [{ open: o, close: from }, { open: to, close: c }];
+  }
+  return [{ open: o, close: c }];
 };
 
 /** The usual week as DayHours, Sunday first. */
 export function weekOf(details: Pick<AgentDetails, 'hours'>): DayHours[] {
   return [...DAY_KEYS]
     .sort((a, b) => WEEKDAY[a] - WEEKDAY[b])
-    .map((k) => ({ day: WEEKDAY[k], ranges: range(details.hours[k]?.open ?? null, details.hours[k]?.close ?? null) }));
+    .map((k) => ({ day: WEEKDAY[k], ranges: range(details.hours[k]?.open ?? null, details.hours[k]?.close ?? null, details.hours[k]?.break) }));
 }
 
 /**
@@ -136,7 +147,7 @@ export function nextWeekOf(details: Pick<AgentDetails, 'hours' | 'days'>): DayHo
   const week = weekOf(details);
   for (const d of details.days.slice(0, 7)) {
     const entry = week.find((w) => w.day === WEEKDAY[d.day]);
-    if (entry) entry.ranges = range(d.open, d.close);
+    if (entry) entry.ranges = range(d.open, d.close, d.break);
   }
   return week;
 }

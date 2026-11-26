@@ -34,9 +34,10 @@ export function agentSiteUrl(): string | null {
 
 /**
  * The website key, made in the Business Agent (Website & SEO → Newsletter
- * sign-ups → Make a website key). A server secret: it lets sign-ups through
- * without the per-address limit (they all come from this server) and is the
- * only way to unsubscribe someone there.
+ * sign-ups → Make a website key). A server secret, and optional for sign-ups:
+ * without it they still go, each under the visitor's own address
+ * (`X-Visitor-IP`), so the agent's limit of a few an hour counts each visitor
+ * rather than this server. With it there's no limit. Unsubscribes need it.
  */
 export function agentKey(): string | null {
   return process.env.BUSINESS_AGENT_NEWSLETTER_KEY?.trim() || null;
@@ -51,24 +52,48 @@ export interface AgentSignup {
   lang?: 'en' | 'es' | null;
   /** Where on the site: the form's source (`first_visit_popup`, `competition`…). */
   place: string;
+  /** The visitor's address, which the agent's per-visitor limit counts; never kept there. */
+  visitorIp?: string | null;
 }
 
-/** Why a send was skipped or failed, for the logs; null when it went through. */
-type Outcome = 'off' | 'no_key' | `http_${number}` | 'unreachable' | null;
+/**
+ * Why a send was skipped or failed, for the logs; null when it went through.
+ * `bad_key`: the agent didn't know the key, and the sign-up went without it.
+ */
+type Outcome = 'off' | 'no_key' | 'bad_key' | `http_${number}` | 'unreachable' | null;
 
-async function post(path: 'signup' | 'unsubscribe', body: Record<string, unknown>): Promise<Outcome> {
+async function post(
+  path: 'signup' | 'unsubscribe',
+  body: Record<string, unknown>,
+  visitorIp?: string | null,
+): Promise<Outcome> {
   const base = agentSiteUrl();
   if (!base) return 'off';
   const key = agentKey();
-  if (!key) return 'no_key';
-  try {
-    const response = await fetch(`${base}/${path}`, {
+  // A sign-up goes without the key (the agent takes them from any website); an
+  // unsubscribe can't, as only the key may take someone off the list there.
+  if (!key && path === 'unsubscribe') return 'no_key';
+  const send = (withKey: string | null) =>
+    fetch(`${base}/${path}`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${key}` },
+      headers: {
+        'content-type': 'application/json',
+        ...(withKey ? { authorization: `Bearer ${withKey}` } : {}),
+        ...(visitorIp ? { 'x-visitor-ip': visitorIp } : {}),
+      },
       body: JSON.stringify(body),
       cache: 'no-store',
       signal: AbortSignal.timeout(TIMEOUT_MS),
     });
+  try {
+    const response = await send(key);
+    // A key the agent doesn't know (an old one, after a new key was made there)
+    // is a 401. That mustn't lose the sign-up: it goes again without the key,
+    // and the logs say to replace it.
+    if (response.status === 401 && key && path === 'signup') {
+      const again = await send(null);
+      return again.ok ? 'bad_key' : `http_${again.status}`;
+    }
     return response.ok ? null : `http_${response.status}`;
   } catch {
     return 'unreachable';
@@ -80,6 +105,12 @@ function report(what: string, outcome: Outcome) {
   if (outcome === null || outcome === 'off') return;
   if (outcome === 'no_key') {
     console.warn(`Business Agent ${what} skipped: BUSINESS_AGENT_NEWSLETTER_KEY is not set.`);
+    return;
+  }
+  if (outcome === 'bad_key') {
+    console.warn(
+      `Business Agent ${what} sent without the website key: the agent doesn't know BUSINESS_AGENT_NEWSLETTER_KEY. Make a new one there (Website & SEO → Newsletter sign-ups) and set it.`,
+    );
     return;
   }
   console.error(`Business Agent ${what} failed`, { outcome });
@@ -94,7 +125,7 @@ export async function sendSignupToAgent(signup: AgentSignup): Promise<void> {
     ...(signup.name ? { name: signup.name } : {}),
     ...(signup.lang ? { lang: signup.lang } : {}),
     place: signup.place,
-  }).catch(() => 'unreachable' as const);
+  }, signup.visitorIp).catch(() => 'unreachable' as const);
   report('sign-up', outcome);
 }
 

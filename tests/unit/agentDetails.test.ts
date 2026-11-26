@@ -5,6 +5,9 @@ import { agentDetailsUrl, getCafeDetails } from '@/server/businessAgent/detailsF
 import { agentMenuUrl } from '@/server/businessAgent/menuFeed';
 import { agentSiteUrl } from '@/server/businessAgent/newsletter';
 import { getOrderingHours } from '@/server/places/orderingHours';
+import { groupOpeningHours } from '@/shared/lib/openingHours';
+import { openState } from '@/shared/lib/openNow';
+import { isOpenForAsap } from '@/features/order/lib/pickupTimes';
 
 /**
  * The café's details from the Business Agent: address, contacts, social
@@ -101,6 +104,30 @@ test('the usual week and the next one by weekday: a closure this week shuts that
   assert.deepEqual(next.find((w) => w.day === 4)?.ranges, [], 'Thursday the 24th: closed for Christmas');
   assert.deepEqual(next.find((w) => w.day === 5)?.ranges, [], 'Friday the 25th too');
   assert.deepEqual(next.find((w) => w.day === 6)?.ranges, [{ open: 600, close: 840 }]);
+});
+
+test('a day that closes for a break is two spans: the list, "open now" and ordering all see it shut', () => {
+  const split = { open: '09:00', close: '20:00', break: { from: '14:00', to: '17:00' } };
+  const d = parseAgentDetails({
+    ...FEED,
+    hours: { ...FEED.hours, mon: split, sun: split, sat: { open: '10:00', close: '14:00', break: { from: '15:00', to: '16:00' } } },
+    days: FEED.days.map((x) => (x.day === 'mon' ? { ...x, open: '09:00', close: '20:00', break: { from: '14:00', to: '17:00' } } : x)),
+  })!;
+  const both = [{ open: 9 * 60, close: 14 * 60 }, { open: 17 * 60, close: 20 * 60 }];
+  assert.deepEqual(weekOf(d).find((w) => w.day === 1)?.ranges, both);
+  assert.deepEqual(nextWeekOf(d).find((w) => w.day === 1)?.ranges, both, 'the next days carry the break too');
+  assert.deepEqual(weekOf(d).find((w) => w.day === 6)?.ranges, [{ open: 600, close: 840 }], 'a break outside the day is left out');
+
+  const rows = groupOpeningHours(weekOf(d), 'en', { closed: 'Closed', allDay: 'Open 24 hours' });
+  assert.deepEqual(rows.find((r) => r.label === 'Monday'), { label: 'Monday', value: '9:00 – 14:00, 17:00 – 20:00' });
+
+  // Monday 21 December 2026, 15:00 in Madrid: in the break.
+  const inBreak = Date.parse('2026-12-21T14:00:00Z');
+  const state = openState(nextWeekOf(d), inBreak, 'Europe/Madrid');
+  assert.equal(state.open, false);
+  assert.equal(!state.open && state.opensAt, '2026-12-21T16:00:00.000Z', 'opens again at 17:00');
+  assert.equal(isOpenForAsap(inBreak, 'Europe/Madrid', 15, nextWeekOf(d)), false, 'no orders through the break');
+  assert.equal(isOpenForAsap(Date.parse('2026-12-21T09:00:00Z'), 'Europe/Madrid', 15, nextWeekOf(d)), true, '10:00 is open');
 });
 
 test('the pages’ view: the agent’s contacts as links, its time zone, its closures', () => {

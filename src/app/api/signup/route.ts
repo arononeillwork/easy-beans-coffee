@@ -107,6 +107,7 @@ export async function POST(request: Request) {
         phone: parsed.phone ?? null,
         lang: parsed.lang ?? null,
         place: parsed.source,
+        visitorIp: ip,
       });
       await upsertNewsletterSubscriber({ email: parsed.email, phone: parsed.phone ?? null }).catch(
         (err) => console.error('square subscriber sync failed', err),
