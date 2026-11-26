@@ -112,6 +112,32 @@ test('without the key a sign-up still goes, under the visitor’s address; with 
   assert.equal((calls[1].init.headers as Record<string, string>).authorization, 'Bearer nl_test');
 });
 
+test('a key the agent doesn’t know never loses a sign-up: it goes again without it, and the logs say to replace it', async () => {
+  process.env.BUSINESS_AGENT_SITE_URL = 'https://agent.test/api/site/1';
+  process.env.BUSINESS_AGENT_NEWSLETTER_KEY = 'nl_old';
+  answer = async () =>
+    calls.length === 1
+      ? new Response('{"error":"That key isn’t this business’s website key."}', { status: 401 })
+      : new Response('{"ok":true}', { status: 200 });
+  await sendSignupToAgent({ ...signup, visitorIp: '203.0.113.7' });
+  assert.equal(calls.length, 2);
+  assert.equal((calls[0].init.headers as Record<string, string>).authorization, 'Bearer nl_old');
+  const retry = calls[1].init.headers as Record<string, string>;
+  assert.equal(retry.authorization, undefined);
+  assert.equal(retry['x-visitor-ip'], '203.0.113.7');
+  assert.equal(calls[1].init.body, calls[0].init.body);
+  assert.equal(logged.length, 1);
+  assert.match(String(logged[0][0]), /doesn't know BUSINESS_AGENT_NEWSLETTER_KEY/);
+
+  // An unsubscribe can't go without the key, so a refused one is a failure, said once.
+  calls = [];
+  logged = [];
+  answer = async () => new Response('{}', { status: 401 });
+  await sendUnsubscribeToAgent('lucia@example.com');
+  assert.equal(calls.length, 1);
+  assert.deepEqual(logged.map((l) => l[1]), [{ outcome: 'http_401' }]);
+});
+
 test('an unsubscribe needs the key: without it nothing is sent and the logs say so; switched off, nothing at all', async () => {
   process.env.VERCEL = '1';
   await sendUnsubscribeToAgent('lucia@example.com');

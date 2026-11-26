@@ -56,8 +56,11 @@ export interface AgentSignup {
   visitorIp?: string | null;
 }
 
-/** Why a send was skipped or failed, for the logs; null when it went through. */
-type Outcome = 'off' | 'no_key' | `http_${number}` | 'unreachable' | null;
+/**
+ * Why a send was skipped or failed, for the logs; null when it went through.
+ * `bad_key`: the agent didn't know the key, and the sign-up went without it.
+ */
+type Outcome = 'off' | 'no_key' | 'bad_key' | `http_${number}` | 'unreachable' | null;
 
 async function post(
   path: 'signup' | 'unsubscribe',
@@ -70,18 +73,27 @@ async function post(
   // A sign-up goes without the key (the agent takes them from any website); an
   // unsubscribe can't, as only the key may take someone off the list there.
   if (!key && path === 'unsubscribe') return 'no_key';
-  try {
-    const response = await fetch(`${base}/${path}`, {
+  const send = (withKey: string | null) =>
+    fetch(`${base}/${path}`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        ...(key ? { authorization: `Bearer ${key}` } : {}),
+        ...(withKey ? { authorization: `Bearer ${withKey}` } : {}),
         ...(visitorIp ? { 'x-visitor-ip': visitorIp } : {}),
       },
       body: JSON.stringify(body),
       cache: 'no-store',
       signal: AbortSignal.timeout(TIMEOUT_MS),
     });
+  try {
+    const response = await send(key);
+    // A key the agent doesn't know (an old one, after a new key was made there)
+    // is a 401. That mustn't lose the sign-up: it goes again without the key,
+    // and the logs say to replace it.
+    if (response.status === 401 && key && path === 'signup') {
+      const again = await send(null);
+      return again.ok ? 'bad_key' : `http_${again.status}`;
+    }
     return response.ok ? null : `http_${response.status}`;
   } catch {
     return 'unreachable';
@@ -93,6 +105,12 @@ function report(what: string, outcome: Outcome) {
   if (outcome === null || outcome === 'off') return;
   if (outcome === 'no_key') {
     console.warn(`Business Agent ${what} skipped: BUSINESS_AGENT_NEWSLETTER_KEY is not set.`);
+    return;
+  }
+  if (outcome === 'bad_key') {
+    console.warn(
+      `Business Agent ${what} sent without the website key: the agent doesn't know BUSINESS_AGENT_NEWSLETTER_KEY. Make a new one there (Website & SEO → Newsletter sign-ups) and set it.`,
+    );
     return;
   }
   console.error(`Business Agent ${what} failed`, { outcome });
