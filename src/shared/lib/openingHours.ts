@@ -14,7 +14,19 @@ export type HourRange = { open: number; close: number | null };
 /** `day` follows JS/Google convention: 0 = Sunday. */
 export type DayHours = { day: number; ranges: HourRange[] };
 
-export type HoursRow = { label: string; value: string };
+export type HoursRow = {
+  label: string;
+  /** The whole day on one line, "9:00 – 14:00, 17:00 – 20:00" or "Closed": what rows are grouped by. */
+  value: string;
+  /**
+   * The day in order, to show one under another: open, a break, open again
+   * (9:00 – 14:00, closed 14:00 – 17:00, 17:00 – 20:00). Closed all day is one
+   * `closed` segment.
+   */
+  segments?: HoursSegment[];
+};
+
+export type HoursSegment = { kind: 'open' | 'break' | 'closed'; time: string };
 
 /** "8:00", "18:30" — no leading zero on the hour, matching the printed sign. */
 function formatMinutes(minutes: number): string {
@@ -23,18 +35,31 @@ function formatMinutes(minutes: number): string {
   return `${hour}:${String(minute).padStart(2, '0')}`;
 }
 
-function formatRanges(
-  ranges: HourRange[],
-  labels: { closed: string; allDay: string },
-): string {
-  if (ranges.length === 0) return labels.closed;
-  return ranges
-    .map((range) =>
-      range.close === null
-        ? labels.allDay
-        : `${formatMinutes(range.open)} – ${formatMinutes(range.close)}`,
-    )
-    .join(', ');
+const byOpening = (ranges: HourRange[]) => [...ranges].sort((a, b) => a.open - b.open);
+
+function formatSpans(ranges: HourRange[], labels: { closed: string; allDay: string }): string[] {
+  if (ranges.length === 0) return [labels.closed];
+  return byOpening(ranges).map((range) =>
+    range.close === null ? labels.allDay : `${formatMinutes(range.open)} – ${formatMinutes(range.close)}`,
+  );
+}
+
+function formatRanges(ranges: HourRange[], labels: { closed: string; allDay: string }): string {
+  return formatSpans(ranges, labels).join(', ');
+}
+
+/** Each span it's open, with a break between two that don't meet. */
+function formatSegments(ranges: HourRange[], labels: { closed: string; allDay: string }): HoursSegment[] {
+  if (ranges.length === 0) return [{ kind: 'closed', time: labels.closed }];
+  const sorted = byOpening(ranges);
+  const spans = formatSpans(sorted, labels);
+  return sorted.flatMap((range, i): HoursSegment[] => {
+    const next = sorted[i + 1];
+    const gap = next && range.close !== null && next.open > range.close
+      ? [{ kind: 'break' as const, time: `${formatMinutes(range.close)} – ${formatMinutes(next.open)}` }]
+      : [];
+    return [{ kind: 'open', time: spans[i] }, ...gap];
+  });
 }
 
 /**
@@ -78,7 +103,11 @@ export function groupOpeningHours(
       runStart.day === runEnd.day
         ? dayName(runStart.day, lang, 'long')
         : `${dayName(runStart.day, lang, 'short')} – ${dayName(runEnd.day, lang, 'short')}`;
-    rows.push({ label, value: runValue });
+    rows.push({
+      label,
+      value: runValue,
+      segments: formatSegments(runStart.ranges, labels),
+    });
   };
 
   for (const entry of mondayFirst.slice(1)) {
