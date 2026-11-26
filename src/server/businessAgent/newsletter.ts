@@ -34,9 +34,10 @@ export function agentSiteUrl(): string | null {
 
 /**
  * The website key, made in the Business Agent (Website & SEO → Newsletter
- * sign-ups → Make a website key). A server secret: it lets sign-ups through
- * without the per-address limit (they all come from this server) and is the
- * only way to unsubscribe someone there.
+ * sign-ups → Make a website key). A server secret, and optional for sign-ups:
+ * without it they still go, each under the visitor's own address
+ * (`X-Visitor-IP`), so the agent's limit of a few an hour counts each visitor
+ * rather than this server. With it there's no limit. Unsubscribes need it.
  */
 export function agentKey(): string | null {
   return process.env.BUSINESS_AGENT_NEWSLETTER_KEY?.trim() || null;
@@ -51,20 +52,32 @@ export interface AgentSignup {
   lang?: 'en' | 'es' | null;
   /** Where on the site: the form's source (`first_visit_popup`, `competition`…). */
   place: string;
+  /** The visitor's address, which the agent's per-visitor limit counts; never kept there. */
+  visitorIp?: string | null;
 }
 
 /** Why a send was skipped or failed, for the logs; null when it went through. */
 type Outcome = 'off' | 'no_key' | `http_${number}` | 'unreachable' | null;
 
-async function post(path: 'signup' | 'unsubscribe', body: Record<string, unknown>): Promise<Outcome> {
+async function post(
+  path: 'signup' | 'unsubscribe',
+  body: Record<string, unknown>,
+  visitorIp?: string | null,
+): Promise<Outcome> {
   const base = agentSiteUrl();
   if (!base) return 'off';
   const key = agentKey();
-  if (!key) return 'no_key';
+  // A sign-up goes without the key (the agent takes them from any website); an
+  // unsubscribe can't, as only the key may take someone off the list there.
+  if (!key && path === 'unsubscribe') return 'no_key';
   try {
     const response = await fetch(`${base}/${path}`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${key}` },
+      headers: {
+        'content-type': 'application/json',
+        ...(key ? { authorization: `Bearer ${key}` } : {}),
+        ...(visitorIp ? { 'x-visitor-ip': visitorIp } : {}),
+      },
       body: JSON.stringify(body),
       cache: 'no-store',
       signal: AbortSignal.timeout(TIMEOUT_MS),
@@ -94,7 +107,7 @@ export async function sendSignupToAgent(signup: AgentSignup): Promise<void> {
     ...(signup.name ? { name: signup.name } : {}),
     ...(signup.lang ? { lang: signup.lang } : {}),
     place: signup.place,
-  }).catch(() => 'unreachable' as const);
+  }, signup.visitorIp).catch(() => 'unreachable' as const);
   report('sign-up', outcome);
 }
 

@@ -92,6 +92,7 @@ export async function POST(request: Request) {
         name: body.name,
         lang: body.lang,
         place: 'competition',
+        visitorIp: ip,
       }),
     );
 
