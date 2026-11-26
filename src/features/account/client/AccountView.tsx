@@ -114,7 +114,8 @@ async function readError(res: Response): Promise<string> {
 /**
  * Where to send the visitor once signed in, when they came here to do
  * something else — the cart sends `?next=/es/order?cart=open` so an order can
- * go on as soon as there is an account. Same-site paths only, as in
+ * go on as soon as there is an account, and the coffee club's join button
+ * `?next=/es/club?join=1`. Same-site paths only, as in
  * /auth/callback, so the parameter can't be pointed off-site.
  */
 function returnTo(): string | null {
@@ -207,8 +208,12 @@ export function AccountView() {
     signedIn(body);
   };
 
-  // Shown above sign-in / sign-up when the cart sent them: why an account.
-  const [forOrder] = useState(() => typeof window !== 'undefined' && returnTo() !== null);
+  // Shown above sign-in / sign-up when the cart or the coffee club sent them: why an account.
+  const [sentFrom] = useState(() => {
+    const next = typeof window !== 'undefined' ? returnTo() : null;
+    if (next === null) return null;
+    return /^\/(es|en)\/club([?#]|$)/.test(next) ? 'club' : 'order';
+  });
 
   return (
     <Box sx={{ backgroundColor: brand.cream }}>
@@ -226,9 +231,9 @@ export function AccountView() {
           </Typography>
         )}
 
-        {forOrder && (phase === 'signIn' || phase === 'signUp') && (
-          <Typography data-testid="order-sign-in-hint" sx={{ mb: 3, color: brand.ink70 }}>
-            {labels.forOrderHint}
+        {sentFrom && (phase === 'signIn' || phase === 'signUp') && (
+          <Typography data-testid={`${sentFrom}-sign-in-hint`} sx={{ mb: 3, color: brand.ink70 }}>
+            {sentFrom === 'club' ? labels.forClubHint : labels.forOrderHint}
           </Typography>
         )}
 

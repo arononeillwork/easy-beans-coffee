@@ -97,8 +97,8 @@ week), the account page shows it first:
   till; this week's coffee ("ready", or "had, the next one on Monday"; a failed payment or a pause says so);
   and their member code as a **Code 128 barcode** with the code under it (`7Q2K 9XMB`), for scanning once the
   till has a scanner. `src/shared/lib/code128.ts` draws it; no library is loaded.
-- **Someone who isn't a member** gets the club's price and a **Join the club** button to Square's checkout,
-  while the café is taking members.
+- **Someone who isn't a member** gets the club's price and a **Join the club** button to their own checkout
+  (below), while the café is taking members.
 - **No club**, or the agent off or unreachable: no card. The page never fails over it.
 
 `GET /api/account/club` asks the agent server to server (`src/server/businessAgent/accounts.ts`): its
@@ -107,3 +107,17 @@ checked (a session here exists only once the address is confirmed). Someone the 
 synced first, with their Square customer. It needs **Accounts & rewards on your website** switched on in the
 agent (Website & SEO); off, the agent answers 404 and there's no card. The agent finds the person by email, so a
 member sees their pass when they signed up here with the email they joined the club with.
+
+## Selling the coffee club
+
+`/club` (and a section on the home page, with a **Coffee club** link in the footer and phone menu) shows the
+offer from the agent's public feed, `…/api/site/<business>/club` (`src/server/businessAgent/clubFeed.ts`,
+re-read every 60 s; `BUSINESS_AGENT_CLUB_URL` names another address, or `off`, and unset a laptop reads nothing).
+A down agent keeps the last answer; a 404 (no club) hides the section and the page says it isn't available;
+`taking_members: false` shows the offer with no button. **Join** posts to `/api/account/club/join`, which asks the
+agent (`account/club/join`, with the website key) for Square's checkout with the member's email filled in;
+signed out, they sign in first and carry on from `/club?join=1`. Square returns them to
+`/<lang>/account?club=joined`, built from `NEXT_PUBLIC_SITE_URL`, which must be https and the website the agent
+has for the café (else it answers 400 and the button says it couldn't open the checkout). That page welcomes them
+and re-reads the pass every 15 s for up to 3 minutes. It needs the website key and **Accounts & rewards on your
+website** on in the agent.

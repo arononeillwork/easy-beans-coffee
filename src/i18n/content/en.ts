@@ -20,6 +20,7 @@ export const en = {
     shop: 'Shop',
     story: 'About',
     findUs: 'Visit',
+    club: 'Coffee club',
     orderCta: 'Order for collection',
     account: 'Account',
   },
@@ -323,9 +324,13 @@ export const en = {
     clubOne: 'A coffee a week',
     clubMany: '{n} coffees a week',
     clubJoinBody: '{coffees} for {price} a month. Join on Square’s secure checkout, cancel any time.',
-    clubJoin: 'Join the club',
+    /** Back from the checkout, while the pass is on its way. */
+    clubWelcome: 'Welcome to the club',
+    clubSettingUp: 'Setting up your membership…',
+    clubSlow: 'This is taking longer than usual. Your pass will show here: refresh in a few minutes, or ask us at the counter.',
     /** The order list, and the line above sign-in when the cart sent them here. */
     forOrderHint: 'Sign in or create an account to place your collection order — your cart is waiting.',
+    forClubHint: 'Sign in or create an account to join the coffee club. Then it’s on to checkout.',
     ordersHeadline: 'Your orders',
     ordersNone: 'No orders yet. Collection orders you place online appear here.',
     ordersFailed: 'Could not load your orders just now.',
@@ -338,6 +343,38 @@ export const en = {
     deleteConfirm: 'Yes, delete everything',
     deleteKeep: 'Keep my account',
     deleted: 'All gone. You are signed out — see you at the counter.',
+  },
+  /**
+   * Selling the coffee club: its page and the home page section. The name, price,
+   * coffees a week and drink limit all come from the Business Agent.
+   */
+  club: {
+    eyebrow: 'Your weekly coffee',
+    metaDescription: 'A coffee on us every week, for one monthly price. Join the Easy Beans coffee club.',
+    offerOne: '1 coffee a week for {price} a month',
+    offerMany: '{n} coffees a week for {price} a month',
+    lead: 'Join once, then come in and enjoy. We’ll take care of the rest.',
+    stepsTitle: 'How it works',
+    steps: [
+      { title: 'Join', body: 'Sign in here and pay on Square’s secure checkout.' },
+      { title: 'Say hello', body: 'At the counter, show your pass or just give your name.' },
+      { title: 'Enjoy', body: 'Your coffee’s free, once a week.' },
+    ],
+    /** Replaces the last step's line when the club is worth more than one a week. */
+    freeMany: 'Your coffee’s free, {n} times a week.',
+    cap: 'Up to {amount} a drink. Fancy something dearer? Just pay the difference.',
+    cancel: 'Cancel any time.',
+    join: 'Join the club',
+    joining: 'Opening checkout…',
+    closed: 'Not taking new members right now.',
+    member: 'You’re already a member.',
+    seePass: 'See your pass',
+    failed: 'We couldn’t open the checkout just now. Try again in a moment, or ask us at the counter.',
+    teaserCta: 'See how it works',
+    unavailable: 'The coffee club isn’t available right now.',
+    unavailableBody: 'Pop in and ask us at the counter.',
+    unavailableCta: 'See the menu',
+    photoAlt: 'A takeaway cappuccino from Easy Beans',
   },
   footer: {
     hoursTitle: 'Opening hours',

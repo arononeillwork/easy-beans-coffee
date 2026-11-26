@@ -36,6 +36,11 @@ export interface AgentFeedSpec<T> {
   parse: (raw: unknown) => T | null;
   revalidateSeconds: number;
   timeoutMs?: number;
+  /**
+   * For a feed whose 404 means "the café has none" (the coffee club): the last
+   * answer read is dropped rather than served. Any other failure still keeps it.
+   */
+  noneOn404?: boolean;
 }
 
 const TIMEOUT_MS = 4000;
@@ -60,6 +65,7 @@ export function agentFeed<T>(spec: AgentFeedSpec<T>): () => Promise<T | null> {
         next: { revalidate: spec.revalidateSeconds },
         signal: AbortSignal.timeout(spec.timeoutMs ?? TIMEOUT_MS),
       });
+      if (response.status === 404 && spec.noneOn404) lastGood = null;
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const parsed = spec.parse(await response.json());
       if (!parsed) throw new Error(`not a ${spec.name} feed (version 1)`);
