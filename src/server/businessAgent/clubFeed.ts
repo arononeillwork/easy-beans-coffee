@@ -4,7 +4,7 @@ import { agentFeed } from './feed';
 
 /**
  * The café's coffee club, as the Business Agent sells it, for the club page and
- * the home page section. Public, with no sign-in; joining is
+ * the header's "Join the club" on every page. Public, with no sign-in; joining is
  * {@link import('./accounts').joinClub}. Its contract lives in the
  * business-agent repo, docs/WEBSITE.md → "The coffee club".
  * `BUSINESS_AGENT_CLUB_URL` names another address for it, or `off`.

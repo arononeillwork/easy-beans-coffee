@@ -114,10 +114,10 @@ member sees their pass when they signed up here with the email they joined the c
 
 ## Selling the coffee club
 
-`/club` (and a section on the home page, with a **Coffee club** link in the footer and phone menu) shows the
+`/club` (with **Join the club** in the header on every page, and a **Coffee club** link in the footer and phone menu) shows the
 offer from the agent's public feed, `…/api/site/<business>/club` (`src/server/businessAgent/clubFeed.ts`,
 re-read every 60 s; `BUSINESS_AGENT_CLUB_URL` names another address, or `off`, and unset a laptop reads nothing).
-A down agent keeps the last answer; a 404 (no club) hides the section and the page says it isn't available;
+A down agent keeps the last answer; a 404 (no club) hides the header button and the page says it isn’t available;
 `taking_members: false` shows the offer with no button. **Join** posts to `/api/account/club/join`, which asks the
 agent (`account/club/join`, with the website key) for Square's checkout with the member's email filled in;
 signed out, they sign in first and carry on from `/club?join=1`. Square returns them to

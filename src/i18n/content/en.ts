@@ -332,7 +332,7 @@ export const en = {
     deleted: 'All gone. You are signed out — see you at the counter.',
   },
   /**
-   * Selling the coffee club: its page and the home page section. The name, price,
+   * Selling the coffee club: its page and the header button. The name, price,
    * coffees a week and drink limit all come from the Business Agent.
    */
   club: {
@@ -357,7 +357,6 @@ export const en = {
     member: 'You’re already a member.',
     seePass: 'See your pass',
     failed: 'We couldn’t open the checkout just now. Try again in a moment, or ask us at the counter.',
-    teaserCta: 'See how it works',
     unavailable: 'The coffee club isn’t available right now.',
     unavailableBody: 'Pop in and ask us at the counter.',
     unavailableCta: 'See the menu',

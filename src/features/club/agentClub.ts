@@ -1,7 +1,7 @@
 /**
  * The café's coffee club as the Business Agent sells it: what it costs a month
  * (Square charges it) and what it gives each week (the agent counts them). The
- * site reads it for the public club page and the home page section.
+ * site reads it for the public club page and the header's "Join the club".
  *
  * The feed's contract lives in the business-agent repo, docs/WEBSITE.md → "The
  * coffee club". This module is the plain-data half, parsed and unit-tested

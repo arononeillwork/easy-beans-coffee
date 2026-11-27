@@ -11,6 +11,7 @@ import { CartProvider } from '@/features/order/client/CartProvider';
 import { CartDrawer } from '@/features/order/client/CartDrawer';
 import { LANGS, isLang } from '@/i18n/config';
 import { getDictionary } from '@/i18n/dictionary';
+import { getAgentClub } from '@/server/businessAgent/clubFeed';
 import { brand } from '@/theme/brand';
 import { fontVariables } from '@/theme/fonts';
 
@@ -82,6 +83,8 @@ export default async function SiteLayout({
   const { lang } = await params;
   if (!isLang(lang)) notFound();
   const t = getDictionary(lang);
+  // The header's "Join the club" shows while the café has a club in the Business Agent.
+  const hasClub = (await getAgentClub()) !== null;
 
   return (
     <html lang={lang} className={fontVariables}>
@@ -101,7 +104,7 @@ export default async function SiteLayout({
                   }}
                 >
                   <AnnouncementBar />
-                  <Header />
+                  <Header hasClub={hasClub} />
                 </Box>
                 <Box component="main" sx={{ flexGrow: 1 }}>
                   {children}

@@ -50,7 +50,11 @@ const DRAWER_NAV = [
   { href: '/account', key: 'account', Icon: PersonOutlineRoundedIcon },
 ] as const;
 
-export function Header() {
+/**
+ * `hasClub`: the café runs a coffee club, so "Join the club" sits in the bar,
+ * beside the order button on a computer and beside the cart on a phone.
+ */
+export function Header({ hasClub = false }: { hasClub?: boolean }) {
   const { t, lang } = useLanguage();
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -72,7 +76,7 @@ export function Header() {
           maxWidth: 1280,
           width: '100%',
           mx: 'auto',
-          gap: { xs: 0.5, md: 2 },
+          gap: { xs: 0.5, md: 1, lg: 2 },
           minHeight: { xs: 72, md: 84 },
         }}
       >
@@ -96,7 +100,7 @@ export function Header() {
           <Box
             component="span"
             sx={{
-              display: { xs: 'none', md: 'inline' },
+              display: { xs: 'none', lg: 'inline' },
               ml: 1.75,
               fontFamily: 'var(--font-poppins)',
               fontWeight: 600,
@@ -111,7 +115,7 @@ export function Header() {
 
         <Box sx={{ flexGrow: 1 }} />
 
-        <Box component="nav" sx={{ display: { xs: 'none', md: 'flex' }, gap: 3, alignItems: 'center' }}>
+        <Box component="nav" sx={{ display: { xs: 'none', md: 'flex' }, gap: { md: 2, lg: 3 }, alignItems: 'center' }}>
           {NAV.map((item) => {
             const href = localePath(lang, item.href);
             const active = pathname === href;
@@ -127,6 +131,7 @@ export function Header() {
                   textDecoration: 'none',
                   color: 'text.primary',
                   fontSize: '0.9375rem',
+                  whiteSpace: 'nowrap',
                   fontWeight: 500,
                   '&:hover': { color: brand.rosePinkDeep },
                   '&::after': active
@@ -148,12 +153,33 @@ export function Header() {
           })}
         </Box>
 
+        {hasClub && (
+          <Button
+            component={Link}
+            href={localePath(lang, '/club')}
+            variant="outlined"
+            size="small"
+            data-testid="header-club"
+            aria-current={pathname === localePath(lang, '/club') ? 'page' : undefined}
+            sx={{
+              flexShrink: 0,
+              whiteSpace: 'nowrap',
+              ml: { md: 1 },
+              color: brand.rosePinkDeep,
+              borderColor: brand.rosePink,
+              '&:hover': { borderColor: brand.rosePinkDeep, backgroundColor: brand.rosePinkTint },
+            }}
+          >
+            {t.club.join}
+          </Button>
+        )}
+
         <Button
           component={Link}
           href={localePath(lang, '/order')}
           variant="contained"
           size="small"
-          sx={{ display: { xs: 'none', md: 'inline-flex' }, ml: 1 }}
+          sx={{ display: { xs: 'none', md: 'inline-flex' }, flexShrink: 0, whiteSpace: 'nowrap' }}
         >
           {t.nav.orderCta}
         </Button>
