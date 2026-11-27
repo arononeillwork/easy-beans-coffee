@@ -246,12 +246,12 @@ export const en = {
     title: 'Account',
     eyebrow: 'Your account',
     signInHeadline: 'Sign in',
-    signInBody: 'Your details, interests and rewards — the same as at the counter.',
+    signInBody: 'Your details and your orders, in one place.',
     emailLabel: 'Your email',
     passwordLabel: 'Password',
     signIn: 'Sign in',
     signUpHeadline: 'Create your account',
-    signUpBody: 'One account for your details, interests and rewards.',
+    signUpBody: 'One account for your details and orders.',
     signUp: 'Create account',
     passwordHint: 'At least 8 characters.',
     google: 'Continue with Google',
@@ -293,19 +293,6 @@ export const en = {
     saved: 'Saved.',
     invalidPhone: 'Enter a valid phone number, or leave it empty.',
     signOut: 'Sign out',
-    /**
-     * The rewards section. "Beans" is not hard-coded: the unit name comes
-     * from the Square loyalty programme's own terminology, so the till and
-     * the site always agree on what a point is called.
-     */
-    rewardsHeadline: 'Rewards',
-    rewardsBody: 'Counted by Square — the same balance as at the counter.',
-    rewardsLifetime: '{points} collected all-time',
-    rewardsNone: 'None yet. Your first order at the counter starts the count.',
-    rewardsReady: 'Ready to redeem',
-    rewardsToGo: '{points} to go',
-    rewardsRedeemNote: 'Redeem at the counter — just ask before you pay.',
-    rewardsFailed: 'Could not load your rewards just now.',
     /**
      * The coffee club card, from the Business Agent: the member's pass (this
      * week's coffee and the barcode they show at the counter) or how to join.

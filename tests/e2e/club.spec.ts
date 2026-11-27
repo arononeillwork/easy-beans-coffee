@@ -177,9 +177,6 @@ test.describe('the account page', () => {
   async function signedIn(page: Page, clubs: unknown[]) {
     await page.route('**/api/account', (route) => route.fulfill({ json: { profile } }));
     await page.route('**/api/account/orders', (route) => route.fulfill({ json: { orders: [] } }));
-    await page.route('**/api/account/rewards', (route) =>
-      route.fulfill({ json: { program: null, balance: null, lifetimePoints: null } }),
-    );
     const reads = { count: 0 };
     await page.route('**/api/account/club', (route) => {
       const club = clubs[Math.min(reads.count, clubs.length - 1)];
@@ -188,6 +185,15 @@ test.describe('the account page', () => {
     });
     return reads;
   }
+
+  test('shows no loyalty points or rewards', async ({ page }) => {
+    await signedIn(page, [notYet]);
+    await open(page, '/en/account');
+
+    await expect(page.getByRole('heading', { name: 'Your orders' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /rewards/i })).toHaveCount(0);
+    await expect(page.locator('main')).not.toContainText(/rewards|redeem/i);
+  });
 
   test('a non-member’s join button opens their own checkout, not the generic one', async ({ page, baseURL }) => {
     await signedIn(page, [notYet]);

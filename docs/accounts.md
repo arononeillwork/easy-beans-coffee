@@ -88,6 +88,10 @@ newsletter rows (`email_signups`) and the Supabase Auth user in one action;
 paid orders stay, as accounting records — the `auth_user_id` foreign key is
 `on delete set null`, so they are unlinked from the deleted account.
 
+## No loyalty points
+
+The account page shows no Square Loyalty points or rewards: the café doesn't offer them on the website.
+
 ## The coffee club pass
 
 When the café runs a coffee club in the Business Agent (a monthly membership on Square, worth free coffees a
