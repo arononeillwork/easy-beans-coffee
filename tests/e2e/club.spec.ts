@@ -59,15 +59,14 @@ test.describe('the club page', () => {
     await expect(page.getByTestId('club-closed')).toHaveCount(0);
   });
 
-  test('is in Spanish too, linked from the home page section and the footer', async ({ page }) => {
+  test('is in Spanish too, linked from the header and the footer', async ({ page }) => {
     await open(page, '/es');
 
-    const band = page.getByTestId('club-band');
-    await expect(band).toContainText(FIXTURE.club.name);
-    await expect(band).toContainText(/1 café a la semana por 12\s€ al mes/);
+    const join = page.getByTestId('header-club');
+    await expect(join).toHaveText('Únete al club');
     await expect(page.locator('footer').getByRole('link', { name: 'Club de café' })).toHaveAttribute('href', '/es/club');
 
-    await band.getByRole('link').click();
+    await join.click();
     await expect(page).toHaveURL(/\/es\/club$/, { timeout: 30_000 });
     await expect(page.getByTestId('club-offer')).toContainText(/Hasta 4,50\s€ por bebida/);
     await expect(page.getByTestId('club-join')).toHaveText('Únete al club');
@@ -82,16 +81,28 @@ test.describe('the club page', () => {
     await expect(page.getByTestId('club-join')).toHaveCount(0);
   });
 
-  test('with no club (404), the home page leaves the section out and the page says so', async ({ page, request }) => {
+  test('with no club (404), the header leaves the button out and the page says so', async ({ page, request }) => {
     await setClub(request, 'none');
 
     await open(page, '/es');
     await expect(page.locator('#visit')).toBeVisible();
-    await expect(page.getByTestId('club-band')).toHaveCount(0);
+    await expect(page.getByTestId('header-club')).toHaveCount(0);
 
     await page.goto('/en/club');
     await expect(page.getByTestId('club-unavailable')).toContainText('The coffee club isn’t available right now.');
     await expect(page.getByTestId('club-join')).toHaveCount(0);
+  });
+});
+
+test.describe('the header on a phone', () => {
+  test.use({ viewport: { width: 375, height: 812 } });
+
+  test('keeps "Join the club" in the bar, beside the cart, without spilling over', async ({ page }) => {
+    await open(page, '/en');
+    const join = page.getByTestId('header-club');
+    await expect(join).toBeVisible();
+    await expect(join).toHaveAttribute('href', '/en/club');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
   });
 });
 

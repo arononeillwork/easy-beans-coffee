@@ -334,7 +334,6 @@ export const es: SiteContent = {
     member: 'Ya eres del club.',
     seePass: 'Ver tu pase',
     failed: 'No hemos podido abrir el pago ahora mismo. Prueba en un momento o pregúntanos en la barra.',
-    teaserCta: 'Mira cómo funciona',
     unavailable: 'El club de café no está disponible ahora mismo.',
     unavailableBody: 'Pásate y pregúntanos en la barra.',
     unavailableCta: 'Ver el menú',
