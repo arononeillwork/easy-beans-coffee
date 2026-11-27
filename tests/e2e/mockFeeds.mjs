@@ -1,6 +1,6 @@
 // Local stand-in for the feeds the site reads automatically: the Business
-// Agent's (details, Google reviews, Instagram posts) and Instagram's own, which
-// only the café TV's poster mode still reads.
+// Agent's (details, Google reviews, Instagram posts, coffee club) and
+// Instagram's own, which only the café TV's poster mode still reads.
 //
 // The site is pointed here through E2E_FEEDS_BASE (see src/server/feedBase.ts
 // and playwright.config.ts), so the browser suite exercises the real path —
@@ -116,6 +116,19 @@ function instagram() {
   return { data: FIXTURE.posts.map(media) };
 }
 
+/** What the stand-in's club is doing, set by club.spec.ts: 'open', 'closed' (no new members) or 'none' (404). */
+let clubMode = 'open';
+
+/** The Business Agent's coffee club (GET /api/site/1/club), as docs/WEBSITE.md in business-agent has it. */
+function agentClub() {
+  return {
+    version: 1,
+    business: { id: 1, name: 'Easy Beans Coffee' },
+    club: { ...FIXTURE.club, taking_members: clubMode === 'open', signup_url: null },
+    generated_at: new Date().toISOString(),
+  };
+}
+
 /** One post by its id, as the café TV's picture route asks for it. */
 function instagramPost(id) {
   const i = FIXTURE.posts.findIndex((post) => post.id === id);
@@ -128,7 +141,7 @@ const json = (res, status, body) => {
 };
 
 createServer((req, res) => {
-  const { pathname } = new URL(req.url ?? '/', 'http://localhost');
+  const { pathname, searchParams } = new URL(req.url ?? '/', 'http://localhost');
   if (pathname === '/health') return json(res, 200, { ok: true });
   const postId = /^\/instagram\/v[\d.]+\/(\d+)$/.exec(pathname)?.[1];
   if (postId) {
@@ -139,6 +152,13 @@ createServer((req, res) => {
   if (pathname === '/agent/api/site/1/details') return json(res, 200, agentDetails());
   if (pathname === '/agent/api/site/1/reviews') return json(res, 200, agentReviews());
   if (pathname === '/agent/api/site/1/posts') return json(res, 200, agentPosts());
+  if (pathname === '/agent/api/site/1/club') {
+    return clubMode === 'none' ? json(res, 404, { error: 'Not found' }) : json(res, 200, agentClub());
+  }
+  if (pathname === '/control/club' && req.method === 'POST') {
+    clubMode = searchParams.get('mode') ?? 'open';
+    return json(res, 200, { mode: clubMode });
+  }
   // Square and anything else: answer like an unconfigured service.
   return json(res, 404, { error: 'not mocked' });
 }).listen(PORT, () => {

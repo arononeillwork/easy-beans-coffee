@@ -16,7 +16,8 @@ import { getPriceBookOrEmpty } from '@/server/square/priceCache';
  * Six blocks, each carrying live data where it has any, all of it from the
  * Business Agent (the café's back office): open/closed, the address and
  * WhatsApp, what's on the menu and its prices, the Instagram posts and the
- * Google rating. Copy is kept to what a visitor needs to act.
+ * Google rating. Copy is kept to what a visitor needs to act. (The coffee club
+ * is in the header, on every page.)
  */
 export default async function HomePage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;

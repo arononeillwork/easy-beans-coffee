@@ -83,10 +83,11 @@ export default defineConfig({
       // the local stand-in (src/server/feedBase.ts honours this only outside a
       // production build). Real addresses in .env.local are overridden here.
       E2E_FEEDS_BASE: `http://localhost:${MOCK_FEEDS_PORT}`,
-      // The Business Agent's details (hours, closures, address, contacts), Google reviews and Instagram posts.
+      // The Business Agent's details (hours, closures, address, contacts), Google reviews, Instagram posts and coffee club.
       BUSINESS_AGENT_DETAILS_URL: 'https://businesssagent.com/api/site/1/details',
       BUSINESS_AGENT_REVIEWS_URL: 'https://businesssagent.com/api/site/1/reviews',
       BUSINESS_AGENT_POSTS_URL: 'https://businesssagent.com/api/site/1/posts',
+      BUSINESS_AGENT_CLUB_URL: 'https://businesssagent.com/api/site/1/club',
       // Only the café TV's poster mode still reads Instagram itself (the stand-in too).
       INSTAGRAM_ACCESS_TOKEN: 'e2e-token',
     },

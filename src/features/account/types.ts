@@ -24,23 +24,6 @@ export interface AccountProfile {
 }
 
 /**
- * The rewards snapshot as `/api/account/rewards` serves it — the Square
- * loyalty programme plus the signed-in customer's own balance. `program` is
- * null when the café has no active programme; `balance` is null when the
- * customer has not been enrolled at the till yet.
- */
-export interface AccountRewards {
-  program: {
-    /** Square's name for one point — "Bean" — and for several. */
-    one: string;
-    other: string;
-    tiers: Array<{ id: string; name: string; points: number }>;
-  } | null;
-  balance: number | null;
-  lifetimePoints: number | null;
-}
-
-/**
  * One collection order on the account page, as `/api/account/orders` serves
  * it. `status` is the same customer-facing status the order's own status page
  * shows; `token` opens that page.

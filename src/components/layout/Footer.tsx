@@ -67,6 +67,7 @@ export async function Footer({ t, lang }: { t: SiteContent; lang: Lang }) {
 
   const pages = [
     { label: t.nav.menu, href: localePath(lang, '/order') },
+    { label: t.nav.club, href: localePath(lang, '/club') },
     { label: t.nav.shop, href: localePath(lang, '/shop') },
     { label: t.nav.story, href: localePath(lang, '/about') },
     { label: t.nav.account, href: localePath(lang, '/account') },

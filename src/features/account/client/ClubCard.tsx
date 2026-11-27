@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import { useLanguage } from '@/i18n/LanguageProvider';
+import { JoinClubButton } from '@/features/club/client/JoinClubButton';
 import { formatEuros } from '@/features/order/lib/price';
 import { code128Bars, code128Encodable, code128Modules } from '@/shared/lib/code128';
 import { brand, radius, shadow } from '@/theme/brand';
@@ -13,6 +14,10 @@ import type { AccountClub } from '../types';
 
 /** Quiet zone each side of the barcode, in modules (Code 128 asks for at least 10). */
 const QUIET = 12;
+
+/** Back from Square's checkout the pass takes a minute or two: asked for every 15 s, for up to 3 minutes. */
+const REREAD_MS = 15_000;
+const REREADS = (3 * 60_000) / REREAD_MS;
 
 /** "7Q2K 9XMB": the member code in two groups, easy to read out or type at the till. */
 export const groupedCode = (code: string) => (code.length > 4 ? `${code.slice(0, 4)} ${code.slice(4)}` : code);
@@ -22,28 +27,85 @@ export const groupedCode = (code: string) => (code.length > 4 ? `${code.slice(0,
  * their pass to hold up at the counter: their name, this week's coffee and their
  * member code as a barcode. Someone who isn't a member gets how to join, while
  * the café is taking members. No club, or the agent unreachable: nothing.
+ *
+ * Back from the checkout (`?club=joined`) they're welcomed, and the club is
+ * re-read until the pass arrives. Until then there's no join button, so nobody
+ * pays twice while Square and the agent catch up.
  */
 export function ClubCard({ name }: { name: string | null }) {
   const [club, setClub] = useState<AccountClub | null>(null);
+  const [joined] = useState(
+    () => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('club') === 'joined',
+  );
+  const [slow, setSlow] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let rereads = 0;
+
+    const read = async () => {
+      let next: AccountClub | null = null;
       try {
         const res = await fetch('/api/account/club');
-        if (!res.ok) return;
-        const body = (await res.json()) as { club: AccountClub | null };
-        if (!cancelled) setClub(body.club);
+        if (res.ok) next = ((await res.json()) as { club: AccountClub | null }).club;
       } catch {
         // The account page never fails over the club: no card is all.
       }
-    })();
+      if (cancelled) return;
+      setClub(next);
+      if (!joined) return;
+      if (next?.pass) {
+        // Welcomed, with their pass: a reload from here is just the account page.
+        const url = new URL(window.location.href);
+        url.searchParams.delete('club');
+        window.history.replaceState(null, '', `${url.pathname}${url.search}`);
+      } else if (rereads < REREADS) {
+        rereads += 1;
+        timer = setTimeout(read, REREAD_MS);
+      } else {
+        setSlow(true);
+      }
+    };
+
+    void read();
     return () => {
       cancelled = true;
+      clearTimeout(timer);
     };
-  }, []);
+  }, [joined]);
 
-  return club ? <ClubPass club={club} name={name} /> : null;
+  if (!joined) return club ? <ClubPass club={club} name={name} /> : null;
+  return (
+    <Stack spacing={3}>
+      <Welcome waiting={club?.pass ? null : slow ? 'slow' : 'settingUp'} />
+      {club?.pass && <ClubPass club={club} name={name} />}
+    </Stack>
+  );
+}
+
+/** "Welcome to the club", and while the pass is on its way, that it is. */
+function Welcome({ waiting }: { waiting: 'settingUp' | 'slow' | null }) {
+  const { t } = useLanguage();
+  const labels = t.account;
+  return (
+    <Box
+      data-testid="club-welcome"
+      sx={{ backgroundColor: brand.matchaTint, borderRadius: `${radius.xl}px`, p: { xs: 3, md: 4 } }}
+    >
+      <Typography variant="h4" component="h2">
+        {labels.clubWelcome}
+      </Typography>
+      {/* Always mounted, so a screen reader hears the text change. */}
+      <Box role="status">
+        {waiting && (
+          <Typography sx={{ color: brand.ink70, mt: 1 }}>
+            {waiting === 'slow' ? labels.clubSlow : labels.clubSettingUp}
+          </Typography>
+        )}
+      </Box>
+    </Box>
+  );
 }
 
 /** The card itself, for a club already read: the member's pass, or how to join; nothing when neither applies. */
@@ -118,9 +180,8 @@ export function ClubPass({ club, name }: { club: AccountClub; name: string | nul
               .replace('{coffees}', n === 1 ? labels.clubOne : labels.clubMany.replace('{n}', String(n)))
               .replace('{price}', formatEuros(Math.round(club.price * 100), lang))}
           </Typography>
-          <Button variant="contained" href={club.join_url!} rel="noopener">
-            {labels.clubJoin}
-          </Button>
+          {/* Their own checkout, with their email filled in; `join_url` only says the café is taking members. */}
+          <JoinClubButton />
         </>
       )}
     </Box>

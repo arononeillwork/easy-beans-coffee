@@ -20,6 +20,7 @@ export const en = {
     shop: 'Shop',
     story: 'About',
     findUs: 'Visit',
+    club: 'Coffee club',
     orderCta: 'Order for collection',
     account: 'Account',
   },
@@ -245,12 +246,12 @@ export const en = {
     title: 'Account',
     eyebrow: 'Your account',
     signInHeadline: 'Sign in',
-    signInBody: 'Your details, interests and rewards — the same as at the counter.',
+    signInBody: 'Your details and your orders, in one place.',
     emailLabel: 'Your email',
     passwordLabel: 'Password',
     signIn: 'Sign in',
     signUpHeadline: 'Create your account',
-    signUpBody: 'One account for your details, interests and rewards.',
+    signUpBody: 'One account for your details and orders.',
     signUp: 'Create account',
     passwordHint: 'At least 8 characters.',
     google: 'Continue with Google',
@@ -293,19 +294,6 @@ export const en = {
     invalidPhone: 'Enter a valid phone number, or leave it empty.',
     signOut: 'Sign out',
     /**
-     * The rewards section. "Beans" is not hard-coded: the unit name comes
-     * from the Square loyalty programme's own terminology, so the till and
-     * the site always agree on what a point is called.
-     */
-    rewardsHeadline: 'Rewards',
-    rewardsBody: 'Counted by Square — the same balance as at the counter.',
-    rewardsLifetime: '{points} collected all-time',
-    rewardsNone: 'None yet. Your first order at the counter starts the count.',
-    rewardsReady: 'Ready to redeem',
-    rewardsToGo: '{points} to go',
-    rewardsRedeemNote: 'Redeem at the counter — just ask before you pay.',
-    rewardsFailed: 'Could not load your rewards just now.',
-    /**
      * The coffee club card, from the Business Agent: the member's pass (this
      * week's coffee and the barcode they show at the counter) or how to join.
      */
@@ -323,9 +311,13 @@ export const en = {
     clubOne: 'A coffee a week',
     clubMany: '{n} coffees a week',
     clubJoinBody: '{coffees} for {price} a month. Join on Square’s secure checkout, cancel any time.',
-    clubJoin: 'Join the club',
+    /** Back from the checkout, while the pass is on its way. */
+    clubWelcome: 'Welcome to the club',
+    clubSettingUp: 'Setting up your membership…',
+    clubSlow: 'This is taking longer than usual. Your pass will show here: refresh in a few minutes, or ask us at the counter.',
     /** The order list, and the line above sign-in when the cart sent them here. */
     forOrderHint: 'Sign in or create an account to place your collection order — your cart is waiting.',
+    forClubHint: 'Sign in or create an account to join the coffee club. Then it’s on to checkout.',
     ordersHeadline: 'Your orders',
     ordersNone: 'No orders yet. Collection orders you place online appear here.',
     ordersFailed: 'Could not load your orders just now.',
@@ -338,6 +330,37 @@ export const en = {
     deleteConfirm: 'Yes, delete everything',
     deleteKeep: 'Keep my account',
     deleted: 'All gone. You are signed out — see you at the counter.',
+  },
+  /**
+   * Selling the coffee club: its page and the header button. The name, price,
+   * coffees a week and drink limit all come from the Business Agent.
+   */
+  club: {
+    eyebrow: 'Your weekly coffee',
+    metaDescription: 'A coffee on us every week, for one monthly price. Join the Easy Beans coffee club.',
+    offerOne: '1 coffee a week for {price} a month',
+    offerMany: '{n} coffees a week for {price} a month',
+    lead: 'Join once, then come in and enjoy. We’ll take care of the rest.',
+    stepsTitle: 'How it works',
+    steps: [
+      { title: 'Join', body: 'Sign in here and pay on Square’s secure checkout.' },
+      { title: 'Say hello', body: 'At the counter, show your pass or just give your name.' },
+      { title: 'Enjoy', body: 'Your coffee’s free, once a week.' },
+    ],
+    /** Replaces the last step's line when the club is worth more than one a week. */
+    freeMany: 'Your coffee’s free, {n} times a week.',
+    cap: 'Up to {amount} a drink. Fancy something dearer? Just pay the difference.',
+    cancel: 'Cancel any time.',
+    join: 'Join the club',
+    joining: 'Opening checkout…',
+    closed: 'Not taking new members right now.',
+    member: 'You’re already a member.',
+    seePass: 'See your pass',
+    failed: 'We couldn’t open the checkout just now. Try again in a moment, or ask us at the counter.',
+    unavailable: 'The coffee club isn’t available right now.',
+    unavailableBody: 'Pop in and ask us at the counter.',
+    unavailableCta: 'See the menu',
+    photoAlt: 'A takeaway cappuccino from Easy Beans',
   },
   footer: {
     hoursTitle: 'Opening hours',
