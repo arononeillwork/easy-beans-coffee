@@ -22,6 +22,7 @@ import LocalCafeOutlinedIcon from '@mui/icons-material/LocalCafeOutlined';
 import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
+import LoyaltyOutlinedIcon from '@mui/icons-material/LoyaltyOutlined';
 import PersonOutlineRoundedIcon from '@mui/icons-material/PersonOutlineRounded';
 // Cropped to the roundel itself: the original PNG carries a wide transparent
 // margin, which made the logo read smaller than the space it took.
@@ -44,6 +45,8 @@ const NAV = [
 /** The phone menu: every page plus the account, each with its icon. */
 const DRAWER_NAV = [
   ...NAV,
+  // In the phone menu and the footer; the desktop bar stays at four links.
+  { href: '/club', key: 'club', Icon: LoyaltyOutlinedIcon },
   { href: '/account', key: 'account', Icon: PersonOutlineRoundedIcon },
 ] as const;
 

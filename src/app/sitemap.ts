@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const paths = [
     '',
     '/order',
+    '/club',
     '/shop',
     ...RETAIL_COLLECTIONS.map((slug) => `/shop/${slug}`),
     '/about',

@@ -4,9 +4,10 @@ import { agentKey, agentSiteUrl } from './newsletter';
 
 /**
  * The signed-in person's coffee club from the Business Agent: their pass (this
- * week's coffee and their member code, for the barcode) or how to join. The
- * contract lives in the business-agent repo, docs/WEBSITE.md → "Accounts &
- * rewards" → "The coffee club".
+ * week's coffee and their member code, for the barcode) or how to join, and the
+ * link to Square's checkout that joins them. The contract lives in the
+ * business-agent repo, docs/WEBSITE.md → "Accounts & rewards" → "The coffee
+ * club".
  *
  * Server to server only, with the website key (the newsletter's), and the email
  * only ever in the body. The site's sign-in has checked the address already
@@ -16,11 +17,18 @@ import { agentKey, agentSiteUrl } from './newsletter';
  */
 
 const TIMEOUT_MS = 4000;
+/** Joining waits longer: the agent has Square make the checkout while the person waits. */
+const JOIN_TIMEOUT_MS = 10_000;
 
 type Outcome = 'off' | 'no_key' | `http_${number}` | 'unreachable';
-type Result<T> = { ok: true; body: T } | { ok: false; outcome: Outcome };
+/** `error`: the agent's own word for why it said no ("already_a_member"), when it gave one. */
+type Result<T> = { ok: true; body: T } | { ok: false; outcome: Outcome; error?: string };
 
-async function post<T>(path: 'account/summary' | 'account/sync', body: Record<string, unknown>): Promise<Result<T>> {
+async function post<T>(
+  path: 'account/summary' | 'account/sync' | 'account/club/join',
+  body: Record<string, unknown>,
+  timeoutMs = TIMEOUT_MS,
+): Promise<Result<T>> {
   const base = agentSiteUrl();
   if (!base) return { ok: false, outcome: 'off' };
   const key = agentKey();
@@ -31,9 +39,13 @@ async function post<T>(path: 'account/summary' | 'account/sync', body: Record<st
       headers: { 'content-type': 'application/json', authorization: `Bearer ${key}` },
       body: JSON.stringify(body),
       cache: 'no-store',
-      signal: AbortSignal.timeout(TIMEOUT_MS),
+      signal: AbortSignal.timeout(timeoutMs),
     });
-    if (!response.ok) return { ok: false, outcome: `http_${response.status}` };
+    if (!response.ok) {
+      const answer = (await response.json().catch(() => null)) as { error?: unknown } | null;
+      const error = typeof answer?.error === 'string' ? answer.error : undefined;
+      return { ok: false, outcome: `http_${response.status}`, error };
+    }
     return { ok: true, body: (await response.json()) as T };
   } catch {
     return { ok: false, outcome: 'unreachable' };
@@ -41,11 +53,11 @@ async function post<T>(path: 'account/summary' | 'account/sync', body: Record<st
 }
 
 /** What happened, never who: no address in the logs. "off" (a laptop, a test run) says nothing. */
-function report(outcome: Outcome) {
+function report(outcome: Outcome, what: 'read' | 'join' = 'read') {
   if (outcome === 'off') return;
   // 404: the café hasn't turned on accounts on its website in the agent (Website & SEO).
   if (outcome === 'no_key' || outcome === 'http_404') console.warn('Business Agent coffee club unavailable', { outcome });
-  else console.error('Business Agent coffee club read failed', { outcome });
+  else console.error(`Business Agent coffee club ${what} failed`, { outcome });
 }
 
 interface Summary {
@@ -84,4 +96,31 @@ export async function clubFor(person: ClubPerson): Promise<AccountClub | null> {
     return null;
   }
   return summary.body.club ?? null;
+}
+
+export type JoinClubResult = { url: string } | { error: 'already_a_member' | 'not_taking_members' | 'unavailable' };
+
+/**
+ * Square's checkout page for this person to join the club: their email filled
+ * in, returning to `redirectUrl` (https, on the café's own website) once paid.
+ * The agent gives the same person and redirect the same link for a week. Never
+ * throws: anything but a link or a clear no is "unavailable".
+ */
+export async function joinClub(email: string, redirectUrl: string): Promise<JoinClubResult> {
+  const result = await post<{ url?: unknown } | null>(
+    'account/club/join',
+    { email: email.trim().toLowerCase(), email_verified: true, redirect_url: redirectUrl },
+    JOIN_TIMEOUT_MS,
+  );
+  if (result.ok) {
+    const url = result.body?.url;
+    if (typeof url === 'string' && url.startsWith('https://')) return { url };
+    console.error('Business Agent coffee club join failed', { outcome: 'no_link' });
+    return { error: 'unavailable' };
+  }
+  if (result.outcome === 'http_409' && (result.error === 'already_a_member' || result.error === 'not_taking_members')) {
+    return { error: result.error };
+  }
+  report(result.outcome, 'join');
+  return { error: 'unavailable' };
 }

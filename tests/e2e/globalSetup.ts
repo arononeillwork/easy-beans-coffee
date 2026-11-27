@@ -24,6 +24,8 @@ const ROUTES = [
   '/en/shop/beans',
   '/en/shop/beans/brasil-bottrel',
   '/es/order',
+  '/es/club',
+  '/en/club',
   '/en/order',
   '/admin',
   // The cart asks this for the live opening hours; cold it outlasts an assertion.

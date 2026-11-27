@@ -14,8 +14,6 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
-import CoffeeRoundedIcon from '@mui/icons-material/CoffeeRounded';
 import GoogleIcon from '@mui/icons-material/Google';
 import Link from 'next/link';
 import { useLanguage } from '@/i18n/LanguageProvider';
@@ -34,8 +32,8 @@ const MIN_PASSWORD = 8;
  * The /account page. Sign-in and sign-up are Supabase Auth's problem —
  * passwords, Google, confirmation and reset emails all happen there, nothing
  * here ever sees a credential store. Once a session cookie exists, the page
- * shows the customer's rewards and their Square-held profile (plus the
- * directory's Interests custom field) — readable, editable, deletable.
+ * shows the customer's coffee club, their orders and their Square-held profile
+ * — readable, editable, deletable. Square's loyalty points aren't shown.
  *
  *   loading → signIn ⇄ signUp → checkEmail        (confirmation link sent)
  *                    ↘ forgot                      (reset link sent)
@@ -114,7 +112,8 @@ async function readError(res: Response): Promise<string> {
 /**
  * Where to send the visitor once signed in, when they came here to do
  * something else — the cart sends `?next=/es/order?cart=open` so an order can
- * go on as soon as there is an account. Same-site paths only, as in
+ * go on as soon as there is an account, and the coffee club's join button
+ * `?next=/es/club?join=1`. Same-site paths only, as in
  * /auth/callback, so the parameter can't be pointed off-site.
  */
 function returnTo(): string | null {
@@ -207,8 +206,12 @@ export function AccountView() {
     signedIn(body);
   };
 
-  // Shown above sign-in / sign-up when the cart sent them: why an account.
-  const [forOrder] = useState(() => typeof window !== 'undefined' && returnTo() !== null);
+  // Shown above sign-in / sign-up when the cart or the coffee club sent them: why an account.
+  const [sentFrom] = useState(() => {
+    const next = typeof window !== 'undefined' ? returnTo() : null;
+    if (next === null) return null;
+    return /^\/(es|en)\/club([?#]|$)/.test(next) ? 'club' : 'order';
+  });
 
   return (
     <Box sx={{ backgroundColor: brand.cream }}>
@@ -226,9 +229,9 @@ export function AccountView() {
           </Typography>
         )}
 
-        {forOrder && (phase === 'signIn' || phase === 'signUp') && (
-          <Typography data-testid="order-sign-in-hint" sx={{ mb: 3, color: brand.ink70 }}>
-            {labels.forOrderHint}
+        {sentFrom && (phase === 'signIn' || phase === 'signUp') && (
+          <Typography data-testid={`${sentFrom}-sign-in-hint`} sx={{ mb: 3, color: brand.ink70 }}>
+            {sentFrom === 'club' ? labels.forClubHint : labels.forOrderHint}
           </Typography>
         )}
 
@@ -299,7 +302,6 @@ export function AccountView() {
               name={[payload.profile.givenName, payload.profile.familyName].filter(Boolean).join(' ') || null}
             />
             <OrdersCard />
-            <RewardsCard />
             <ProfileCard
               payload={payload}
               onSaved={setPayload}
@@ -729,8 +731,6 @@ function ResetCard({ onDone }: { onDone: () => void }) {
   );
 }
 
-// ── Rewards: the beans, straight from Square Loyalty ────────────────────────
-
 // ── Orders: every collection order placed from this account ────────────────
 
 function OrdersCard() {
@@ -825,143 +825,6 @@ function OrdersCard() {
             </Stack>
           </Box>
         ))}
-    </Card>
-  );
-}
-
-interface AccountRewards {
-  program: { one: string; other: string; tiers: Array<{ id: string; name: string; points: number }> } | null;
-  balance: number | null;
-  lifetimePoints: number | null;
-}
-
-function RewardsCard() {
-  const { t } = useLanguage();
-  const labels = t.account;
-  const [rewards, setRewards] = useState<AccountRewards | null | 'error'>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const res = await fetch('/api/account/rewards');
-        if (!res.ok) throw new Error(`rewards read failed: ${res.status}`);
-        const body = (await res.json()) as AccountRewards;
-        if (!cancelled) setRewards(body);
-      } catch {
-        if (!cancelled) setRewards('error');
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  // No programme in the Square Dashboard means no section — not an apology.
-  if (rewards !== 'error' && rewards?.program === null) return null;
-
-  const program = rewards !== null && rewards !== 'error' ? rewards.program : null;
-  const balance = rewards !== null && rewards !== 'error' ? rewards.balance : null;
-  const unit = (count: number) => (count === 1 ? program?.one : program?.other) ?? '';
-
-  return (
-    <Card>
-      <Typography variant="h4" component="h2" sx={{ mb: 1 }}>
-        {labels.rewardsHeadline}
-      </Typography>
-      <Typography color="text.secondary" sx={{ mb: 3 }}>
-        {labels.rewardsBody}
-      </Typography>
-
-      {rewards === 'error' && <Typography color="text.secondary">{labels.rewardsFailed}</Typography>}
-      {rewards === null && <Typography color="text.secondary">…</Typography>}
-
-      {rewards !== null && rewards !== 'error' && program && (
-        <>
-          {/* The balance, as the headline fact. */}
-          <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 0.5 }}>
-            <Box
-              aria-hidden
-              sx={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 48,
-                height: 48,
-                borderRadius: '50%',
-                backgroundColor: brand.cream,
-                color: brand.rosePinkDeep,
-              }}
-            >
-              <CoffeeRoundedIcon />
-            </Box>
-            <Typography sx={{ fontSize: '2rem', fontWeight: 600, lineHeight: 1 }}>
-              {balance ?? 0}{' '}
-              <Typography component="span" sx={{ fontSize: '1.125rem', color: brand.ink70 }}>
-                {unit(balance ?? 0)}
-              </Typography>
-            </Typography>
-          </Stack>
-
-          {balance === null ? (
-            <Typography sx={{ color: brand.ink70, mb: 2.5 }}>{labels.rewardsNone}</Typography>
-          ) : (
-            rewards.lifetimePoints !== null && (
-              <Typography sx={{ fontSize: '0.8125rem', color: brand.ink45, mb: 2.5 }}>
-                {labels.rewardsLifetime.replace('{points}', String(rewards.lifetimePoints))}
-              </Typography>
-            )
-          )}
-
-          {/* The rewards on offer, cheapest first, as Square lists them. */}
-          {program.tiers.map((tier) => {
-            const affordable = balance !== null && balance >= tier.points;
-            return (
-              <Box
-                key={tier.id}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1.5,
-                  py: 1.4,
-                  borderTop: `1px solid ${brand.ink06}`,
-                }}
-              >
-                <Box sx={{ flexGrow: 1, minWidth: 0 }}>
-                  <Typography sx={{ fontWeight: 500 }}>{tier.name}</Typography>
-                  <Typography sx={{ fontSize: '0.8125rem', color: brand.ink45 }}>
-                    {tier.points} {unit(tier.points)}
-                  </Typography>
-                </Box>
-                {affordable ? (
-                  <Typography
-                    sx={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 0.5,
-                      fontSize: '0.8125rem',
-                      fontWeight: 600,
-                      color: brand.matchaGreenDeep,
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    <CheckCircleOutlineRoundedIcon sx={{ fontSize: '1.1rem' }} aria-hidden />
-                    {labels.rewardsReady}
-                  </Typography>
-                ) : (
-                  <Typography sx={{ fontSize: '0.8125rem', color: brand.ink45, whiteSpace: 'nowrap' }}>
-                    {labels.rewardsToGo.replace('{points}', String(tier.points - (balance ?? 0)))}
-                  </Typography>
-                )}
-              </Box>
-            );
-          })}
-
-          <Typography sx={{ fontSize: '0.75rem', color: brand.ink45, mt: 2 }}>
-            {labels.rewardsRedeemNote}
-          </Typography>
-        </>
-      )}
     </Card>
   );
 }

@@ -25,6 +25,8 @@ export const FIXTURE = {
     writeReviewUrl: 'https://search.google.com/local/writereview?placeid=e2e-place',
     instagramHandle: 'e2e.beans',
   },
+  // The coffee club (the café's is €10 for one a week, up to €5).
+  club: { name: 'E2E Coffee Club', price: 12, currency: 'EUR', coffees_per_week: 1, max_value: 4.5 },
   // Numeric ids, like Instagram's own: the café TV asks for a post's picture by its id.
   posts: [
     { id: '9000000000000001', permalink: 'https://www.instagram.com/p/E2E-POST-1/', caption: 'Feed post one' },
