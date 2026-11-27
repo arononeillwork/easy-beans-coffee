@@ -372,6 +372,8 @@ export const en = {
     ],
     closed: 'Closed',
     closedOn: 'Closed {dates}',
+    /** A break in the day, between two opening times. */
+    breakNote: 'Closed {time}',
     allDay: 'Open 24 h',
     contactTitle: 'Contact',
     rights: '© 2026 Easy Beans Coffee',

@@ -8,7 +8,7 @@ import logo from '@/assets/logo.png';
 import { localePath, type Lang } from '@/i18n/config';
 import type { SiteContent } from '@/i18n/content/en';
 import { getCafeDetails } from '@/server/businessAgent/detailsFeed';
-import { groupOpeningHours } from '@/shared/lib/openingHours';
+import { groupOpeningHours, type HoursRow, type HoursSegment } from '@/shared/lib/openingHours';
 import { brand } from '@/theme/brand';
 
 /** "24 Dec", or "24 – 26 Dec" for a closure of several days, in the page's language. */
@@ -16,6 +16,39 @@ function closureDates(from: string, to: string, lang: Lang): string {
   const format = new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'short', timeZone: 'UTC' });
   const date = (iso: string) => new Date(`${iso}T12:00:00Z`);
   return from === to ? format.format(date(from)) : format.formatRange(date(from), date(to));
+}
+
+/**
+ * One line of a day's hours. A time it's open never breaks across lines; a
+ * break between two is quieter, so the day reads open, closed, open again.
+ */
+function HoursLine({ segment, breakNote }: { segment: HoursSegment; breakNote: string }) {
+  if (segment.kind === 'break') {
+    return (
+      <Box
+        component="span"
+        data-testid="opening-hours-break"
+        sx={{
+          my: 0.75,
+          px: 1.25,
+          py: 0.25,
+          borderRadius: 999,
+          backgroundColor: brand.ink06,
+          fontSize: '0.8125rem',
+          lineHeight: 1.6,
+          color: brand.ink70,
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {breakNote.replace('{time}', segment.time)}
+      </Box>
+    );
+  }
+  return (
+    <Box component="span" sx={{ whiteSpace: 'nowrap', color: segment.kind === 'closed' ? brand.ink45 : 'inherit' }}>
+      {segment.time}
+    </Box>
+  );
 }
 
 /**
@@ -27,7 +60,7 @@ function closureDates(from: string, to: string, lang: Lang): string {
 export async function Footer({ t, lang }: { t: SiteContent; lang: Lang }) {
   const details = await getCafeDetails();
   const liveHours = groupOpeningHours(details.week, lang, { closed: t.footer.closed, allDay: t.footer.allDay });
-  const hours = liveHours.length > 0 ? liveHours : t.footer.hours;
+  const hours: HoursRow[] = liveHours.length > 0 ? liveHours : t.footer.hours;
   // The closures of the next two weeks, so nobody walks to a shut door.
   const soon = new Date(Date.now() + 14 * 86_400_000).toISOString().slice(0, 10);
   const closures = details.closures.filter((c) => c.from <= soon).slice(0, 3);
@@ -77,21 +110,50 @@ export async function Footer({ t, lang }: { t: SiteContent; lang: Lang }) {
               component="dl"
               data-testid="opening-hours"
               data-source={liveHours.length > 0 ? details.source : 'fallback'}
-              sx={{ m: 0, display: 'grid', gridTemplateColumns: 'auto 1fr', columnGap: 2, rowGap: 0.5 }}
+              sx={{ m: 0, display: 'grid', gridTemplateColumns: 'auto 1fr', columnGap: 3, rowGap: 1.5 }}
             >
               {hours.map((slot) => (
                 <Box key={slot.label} data-testid="opening-hours-row" sx={{ display: 'contents' }}>
-                  <Box component="dt" sx={{ color: brand.ink70 }}>{slot.label}</Box>
-                  <Box component="dd" sx={{ m: 0, fontVariantNumeric: 'tabular-nums' }}>{slot.value}</Box>
+                  <Box component="dt" sx={{ color: brand.ink70, whiteSpace: 'nowrap' }}>{slot.label}</Box>
+                  <Box component="dd" sx={{ m: 0, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', fontVariantNumeric: 'tabular-nums' }}>
+                    {(slot.segments ?? [{ kind: 'open', time: slot.value } satisfies HoursSegment]).map((segment) => (
+                      <HoursLine key={`${segment.kind}-${segment.time}`} segment={segment} breakNote={t.footer.breakNote} />
+                    ))}
+                  </Box>
                 </Box>
               ))}
             </Box>
             {closures.length > 0 && (
-              <Box component="ul" data-testid="closures" sx={{ m: 0, mt: 1.5, p: 0, listStyle: 'none', color: brand.rosePinkDeep }}>
+              <Box
+                component="ul"
+                data-testid="closures"
+                sx={{
+                  m: 0,
+                  mt: 2.5,
+                  pt: 2,
+                  px: 0,
+                  pb: 0,
+                  borderTop: `1px solid ${brand.ink12}`,
+                  listStyle: 'none',
+                  display: 'grid',
+                  gridTemplateColumns: 'auto 1fr',
+                  columnGap: 1.5,
+                  rowGap: 1,
+                  fontSize: '0.875rem',
+                  lineHeight: 1.45,
+                }}
+              >
                 {closures.map((c) => (
-                  <Box component="li" key={`${c.from}-${c.to}`} data-testid="closure" sx={{ fontSize: '0.875rem' }}>
-                    {t.footer.closedOn.replace('{dates}', closureDates(c.from, c.to, lang))}
-                    <Box component="span" sx={{ color: brand.ink70 }}>{` · ${c.reason}`}</Box>
+                  <Box
+                    component="li"
+                    key={`${c.from}-${c.to}`}
+                    data-testid="closure"
+                    sx={{ display: 'grid', gridColumn: '1 / -1', gridTemplateColumns: 'subgrid' }}
+                  >
+                    <Box component="span" sx={{ color: brand.rosePinkDeep, fontWeight: 500, whiteSpace: 'nowrap' }}>
+                      {t.footer.closedOn.replace('{dates}', closureDates(c.from, c.to, lang))}
+                    </Box>{' '}
+                    <Box component="span" sx={{ color: brand.ink70 }}>{c.reason}</Box>
                   </Box>
                 ))}
               </Box>

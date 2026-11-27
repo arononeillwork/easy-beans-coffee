@@ -119,7 +119,16 @@ test('a day that closes for a break is two spans: the list, "open now" and order
   assert.deepEqual(weekOf(d).find((w) => w.day === 6)?.ranges, [{ open: 600, close: 840 }], 'a break outside the day is left out');
 
   const rows = groupOpeningHours(weekOf(d), 'en', { closed: 'Closed', allDay: 'Open 24 hours' });
-  assert.deepEqual(rows.find((r) => r.label === 'Monday'), { label: 'Monday', value: '9:00 – 14:00, 17:00 – 20:00' });
+  const monday = rows.find((r) => r.label === 'Monday');
+  assert.equal(monday?.value, '9:00 – 14:00, 17:00 – 20:00');
+  // The footer shows the day in order, the break between the two times it's open.
+  assert.deepEqual(monday?.segments, [
+    { kind: 'open', time: '9:00 – 14:00' },
+    { kind: 'break', time: '14:00 – 17:00' },
+    { kind: 'open', time: '17:00 – 20:00' },
+  ]);
+  assert.deepEqual(rows.find((r) => r.label === 'Saturday')?.segments, [{ kind: 'open', time: '10:00 – 14:00' }]);
+  assert.deepEqual(rows.find((r) => r.label.startsWith('Tue'))?.segments, [{ kind: 'open', time: '7:45 – 16:15' }]);
 
   // Monday 21 December 2026, 15:00 in Madrid: in the break.
   const inBreak = Date.parse('2026-12-21T14:00:00Z');
